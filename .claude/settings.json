@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hook": ".claude/hooks/protect-generated-files.sh",
+        "description": "Prevent editing auto-generated files (database.ts, lock files)"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hook": ".claude/hooks/post-write-lint.sh",
+        "description": "Auto-lint TypeScript files after creation or edit"
+      }
+    ]
+  }
+}
