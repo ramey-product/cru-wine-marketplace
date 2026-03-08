@@ -53,7 +53,7 @@ export function wineToMedusaPayload(wine: WineWebhookRow): MedusaProductPayload 
     handle: wine.slug,
     description: wine.description ?? undefined,
     thumbnail: wine.image_url ?? undefined,
-    status: wine.is_active ? 'published' : 'draft',
+    status: wine.is_active !== false ? 'published' : 'draft',
     metadata: {
       supabase_wine_id: wine.id,
       supabase_org_id: wine.org_id,
@@ -83,21 +83,30 @@ function getMedusaConfig() {
   return { url: url.replace(/\/$/, ''), apiKey }
 }
 
+const MEDUSA_TIMEOUT_MS = 15_000
+
 async function medusaFetch(
   path: string,
   options: RequestInit = {}
 ): Promise<Response> {
   const { url, apiKey } = getMedusaConfig()
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), MEDUSA_TIMEOUT_MS)
 
-  return fetch(`${url}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-      // API key last so callers cannot override it
-      'x-medusa-access-token': apiKey,
-    },
-  })
+  try {
+    return await fetch(`${url}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+        // API key last so callers cannot override it
+        'x-medusa-access-token': apiKey,
+      },
+    })
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 // ---------------------------------------------------------------------------

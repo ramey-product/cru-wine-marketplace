@@ -1,7 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient } from '@/lib/dal/types'
 
 /**
  * Check if a user has an admin or owner role in the specified organization.

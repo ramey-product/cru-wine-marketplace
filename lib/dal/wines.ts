@@ -1,8 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
 import type { WineFilters, Pagination, CreateWineInput, UpdateWineInput } from '@/lib/validations/wines'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient, PaginatedResult } from '@/lib/dal/types'
 
 // ---------------------------------------------------------------------------
 // Shared select for wine queries — includes producer name via join
@@ -19,17 +16,6 @@ const WINE_WITH_TAGS_SELECT = `
   wine_tags(tag_name),
   wine_occasions(occasion_name)
 ` as const
-
-// ---------------------------------------------------------------------------
-// Paginated response type
-// ---------------------------------------------------------------------------
-
-export interface PaginatedResult<T> {
-  data: T[]
-  total: number
-  page: number
-  per_page: number
-}
 
 // ---------------------------------------------------------------------------
 // Core query builder — applies filters to a wines query

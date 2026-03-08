@@ -48,7 +48,7 @@ export async function addWineToWishlist(wineId: string, notes?: string) {
     return { error: 'Failed to add wine to wishlist' }
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath('/(app)/[orgSlug]', 'layout')
   return { data }
 }
 
@@ -83,7 +83,7 @@ export async function removeWishlistItem(wishlistItemId: string) {
     return { error: 'Failed to remove item from wishlist' }
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath('/(app)/[orgSlug]', 'layout')
   return { data: { success: true } }
 }
 
@@ -119,7 +119,7 @@ export async function removeWineFromWishlistAction(wineId: string) {
     return { error: 'Failed to remove wine from wishlist' }
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath('/(app)/[orgSlug]', 'layout')
   return { data: { success: true } }
 }
 

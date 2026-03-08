@@ -1,10 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
 import type { Pagination } from '@/lib/validations/wines'
-import type { PaginatedResult } from '@/lib/dal/wines'
+import type { TypedClient, PaginatedResult } from '@/lib/dal/types'
 import type { CreateProducerInput, UpdateProducerInput } from '@/lib/validations/producers'
-
-type TypedClient = SupabaseClient<Database>
 
 // ---------------------------------------------------------------------------
 // Shared select for producer queries

@@ -1,9 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
 import type { WineFilters, Pagination } from '@/lib/validations/wines'
-import { WINE_SELECT, type PaginatedResult } from '@/lib/dal/wines'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient, PaginatedResult } from '@/lib/dal/types'
+import { WINE_SELECT } from '@/lib/dal/wines'
 
 // ---------------------------------------------------------------------------
 // searchWines — full-text search with optional filters & pagination
