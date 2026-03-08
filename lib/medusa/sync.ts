@@ -140,6 +140,7 @@ export async function updateMedusaProduct(
 ): Promise<SyncResult> {
   const payload = wineToMedusaPayload(wine)
 
+  // Medusa v2 Admin API uses POST for product updates (not PATCH)
   const res = await medusaFetch(`/admin/products/${medusaProductId}`, {
     method: 'POST',
     body: JSON.stringify(payload),

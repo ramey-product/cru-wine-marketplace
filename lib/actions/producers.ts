@@ -252,6 +252,7 @@ export async function reorderProducerPhotosAction(
   const { error } = await reorderProducerPhotos(
     supabase,
     parsed.data.producer_id,
+    parsed.data.org_id,
     parsed.data.ordered_ids
   )
   if (error) {

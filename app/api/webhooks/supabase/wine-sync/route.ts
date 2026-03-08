@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
         .from('wines')
         .update({ medusa_product_id: result.medusa_product_id } as never)
         .eq('id', wine.id)
+        .eq('org_id', wine.org_id)
 
       if (updateError) {
         console.error(

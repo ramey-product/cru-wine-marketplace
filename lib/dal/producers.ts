@@ -251,6 +251,7 @@ export async function deleteProducerPhoto(
 export async function reorderProducerPhotos(
   client: TypedClient,
   producerId: string,
+  orgId: string,
   orderedIds: string[]
 ) {
   // Update display_order for each photo in a single transaction-like batch.
@@ -263,6 +264,7 @@ export async function reorderProducerPhotos(
       .update({ display_order: i })
       .eq('id', orderedIds[i])
       .eq('producer_id', producerId)
+      .eq('org_id', orgId)
 
     if (error) errors.push(error)
   }
