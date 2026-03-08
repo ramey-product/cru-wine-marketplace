@@ -20,6 +20,22 @@ Taste Profile Onboarding is Cru's core differentiator — a 3-minute, jargon-fre
 - [ ] Users who skip onboarding can still browse and receive generic curation
 - [ ] Profile can be re-done or edited from settings at any time
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Create taste_profiles and taste_profile_wines tables with RLS | backend | 5 | `epic-03/story-01-create-taste-profiles-tables-rls.md` |
+| STORY-02 | Create flavor tag taxonomy data and mapping constants | backend | 3 | `epic-03/story-02-flavor-tag-taxonomy-mapping-constants.md` |
+| STORY-03 | Implement taste profile DAL and Server Actions | backend | 5 | `epic-03/story-03-taste-profile-dal-server-actions.md` |
+| STORY-04 | Implement profile summary template engine | backend | 3 | `epic-03/story-04-profile-summary-template-engine.md` |
+| STORY-05 | Design taste profile onboarding flow UX | design | 5 | `epic-03/story-05-design-onboarding-flow-ux.md` |
+| STORY-06 | Build taste profile onboarding Client Component | frontend | 8 | `epic-03/story-06-build-onboarding-client-component.md` |
+| STORY-07 | Build "Wines I've Loved" quick-add feature | frontend | 5 | `epic-03/story-07-wines-ive-loved-quick-add.md` |
+| STORY-08 | Write taste profile onboarding copy and microcopy | copy | 3 | `epic-03/story-08-onboarding-copy-microcopy.md` |
+| STORY-09 | Build taste profile settings page for editing | frontend | 3 | `epic-03/story-09-taste-profile-settings-page.md` |
+
+**Total: 9 stories, 40 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `taste_profiles`, `taste_profile_wines`

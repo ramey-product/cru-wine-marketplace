@@ -20,6 +20,22 @@ Producer Storytelling is the content heart of Cru — the feature that transform
 - [ ] Wine pages with no local availability show "Wishlist + Notify me" CTA instead of buy buttons
 - [ ] All content tables have RLS with public SELECT and platform-org-admin-only writes
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Create producers, wines, and producer_photos tables with RLS | backend | 8 | `epic-04/story-01-create-producers-wines-tables-rls.md` |
+| STORY-02 | DAL functions for producers, wines, and producer_photos | backend | 5 | `epic-04/story-02-dal-functions-producers-wines.md` |
+| STORY-03 | Server Actions for producer and wine content management | backend | 5 | `epic-04/story-03-server-actions-content-management.md` |
+| STORY-04 | Wine-to-Medusa sync webhook | backend | 5 | `epic-04/story-04-wine-medusa-sync-webhook.md` |
+| STORY-05 | Producer Profile Page (frontend) | frontend | 8 | `epic-04/story-05-producer-profile-page.md` |
+| STORY-06 | Wine Detail Page (frontend) | frontend | 8 | `epic-04/story-06-wine-detail-page.md` |
+| STORY-07 | Admin Content Management UI | fullstack | 8 | `epic-04/story-07-admin-content-management-ui.md` |
+| STORY-08 | UX design and copy for Producer Storytelling pages | design+copy | 5 | `epic-04/story-08-ux-design-copy.md` |
+| STORY-09 | Content seeding script and sample data | backend | 3 | `epic-04/story-09-content-seeding-script.md` |
+
+**Total: 9 stories, 55 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `producers`, `wines`, `producer_photos` (content-scoped, org_id = platform org)

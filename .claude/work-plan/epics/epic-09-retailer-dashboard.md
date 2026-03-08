@@ -18,6 +18,24 @@ The Retailer Dashboard gives Cru's 20 LA launch retailers a self-service interfa
 - [ ] All retailer data is isolated via RLS — retailers see only their own orders, inventory, and analytics
 - [ ] Dashboard pages load in < 2 seconds with 30 days of order data
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Retailer Dashboard Database Schema & RLS Policies | backend | 5 | [`story-01-retailer-dashboard-database-schema-rls.md`](epic-09/story-01-retailer-dashboard-database-schema-rls.md) |
+| STORY-02 | Retailer Order Management DAL & Server Actions | backend | 5 | [`story-02-retailer-order-management-dal-server-actions.md`](epic-09/story-02-retailer-order-management-dal-server-actions.md) |
+| STORY-03 | Inventory Management DAL & Server Actions | backend | 3 | [`story-03-inventory-management-dal-server-actions.md`](epic-09/story-03-inventory-management-dal-server-actions.md) |
+| STORY-04 | Analytics DAL Functions | backend | 3 | [`story-04-analytics-dal-functions.md`](epic-09/story-04-analytics-dal-functions.md) |
+| STORY-05 | Retailer Settings DAL & Server Actions | backend | 2 | [`story-05-retailer-settings-dal-server-actions.md`](epic-09/story-05-retailer-settings-dal-server-actions.md) |
+| STORY-06 | Dashboard Layout & Order Queue UI | frontend | 8 | [`story-06-dashboard-layout-order-queue-ui.md`](epic-09/story-06-dashboard-layout-order-queue-ui.md) |
+| STORY-07 | Inventory Health Monitor UI | frontend | 5 | [`story-07-inventory-health-monitor-ui.md`](epic-09/story-07-inventory-health-monitor-ui.md) |
+| STORY-08 | Basic Analytics UI | frontend | 3 | [`story-08-basic-analytics-ui.md`](epic-09/story-08-basic-analytics-ui.md) |
+| STORY-09 | Retailer Settings Pages | frontend | 5 | [`story-09-retailer-settings-pages.md`](epic-09/story-09-retailer-settings-pages.md) |
+| STORY-10 | Customer Email Notifications for Order Status Changes | fullstack | 3 | [`story-10-customer-email-notifications.md`](epic-09/story-10-customer-email-notifications.md) |
+| STORY-11 | UX Design, Retailer Copy & Onboarding | design | 3 | [`story-11-ux-design-retailer-copy-onboarding.md`](epic-09/story-11-ux-design-retailer-copy-onboarding.md) |
+
+**Total: 11 stories, 45 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `retailer_members` (new), extends `retailers` with fulfillment columns, `retailer_notification_preferences` (new), `retailer_stock_overrides` (new), materialized view for analytics

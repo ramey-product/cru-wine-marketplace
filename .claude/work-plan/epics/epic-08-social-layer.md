@@ -19,6 +19,23 @@ Cru's V0 social layer provides two deliberately minimal social primitives: exter
 - [ ] Share events and follow actions are tracked for analytics (share volume, platform distribution, graph density)
 - [ ] Privacy toggle allows users to control profile visibility (public vs. private)
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Social Layer Database Schema | backend | 5 | [`story-01-social-layer-database-schema.md`](epic-08/story-01-social-layer-database-schema.md) |
+| STORY-02 | DAL Functions for Follows and Shares | backend | 3 | [`story-02-dal-functions-follows-shares.md`](epic-08/story-02-dal-functions-follows-shares.md) |
+| STORY-03 | Follow/Unfollow Server Actions | backend | 3 | [`story-03-follow-unfollow-server-actions.md`](epic-08/story-03-follow-unfollow-server-actions.md) |
+| STORY-04 | Share Tracking Server Action and API Route | backend | 2 | [`story-04-share-tracking-server-action.md`](epic-08/story-04-share-tracking-server-action.md) |
+| STORY-05 | Open Graph Metadata for Shareable Pages | fullstack | 3 | [`story-05-open-graph-metadata.md`](epic-08/story-05-open-graph-metadata.md) |
+| STORY-06 | Share Button Component | frontend | 5 | [`story-06-share-button-component.md`](epic-08/story-06-share-button-component.md) |
+| STORY-07 | Follow/Unfollow Button with Optimistic UI | frontend | 3 | [`story-07-follow-button-optimistic-ui.md`](epic-08/story-07-follow-button-optimistic-ui.md) |
+| STORY-08 | User Profile Page (Public View) | fullstack | 5 | [`story-08-user-profile-page.md`](epic-08/story-08-user-profile-page.md) |
+| STORY-09 | Following and Followers List Pages | frontend | 3 | [`story-09-following-followers-list-pages.md`](epic-08/story-09-following-followers-list-pages.md) |
+| STORY-10 | UX Design and User-Facing Copy for Social Layer | design | 3 | [`story-10-ux-design-social-copy.md`](epic-08/story-10-ux-design-social-copy.md) |
+
+**Total: 10 stories, 35 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `follows` (new), `share_events` (new), `user_profiles` ALTER (add username, bio, is_public columns)

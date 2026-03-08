@@ -19,6 +19,26 @@ Local Retailer Integration is the commerce backbone — it ingests, normalizes, 
 - [ ] Admin wine matching review queue handles unmatched and low-confidence matches
 - [ ] Sync failures retain last-known inventory and alert retailers via email
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Create Retailers and Inventory Schema with PostGIS | backend | 8 | `epic-06/story-01-create-retailers-inventory-schema-postgis.md` |
+| STORY-02 | DAL Functions for Retailers and Inventory | backend | 5 | `epic-06/story-02-dal-functions-retailers-inventory.md` |
+| STORY-03 | CSV Import Pipeline | backend | 5 | `epic-06/story-03-csv-import-pipeline.md` |
+| STORY-04 | Fuzzy Wine Matching Engine | backend | 8 | `epic-06/story-04-fuzzy-wine-matching-engine.md` |
+| STORY-05 | POSAdapter Interface and Square Integration | backend | 5 | `epic-06/story-05-posadapter-interface-square-integration.md` |
+| STORY-06 | Lightspeed Retail Adapter | backend | 5 | `epic-06/story-06-lightspeed-retail-adapter.md` |
+| STORY-07 | Shopify POS and Clover Adapters | backend | 5 | `epic-06/story-07-shopify-pos-clover-adapters.md` |
+| STORY-08 | Inventory Sync Scheduling and Error Handling | infrastructure | 5 | `epic-06/story-08-inventory-sync-scheduling-error-handling.md` |
+| STORY-09 | Availability API Endpoint | backend | 3 | `epic-06/story-09-availability-api-endpoint.md` |
+| STORY-10 | Retailer Onboarding Form and CSV Upload UI | frontend | 5 | `epic-06/story-10-retailer-onboarding-form-csv-upload-ui.md` |
+| STORY-11 | CSV Column Mapping and Import Preview UI | frontend | 8 | `epic-06/story-11-csv-column-mapping-import-preview-ui.md` |
+| STORY-12 | Admin Wine Matching Review Interface | frontend | 5 | `epic-06/story-12-admin-wine-matching-review-interface.md` |
+| STORY-13 | UX Design and User-Facing Copy | design + copy | 5 | `epic-06/story-13-ux-design-user-facing-copy.md` |
+
+**Total: 72 story points across 13 stories**
+
 ## Architecture Dependencies
 
 - **Database tables:** `retailers`, `retailer_inventory`, `retailer_sync_logs`, `wine_match_queue`

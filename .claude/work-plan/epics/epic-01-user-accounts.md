@@ -22,6 +22,24 @@ User Accounts is the foundational epic upon which every other P0 feature depends
 - [ ] All user-scoped tables have RLS policies (positive and negative test coverage)
 - [ ] Cookie-based sessions persist across tabs and browser restarts (7-day refresh token)
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Create profiles and user_preferences tables with RLS | backend | 5 | `epic-01/story-01-profiles-preferences-tables.md` |
+| STORY-02 | Create wishlists and wishlist_items tables with RLS | backend | 3 | `epic-01/story-02-wishlists-tables.md` |
+| STORY-03 | Implement auth DAL and Server Actions | backend | 5 | `epic-01/story-03-auth-dal-server-actions.md` |
+| STORY-04 | Implement preferences DAL and Server Actions | backend | 3 | `epic-01/story-04-preferences-dal-server-actions.md` |
+| STORY-05 | Implement wishlist DAL and Server Actions | backend | 3 | `epic-01/story-05-wishlist-dal-server-actions.md` |
+| STORY-06 | Build auth pages (signup, login, password reset, OAuth callback) | frontend | 8 | `epic-01/story-06-auth-pages.md` |
+| STORY-07 | Build wishlist page and wishlist toggle button | frontend | 5 | `epic-01/story-07-wishlist-page-toggle.md` |
+| STORY-08 | Build settings/preferences pages | frontend | 5 | `epic-01/story-08-settings-preferences-pages.md` |
+| STORY-09 | Write auth page copy and microcopy | copy | 2 | `epic-01/story-09-auth-page-copy.md` |
+| STORY-10 | Write settings page copy and microcopy | copy | 2 | `epic-01/story-10-settings-page-copy.md` |
+| STORY-11 | Implement account deletion (CCPA compliance) | backend | 5 | `epic-01/story-11-account-deletion-ccpa.md` |
+
+**Total: 11 stories, 46 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `profiles`, `user_preferences`, `wishlists`, `wishlist_items` (all user-scoped, NO org_id per CG-2)

@@ -20,6 +20,24 @@ The curation engine is Cru's core differentiator — a hybrid rules-based matchi
 - [ ] Dismissed wines excluded from future recommendation runs
 - [ ] 15%+ CTR target on "Picked for You" recommendations
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Curation Database Schema | backend | 5 | `epic-07/story-01-curation-database-schema.md` |
+| STORY-02 | Curation DAL Functions | backend | 5 | `epic-07/story-02-curation-dal-functions.md` |
+| STORY-03 | Rules-Based Matching Engine | backend | 8 | `epic-07/story-03-rules-based-matching-engine.md` |
+| STORY-04 | Recommendation Explanation Templates | backend | 3 | `epic-07/story-04-recommendation-explanation-templates.md` |
+| STORY-05 | Recommendation Caching | backend | 3 | `epic-07/story-05-recommendation-caching.md` |
+| STORY-06 | Dismiss Server Action & PostHog Tracking Setup | backend | 2 | `epic-07/story-06-dismiss-server-action-posthog-tracking.md` |
+| STORY-07 | Curated Collections Admin Interface | fullstack | 8 | `epic-07/story-07-curated-collections-admin-interface.md` |
+| STORY-08 | Home Screen Curation Sections | fullstack | 8 | `epic-07/story-08-home-screen-curation-sections.md` |
+| STORY-09 | Collection Detail Page | frontend | 5 | `epic-07/story-09-collection-detail-page.md` |
+| STORY-10 | Recommendation Card with Dismiss Action | frontend | 5 | `epic-07/story-10-recommendation-card-with-dismiss.md` |
+| STORY-11 | Curation UX Design & User-Facing Copy | design | 5 | `epic-07/story-11-curation-ux-design-copy.md` |
+
+**Total: 11 stories, 57 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `curated_collections`, `curated_collection_items`, `user_wine_dismissals`

@@ -36,9 +36,18 @@
 
 ---
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| EPIC-XX/STORY-01 | [Story Title] | [backend/frontend/fullstack] | [fibonacci] | [story-01-slug.md](epic-XX/story-01-slug.md) |
+| EPIC-XX/STORY-02 | [Story Title] | [backend/frontend/fullstack] | [fibonacci] | [story-02-slug.md](epic-XX/story-02-slug.md) |
+
+---
+
 ## Developer Stories
 
-[Stories listed below in priority/dependency order. Each story follows the story-template format.]
+[Stories listed below in priority/dependency order. Each story follows the story-template format. Individual story files in the `epic-XX/` subdirectory are the source of truth.]
 
 ---
 
