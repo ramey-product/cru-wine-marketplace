@@ -1,9 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
 import type { Pagination } from '@/lib/validations/wines'
-import type { PaginatedResult } from '@/lib/dal/wines'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient, PaginatedResult } from '@/lib/dal/types'
+import type { CreateProducerInput, UpdateProducerInput } from '@/lib/validations/producers'
 
 // ---------------------------------------------------------------------------
 // Shared select for producer queries
@@ -176,4 +173,101 @@ export async function getDistinctProducerCountries(client: TypedClient) {
   if (error || !data) return []
 
   return [...new Set(data.map((d) => d.country).filter(Boolean))]
+}
+
+// ---------------------------------------------------------------------------
+// Write operations — platform org admin only (enforced at Server Action layer)
+// ---------------------------------------------------------------------------
+
+export async function createProducer(
+  client: TypedClient,
+  data: CreateProducerInput
+) {
+  return client
+    .from('producers')
+    .insert(data)
+    .select(PRODUCER_WITH_PHOTOS_SELECT)
+    .single()
+}
+
+export async function updateProducer(
+  client: TypedClient,
+  id: string,
+  orgId: string,
+  data: UpdateProducerInput
+) {
+  return client
+    .from('producers')
+    .update(data)
+    .eq('id', id)
+    .eq('org_id', orgId)
+    .select(PRODUCER_WITH_PHOTOS_SELECT)
+    .single()
+}
+
+// ---------------------------------------------------------------------------
+// Producer photos — write operations
+// ---------------------------------------------------------------------------
+
+export async function addProducerPhoto(
+  client: TypedClient,
+  data: {
+    org_id: string
+    producer_id: string
+    image_url: string
+    caption?: string
+    display_order?: number
+  }
+) {
+  return client
+    .from('producer_photos')
+    .insert({
+      org_id: data.org_id,
+      producer_id: data.producer_id,
+      image_url: data.image_url,
+      caption: data.caption ?? null,
+      display_order: data.display_order ?? 0,
+    })
+    .select('id, image_url, caption, display_order')
+    .single()
+}
+
+export async function deleteProducerPhoto(
+  client: TypedClient,
+  photoId: string,
+  orgId: string
+) {
+  return client
+    .from('producer_photos')
+    .delete()
+    .eq('id', photoId)
+    .eq('org_id', orgId)
+}
+
+export async function reorderProducerPhotos(
+  client: TypedClient,
+  producerId: string,
+  orgId: string,
+  orderedIds: string[]
+) {
+  // Update display_order for each photo in a single transaction-like batch.
+  // Supabase JS doesn't support real transactions, so we update sequentially.
+  const errors: unknown[] = []
+
+  for (let i = 0; i < orderedIds.length; i++) {
+    const { error } = await client
+      .from('producer_photos')
+      .update({ display_order: i })
+      .eq('id', orderedIds[i])
+      .eq('producer_id', producerId)
+      .eq('org_id', orgId)
+
+    if (error) errors.push(error)
+  }
+
+  if (errors.length > 0) {
+    return { error: errors[0] }
+  }
+
+  return { error: null }
 }

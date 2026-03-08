@@ -1,7 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient } from '@/lib/dal/types'
 
 export async function getPreferences(client: TypedClient, userId: string) {
   const { data, error } = await client

@@ -1,8 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
 import type { TasteProfileInput } from '@/lib/validations/taste-profile'
-
-type TypedClient = SupabaseClient<Database>
+import type { TypedClient } from '@/lib/dal/types'
 
 // ---------------------------------------------------------------------------
 // Wine select for taste profile wines join
