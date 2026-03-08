@@ -22,6 +22,21 @@ Search & Browse is the primary discovery engine that lets users find wines throu
 - [ ] SEO routes are indexable: `/wines/region/[region]`, `/wines/varietal/[varietal]`, `/wines/occasion/[occasion]`
 - [ ] All browse pages are mobile-first responsive with filter drawer on mobile
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Wines Catalog Schema & FTS Setup | backend | 8 | `epic-02/story-01-wines-catalog-schema.md` |
+| STORY-02 | Search Wines DAL & Server Actions | backend | 5 | `epic-02/story-02-search-wines-dal.md` |
+| STORY-03 | Recent Searches | backend | 3 | `epic-02/story-03-recent-searches.md` |
+| STORY-04 | Browse Page Layout & Wine Card Design | design | 5 | `epic-02/story-04-browse-design.md` |
+| STORY-05 | Browse & Search Page Copy | copy | 3 | `epic-02/story-05-browse-copy.md` |
+| STORY-06 | Wine Card Component | frontend | 5 | `epic-02/story-06-wine-card-component.md` |
+| STORY-07 | Search Bar with Autocomplete | frontend | 5 | `epic-02/story-07-search-bar-autocomplete.md` |
+| STORY-08 | Browse Pages | frontend | 8 | `epic-02/story-08-browse-pages.md` |
+| STORY-09 | Wine Detail Page | frontend | 5 | `epic-02/story-09-wine-detail-page.md` |
+| STORY-10 | SEO Metadata & Sitemap | frontend | 3 | `epic-02/story-10-seo-sitemap.md` |
+
 ## Architecture Dependencies
 
 - **Database tables:** `wines` (with tsvector), `wine_tags`, `wine_occasions` (all content-scoped, org_id = platform org per CG-2)

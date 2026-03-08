@@ -22,6 +22,24 @@ Order Placement is the revenue engine of Cru — it converts wine discovery into
 - [ ] Age verification (21+) enforced before payment
 - [ ] All order tables have RLS with dual-access pattern (consumer by user_id, retailer by org_id)
 
+## Story Index
+
+| Story | Title | Type | Points | File |
+|-------|-------|------|--------|------|
+| STORY-01 | Create orders, order_items, and order_status_history tables with RLS | backend | 8 | `epic-05/story-01-create-orders-tables-rls.md` |
+| STORY-02 | DAL functions for cart and orders | backend | 5 | `epic-05/story-02-dal-functions-cart-orders.md` |
+| STORY-03 | Cart management Server Actions | backend | 5 | `epic-05/story-03-cart-management-server-actions.md` |
+| STORY-04 | Order placement and lifecycle Server Actions | backend | 8 | `epic-05/story-04-order-placement-lifecycle-actions.md` |
+| STORY-05 | Stripe webhook handler and order finalization | fullstack | 8 | `epic-05/story-05-stripe-webhook-order-finalization.md` |
+| STORY-06 | Inventory hold mechanism | backend | 3 | `epic-05/story-06-inventory-hold-mechanism.md` |
+| STORY-07 | Retailer selection and cart UI | frontend | 8 | `epic-05/story-07-retailer-selection-cart-ui.md` |
+| STORY-08 | Checkout flow and order confirmation UI | frontend | 8 | `epic-05/story-08-checkout-flow-order-confirmation-ui.md` |
+| STORY-09 | Order history and detail pages | frontend | 5 | `epic-05/story-09-order-history-detail-pages.md` |
+| STORY-10 | Order notification emails | fullstack | 3 | `epic-05/story-10-order-notification-emails.md` |
+| STORY-11 | UX design and user-facing copy | design | 5 | `epic-05/story-11-ux-design-user-facing-copy.md` |
+
+**Total: 11 stories, 66 story points**
+
 ## Architecture Dependencies
 
 - **Database tables:** `orders`, `order_items`, `order_status_history` (org-scoped to retailer org, with dual-access RLS for consumer + retailer)
