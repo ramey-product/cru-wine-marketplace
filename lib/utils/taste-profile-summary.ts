@@ -1,4 +1,4 @@
-import type { FlavorAffinity, FlavorAversion } from '@/lib/constants/taste-profile'
+import type { FlavorAffinity } from '@/lib/constants/taste-profile'
 import { FLAVOR_AFFINITY_CATEGORIES } from '@/lib/constants/taste-profile'
 
 // ---------------------------------------------------------------------------

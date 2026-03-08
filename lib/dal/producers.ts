@@ -36,6 +36,7 @@ export async function getProducers(
     .range(from, to)
 
   if (error) {
+    console.error('getProducers query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -89,6 +90,7 @@ export async function getProducersByRegion(
     .range(from, to)
 
   if (error) {
+    console.error('getProducersByRegion query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -117,6 +119,7 @@ export async function getProducersByCountry(
     .range(from, to)
 
   if (error) {
+    console.error('getProducersByCountry query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 

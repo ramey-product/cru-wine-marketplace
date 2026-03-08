@@ -8,7 +8,7 @@ type TypedClient = SupabaseClient<Database>
 // Shared select for wine queries — includes producer name via join
 // ---------------------------------------------------------------------------
 
-const WINE_SELECT = `
+export const WINE_SELECT = `
   *,
   producer:producers!inner(id, name, slug, region, country, hero_image_url)
 ` as const
@@ -125,6 +125,7 @@ export async function getWines(
     .range(from, to)
 
   if (error) {
+    console.error('getWines query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -171,6 +172,7 @@ export async function getWinesByRegion(
     .range(from, to)
 
   if (error) {
+    console.error('getWinesByRegion query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -199,6 +201,7 @@ export async function getWinesByVarietal(
     .range(from, to)
 
   if (error) {
+    console.error('getWinesByVarietal query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -231,6 +234,7 @@ export async function getWinesByOccasion(
     .range(from, to)
 
   if (error) {
+    console.error('getWinesByOccasion query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
@@ -283,6 +287,7 @@ export async function getWinesByProducer(
     .range(from, to)
 
   if (error) {
+    console.error('getWinesByProducer query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 

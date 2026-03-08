@@ -7,8 +7,7 @@ import {
   deleteRecentSearch,
   clearRecentSearches,
 } from '@/lib/dal/search'
-import { SearchQuerySchema } from '@/lib/validations/search'
-import { z } from 'zod'
+import { SearchQuerySchema, DeleteSearchSchema } from '@/lib/validations/search'
 
 // ---------------------------------------------------------------------------
 // saveSearch — save a search query to recent searches
@@ -32,7 +31,8 @@ export async function saveSearch(query: string) {
 
   const { error } = await saveRecentSearch(supabase, user.id, parsed.data.query)
   if (error) {
-    return { error: error.message }
+    console.error('saveSearch failed:', error)
+    return { error: 'Failed to save search' }
   }
 
   revalidatePath('/', 'layout')
@@ -42,10 +42,6 @@ export async function saveSearch(query: string) {
 // ---------------------------------------------------------------------------
 // removeRecentSearch — delete a single recent search
 // ---------------------------------------------------------------------------
-
-const DeleteSearchSchema = z.object({
-  searchId: z.string().uuid(),
-})
 
 export async function removeRecentSearch(searchId: string) {
   const parsed = DeleteSearchSchema.safeParse({ searchId })
@@ -69,7 +65,8 @@ export async function removeRecentSearch(searchId: string) {
     parsed.data.searchId
   )
   if (error) {
-    return { error: error.message }
+    console.error('removeRecentSearch failed:', error)
+    return { error: 'Failed to remove search' }
   }
 
   revalidatePath('/', 'layout')
@@ -93,7 +90,8 @@ export async function clearAllRecentSearches() {
 
   const { error } = await clearRecentSearches(supabase, user.id)
   if (error) {
-    return { error: error.message }
+    console.error('clearAllRecentSearches failed:', error)
+    return { error: 'Failed to clear searches' }
   }
 
   revalidatePath('/', 'layout')

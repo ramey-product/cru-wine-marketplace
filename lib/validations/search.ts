@@ -11,3 +11,7 @@ export const SearchSuggestionsSchema = z.object({
 })
 
 export type SearchSuggestionsInput = z.infer<typeof SearchSuggestionsSchema>
+
+export const DeleteSearchSchema = z.object({
+  searchId: z.string().uuid(),
+})

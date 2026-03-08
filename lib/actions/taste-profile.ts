@@ -40,7 +40,8 @@ export async function saveTasteProfile(input: TasteProfileInput) {
     parsed.data
   )
   if (error) {
-    return { error: error.message }
+    console.error('saveTasteProfile failed:', error)
+    return { error: 'Failed to save taste profile' }
   }
 
   revalidatePath('/', 'layout')
@@ -77,7 +78,8 @@ export async function addWineToProfile(wineId: string, source?: string) {
     parsed.data.source
   )
   if (error) {
-    return { error: error.message }
+    console.error('addWineToProfile failed:', error)
+    return { error: 'Failed to add wine to profile' }
   }
 
   revalidatePath('/', 'layout')
@@ -110,7 +112,8 @@ export async function removeWineFromProfile(wineId: string) {
     parsed.data.wine_id
   )
   if (error) {
-    return { error: error.message }
+    console.error('removeWineFromProfile failed:', error)
+    return { error: 'Failed to remove wine from profile' }
   }
 
   revalidatePath('/', 'layout')

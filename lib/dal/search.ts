@@ -1,18 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 import type { WineFilters, Pagination } from '@/lib/validations/wines'
-import type { PaginatedResult } from '@/lib/dal/wines'
+import { WINE_SELECT, type PaginatedResult } from '@/lib/dal/wines'
 
 type TypedClient = SupabaseClient<Database>
-
-// ---------------------------------------------------------------------------
-// Wine select with producer join (matches wines.ts)
-// ---------------------------------------------------------------------------
-
-const WINE_SELECT = `
-  *,
-  producer:producers!inner(id, name, slug, region, country, hero_image_url)
-` as const
 
 // ---------------------------------------------------------------------------
 // searchWines — full-text search with optional filters & pagination
@@ -95,6 +86,7 @@ export async function searchWines(
     .range(from, to)
 
   if (error) {
+    console.error('searchWines query failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
