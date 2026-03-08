@@ -4,7 +4,7 @@
 > All agents MUST read this file at the start of every task instead of hardcoding paths.
 > When the filesystem changes, update THIS file — not individual agent definitions.
 >
-> Last updated: 2026-03-06
+> Last updated: 2026-03-07
 
 ---
 
@@ -19,41 +19,41 @@
 
 ## Product & Strategy
 
-| Resource | Path | Description |
-|----------|------|-------------|
-| Product Spec | `docs/product/cru-product-spec.md` | Product vision, target users, core value proposition, feature overview |
-| Development Roadmap | `docs/product/cru-product-development-roadmap.md` | Development phases, milestone targets, release planning |
+| Resource | Path | ~Lines | Description |
+|----------|------|--------|-------------|
+| Product Spec | `docs/product/cru-product-spec.md` | 310 | Product vision, target users, core value proposition, feature overview |
+| Development Roadmap | `docs/product/cru-product-development-roadmap.md` | 326 | Development phases, milestone targets, release planning |
 
 ## Architecture
 
-| Resource | Path | Description |
-|----------|------|-------------|
-| System Architecture | `docs/architecture/SYSTEM_ARCHITECTURE.md` | Core platform: multi-tenancy, schema, auth, API layer, DAL, frontend, billing, deployment |
-| E-Commerce Module | `docs/architecture/MODULE_ECOMMERCE.md` | Wine marketplace: Medusa.js v2 modules, auctions, P2P trading, delivery |
-| Integrations Module | `docs/architecture/MODULE_INTEGRATIONS.md` | Third-party services: wine pricing, shipping, age verification, search |
+| Resource | Path | ~Lines | Description |
+|----------|------|--------|-------------|
+| System Architecture | `docs/architecture/SYSTEM_ARCHITECTURE.md` | 1155 | Core platform: multi-tenancy, schema, auth, API layer, DAL, frontend, billing, deployment |
+| E-Commerce Module | `docs/architecture/MODULE_ECOMMERCE.md` | 1531 | Wine marketplace: Medusa.js v2 modules, auctions, P2P trading, delivery |
+| Integrations Module | `docs/architecture/MODULE_INTEGRATIONS.md` | 1719 | Third-party services: wine pricing, shipping, age verification, search |
 
 ## PRDs (P0 — Launch Critical)
 
-| Resource | Path | Priority | RICE |
-|----------|------|----------|------|
-| PRD-01: User Accounts & Preferences | `docs/prds/prd-01-user-accounts.md` | P0 | 10,000 |
-| PRD-02: Search & Browse | `docs/prds/prd-02-search-browse.md` | P0 | 7,500 |
-| PRD-03: Taste Profile Onboarding | `docs/prds/prd-03-taste-profile.md` | P0 | 6,000 |
-| PRD-04: Producer Storytelling | `docs/prds/prd-04-producer-storytelling.md` | P0 | 6,000 |
-| PRD-05: Order Placement | `docs/prds/prd-05-order-placement.md` | P0 | 5,400 |
-| PRD-06: Local Retailer Integration | `docs/prds/prd-06-retailer-integration.md` | P0 | 4,000 |
-| PRD-07: AI + Human Curation Engine | `docs/prds/prd-07-curation-engine.md` | P0 | 6,000 |
-| PRD-08: Social/Community Layer | `docs/prds/prd-08-social-layer.md` | P0 | 4,200 |
-| PRD-09: Retailer Dashboard | `docs/prds/prd-09-retailer-dashboard.md` | P0 | 27 |
+| Resource | Path | ~Lines | RICE |
+|----------|------|--------|------|
+| PRD-01: User Accounts & Preferences | `docs/prds/prd-01-user-accounts.md` | 148 | 10,000 |
+| PRD-02: Search & Browse | `docs/prds/prd-02-search-browse.md` | 160 | 7,500 |
+| PRD-03: Taste Profile Onboarding | `docs/prds/prd-03-taste-profile.md` | 164 | 6,000 |
+| PRD-04: Producer Storytelling | `docs/prds/prd-04-producer-storytelling.md` | 146 | 6,000 |
+| PRD-05: Order Placement | `docs/prds/prd-05-order-placement.md` | 157 | 5,400 |
+| PRD-06: Local Retailer Integration | `docs/prds/prd-06-retailer-integration.md` | 157 | 4,000 |
+| PRD-07: AI + Human Curation Engine | `docs/prds/prd-07-curation-engine.md` | 170 | 6,000 |
+| PRD-08: Social/Community Layer | `docs/prds/prd-08-social-layer.md` | 161 | 4,200 |
+| PRD-09: Retailer Dashboard | `docs/prds/prd-09-retailer-dashboard.md` | 168 | 27 |
 
 ## Competitive Research
 
-| Resource | Path | Description |
-|----------|------|-------------|
-| Competitive Summary | `docs/competitive-research/COMPETITIVE_SUMMARY.md` | Executive summary of competitive landscape |
-| Competitive Matrix | `docs/competitive-research/COMPETITIVE_MATRIX.md` | Feature-by-feature comparison grid |
-| Analysis Index | `docs/competitive-research/COMPETITIVE_ANALYSIS_INDEX.md` | Index of all competitive research |
-| Full Analysis (2025-2026) | `docs/competitive-research/wine_competitive_analysis_2025_2026.md` | Comprehensive market analysis |
+| Resource | Path | ~Lines | Description |
+|----------|------|--------|-------------|
+| Competitive Summary | `docs/competitive-research/COMPETITIVE_SUMMARY.md` | 168 | Executive summary of competitive landscape |
+| Competitive Matrix | `docs/competitive-research/COMPETITIVE_MATRIX.md` | 274 | Feature-by-feature comparison grid |
+| Analysis Index | `docs/competitive-research/COMPETITIVE_ANALYSIS_INDEX.md` | 191 | Index of all competitive research |
+| Full Analysis (2025-2026) | `docs/competitive-research/wine_competitive_analysis_2025_2026.md` | 1093 | Comprehensive market analysis |
 
 ## Reference
 
@@ -66,12 +66,13 @@
 
 | Resource | Path | Description |
 |----------|------|-------------|
-| Project Instructions | `CLAUDE.md` | Master config: stack, patterns, agent roster, execution flow, checkpoints |
+| Project Instructions | `CLAUDE.md` | Minimal essentials: stack, core patterns, context loading strategy |
+| Context Guide | `.claude/CONTEXT_GUIDE.md` | **What to load per task phase** — prevents context overflow |
 | Agent Definitions | `.claude/agents/` | Individual agent role definitions and instructions |
 | Coding Rules | `.claude/rules/` | File-pattern-scoped coding standards (migrations, components, actions, tests, API routes) |
 | Agent Log | `.claude/agent-log.md` | Running status log maintained by pm-orchestrator |
 | Kickoff Prompt | `.claude/kickoff-prompt.md` | Pre-development planning prompt (Checkpoints 1-2) |
-| Project Map Rule | `.claude/rules/project-map.md` | Global agent rule: read Project Map first, update on change, reference by map key |
+| Context Mgmt Rule | `.claude/rules/context-management.md` | Global rule: incremental loading, no bulk doc loading |
 
 ## Work Plan (Checkpoint 2 Output)
 
