@@ -194,3 +194,110 @@ export async function getSearchSuggestions(
   // Return at most 8 suggestions total
   return suggestions.slice(0, 8)
 }
+
+// ---------------------------------------------------------------------------
+// getRecentSearches — return user's most recent search queries
+// ---------------------------------------------------------------------------
+
+export async function getRecentSearches(
+  client: TypedClient,
+  userId: string,
+  limit: number = 10
+) {
+  const { data, error } = await client
+    .from('recent_searches')
+    .select('id, query, searched_at')
+    .eq('user_id', userId)
+    .order('searched_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    return { data: [], error }
+  }
+
+  return { data: data ?? [], error: null }
+}
+
+// ---------------------------------------------------------------------------
+// saveRecentSearch — upsert a search query, enforce FIFO cap at 10
+// Deduplicates: if same query exists, updates searched_at.
+// Then prunes oldest entries beyond the cap.
+// ---------------------------------------------------------------------------
+
+const RECENT_SEARCHES_CAP = 10
+
+export async function saveRecentSearch(
+  client: TypedClient,
+  userId: string,
+  query: string
+) {
+  // Upsert: insert or update searched_at on conflict
+  const { error: upsertError } = await client
+    .from('recent_searches')
+    .upsert(
+      { user_id: userId, query, searched_at: new Date().toISOString() },
+      { onConflict: 'user_id,query' }
+    )
+
+  if (upsertError) {
+    return { error: upsertError }
+  }
+
+  // Prune: keep only the N most recent searches
+  const { data: allSearches, error: fetchError } = await client
+    .from('recent_searches')
+    .select('id')
+    .eq('user_id', userId)
+    .order('searched_at', { ascending: false })
+
+  if (fetchError || !allSearches) {
+    return { error: fetchError }
+  }
+
+  if (allSearches.length > RECENT_SEARCHES_CAP) {
+    const idsToDelete = allSearches
+      .slice(RECENT_SEARCHES_CAP)
+      .map((row) => row.id)
+
+    const { error: deleteError } = await client
+      .from('recent_searches')
+      .delete()
+      .in('id', idsToDelete)
+
+    if (deleteError) {
+      return { error: deleteError }
+    }
+  }
+
+  return { error: null }
+}
+
+// ---------------------------------------------------------------------------
+// deleteRecentSearch — remove a single recent search entry
+// ---------------------------------------------------------------------------
+
+export async function deleteRecentSearch(
+  client: TypedClient,
+  userId: string,
+  searchId: string
+) {
+  return client
+    .from('recent_searches')
+    .delete()
+    .eq('id', searchId)
+    .eq('user_id', userId)
+}
+
+// ---------------------------------------------------------------------------
+// clearRecentSearches — remove all recent searches for a user
+// ---------------------------------------------------------------------------
+
+export async function clearRecentSearches(
+  client: TypedClient,
+  userId: string
+) {
+  return client
+    .from('recent_searches')
+    .delete()
+    .eq('user_id', userId)
+}
