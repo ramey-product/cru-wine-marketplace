@@ -4,7 +4,7 @@
 > All agents MUST read this file at the start of every task instead of hardcoding paths.
 > When the filesystem changes, update THIS file — not individual agent definitions.
 >
-> Last updated: 2026-03-07
+> Last updated: 2026-03-08
 
 ---
 
@@ -81,8 +81,8 @@
 | Work Plan README | `.claude/work-plan/README.md` | Directory structure and conventions |
 | Epic Template | `.claude/work-plan/templates/epic-template.md` | Standard format for Jira Epics |
 | Story Template | `.claude/work-plan/templates/story-template.md` | Standard format for Developer Stories |
-| Epics Directory | `.claude/work-plan/epics/` | Epic summary files with Story Index tables; each epic has a `epic-XX/` subdirectory containing individual story files |
-| Story Files | `.claude/work-plan/epics/epic-XX/story-XX-slug.md` | Individual developer story files (95 total across 9 epics). Find via Story Index table in parent epic file |
+| Epics Directory | `.claude/work-plan/epics/` | Epic summary files with Developer Stories reference tables (no inline story content) |
+| Story Files | `.claude/work-plan/stories/epic-XX/story-XX-slug.md` | Individual developer story files (95 total across 9 epics). Find via Story Index table in parent epic file |
 | Analysis Directory | `.claude/work-plan/analysis/` | Architecture review, risks, cross-cutting concerns, implementation sequence |
 
 ## Scripts
