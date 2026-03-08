@@ -358,3 +358,33 @@ export async function getDistinctOccasions(client: TypedClient) {
 
   return [...new Set(data.map((d) => d.occasion_name))]
 }
+
+// ---------------------------------------------------------------------------
+// Write operations — platform org admin only (enforced at Server Action layer)
+// ---------------------------------------------------------------------------
+
+import type { CreateWineInput, UpdateWineInput } from '@/lib/validations/wines'
+
+export async function createWine(
+  client: TypedClient,
+  data: CreateWineInput
+) {
+  return client
+    .from('wines')
+    .insert(data)
+    .select(WINE_SELECT)
+    .single()
+}
+
+export async function updateWine(
+  client: TypedClient,
+  id: string,
+  data: UpdateWineInput
+) {
+  return client
+    .from('wines')
+    .update(data)
+    .eq('id', id)
+    .select(WINE_SELECT)
+    .single()
+}

@@ -177,3 +177,96 @@ export async function getDistinctProducerCountries(client: TypedClient) {
 
   return [...new Set(data.map((d) => d.country).filter(Boolean))]
 }
+
+// ---------------------------------------------------------------------------
+// Write operations — platform org admin only (enforced at Server Action layer)
+// ---------------------------------------------------------------------------
+
+import type { CreateProducerInput, UpdateProducerInput } from '@/lib/validations/producers'
+
+export async function createProducer(
+  client: TypedClient,
+  data: CreateProducerInput
+) {
+  return client
+    .from('producers')
+    .insert(data)
+    .select(PRODUCER_WITH_PHOTOS_SELECT)
+    .single()
+}
+
+export async function updateProducer(
+  client: TypedClient,
+  id: string,
+  data: UpdateProducerInput
+) {
+  return client
+    .from('producers')
+    .update(data)
+    .eq('id', id)
+    .select(PRODUCER_WITH_PHOTOS_SELECT)
+    .single()
+}
+
+// ---------------------------------------------------------------------------
+// Producer photos — write operations
+// ---------------------------------------------------------------------------
+
+export async function addProducerPhoto(
+  client: TypedClient,
+  data: {
+    org_id: string
+    producer_id: string
+    image_url: string
+    caption?: string
+    display_order?: number
+  }
+) {
+  return client
+    .from('producer_photos')
+    .insert({
+      org_id: data.org_id,
+      producer_id: data.producer_id,
+      image_url: data.image_url,
+      caption: data.caption ?? null,
+      display_order: data.display_order ?? 0,
+    })
+    .select('id, image_url, caption, display_order')
+    .single()
+}
+
+export async function deleteProducerPhoto(
+  client: TypedClient,
+  photoId: string
+) {
+  return client
+    .from('producer_photos')
+    .delete()
+    .eq('id', photoId)
+}
+
+export async function reorderProducerPhotos(
+  client: TypedClient,
+  producerId: string,
+  orderedIds: string[]
+) {
+  // Update display_order for each photo in a single transaction-like batch.
+  // Supabase JS doesn't support real transactions, so we update sequentially.
+  const errors: unknown[] = []
+
+  for (let i = 0; i < orderedIds.length; i++) {
+    const { error } = await client
+      .from('producer_photos')
+      .update({ display_order: i })
+      .eq('id', orderedIds[i])
+      .eq('producer_id', producerId)
+
+    if (error) errors.push(error)
+  }
+
+  if (errors.length > 0) {
+    return { error: errors[0] }
+  }
+
+  return { error: null }
+}
