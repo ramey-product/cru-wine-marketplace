@@ -13,33 +13,17 @@ work-plan/
 │   ├── technical-risks.md             ← Risks, open questions, assumptions
 │   └── implementation-sequence.md     ← Suggested epic ordering with rationale
 ├── epics/
-│   ├── epic-01-user-accounts.md       ← Epic summary + Story Index table
-│   ├── epic-01/                       ← Individual story files
-│   │   ├── story-01-signup-login.md
-│   │   ├── story-03-profile-management.md
-│   │   └── ...
+│   ├── epic-01-user-accounts.md       ← Epic summary + story reference table
 │   ├── epic-02-search-browse.md
+│   ├── ...
+│   └── epic-09-retailer-dashboard.md
+├── stories/
+│   ├── epic-01/                       ← Individual story files for Epic 01
+│   │   ├── story-01-profiles-preferences-tables.md
+│   │   ├── story-02-wishlists-tables.md
+│   │   └── ...
 │   ├── epic-02/
 │   │   └── ...
-│   ├── epic-03-taste-profile.md
-│   ├── epic-03/
-│   │   └── ...
-│   ├── epic-04-producer-storytelling.md
-│   ├── epic-04/
-│   │   └── ...
-│   ├── epic-05-order-placement.md
-│   ├── epic-05/
-│   │   └── ...
-│   ├── epic-06-retailer-integration.md
-│   ├── epic-06/
-│   │   └── ...
-│   ├── epic-07-curation-engine.md
-│   ├── epic-07/
-│   │   └── ...
-│   ├── epic-08-social-layer.md
-│   ├── epic-08/
-│   │   └── ...
-│   ├── epic-09-retailer-dashboard.md
 │   └── epic-09/
 │       └── ...
 └── templates/
@@ -50,8 +34,8 @@ work-plan/
 ## Conventions
 
 - Each Epic file contains the epic summary, metadata, and a **Story Index** table linking to individual story files
-- Individual story files live in `epic-XX/story-XX-slug.md` subdirectories (one file per story)
-- Stories also remain inline in the parent epic for quick scanning, but the individual files are the source of truth
+- Individual story files live in `stories/epic-XX/story-XX-slug.md` (one file per story)
+- Epic files contain only summary metadata and a story reference table — individual story files are the source of truth
 - Stories use Given/When/Then acceptance criteria
 - Story points use the Fibonacci scale: 1, 2, 3, 5, 8, 13
 - Every story includes an agent assignment recommendation
@@ -60,5 +44,5 @@ work-plan/
 ## Finding a Story
 
 1. Open the parent epic file (e.g., `epic-02-search-browse.md`)
-2. Locate the **Story Index** table near the top
-3. Follow the `File` column link to the individual story file (e.g., `epic-02/story-01-wines-table.md`)
+2. Locate the **Developer Stories** table
+3. Follow the story link to the individual story file (e.g., `../stories/epic-02/story-01-wines-table.md`)
