@@ -48,6 +48,10 @@ export async function searchWines(
     q = q.in('region', filters.regions)
   }
 
+  if (filters.sub_regions?.length) {
+    q = q.in('sub_region', filters.sub_regions)
+  }
+
   if (filters.countries?.length) {
     q = q.in('country', filters.countries)
   }
@@ -249,6 +253,7 @@ export async function saveRecentSearch(
     .select('id')
     .eq('user_id', userId)
     .order('searched_at', { ascending: false })
+    .limit(RECENT_SEARCHES_CAP + 1)
 
   if (fetchError || !allSearches) {
     return { error: fetchError }
@@ -281,11 +286,13 @@ export async function deleteRecentSearch(
   userId: string,
   searchId: string
 ) {
-  return client
+  const { error } = await client
     .from('recent_searches')
     .delete()
     .eq('id', searchId)
     .eq('user_id', userId)
+
+  return { error }
 }
 
 // ---------------------------------------------------------------------------
@@ -296,8 +303,10 @@ export async function clearRecentSearches(
   client: TypedClient,
   userId: string
 ) {
-  return client
+  const { error } = await client
     .from('recent_searches')
     .delete()
     .eq('user_id', userId)
+
+  return { error }
 }

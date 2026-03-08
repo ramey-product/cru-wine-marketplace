@@ -35,6 +35,7 @@ export async function saveSearch(query: string) {
     return { error: error.message }
   }
 
+  revalidatePath('/', 'layout')
   return { data: { success: true } }
 }
 

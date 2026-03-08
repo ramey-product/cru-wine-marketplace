@@ -37,7 +37,8 @@ export async function getTasteProfile(client: TypedClient, userId: string) {
 
 // ---------------------------------------------------------------------------
 // upsertTasteProfile — create or update the user's taste profile
-// Increments profile_version on update
+// Uses atomic upsert on user_id unique constraint.
+// profile_version auto-incremented by DB trigger (migration 000006).
 // ---------------------------------------------------------------------------
 
 export async function upsertTasteProfile(
@@ -45,45 +46,26 @@ export async function upsertTasteProfile(
   userId: string,
   input: TasteProfileInput
 ) {
-  // Check if profile already exists to handle version increment
-  const { data: existing } = await client
+  const { data, error } = await client
     .from('taste_profiles')
-    .select('id, profile_version')
-    .eq('user_id', userId)
-    .maybeSingle()
-
-  if (existing) {
-    // Update existing profile, increment version
-    const { data, error } = await client
-      .from('taste_profiles')
-      .update({
+    .upsert(
+      {
+        user_id: userId,
         flavor_affinities: input.flavor_affinities,
         flavor_aversions: input.flavor_aversions,
         drinking_contexts: input.drinking_contexts,
         adventurousness_score: input.adventurousness_score,
-        profile_version: existing.profile_version + 1,
-      })
-      .eq('id', existing.id)
-      .select()
-      .single()
-
-    return { data, error }
-  }
-
-  // Insert new profile
-  const { data, error } = await client
-    .from('taste_profiles')
-    .insert({
-      user_id: userId,
-      flavor_affinities: input.flavor_affinities,
-      flavor_aversions: input.flavor_aversions,
-      drinking_contexts: input.drinking_contexts,
-      adventurousness_score: input.adventurousness_score,
-    })
+      },
+      { onConflict: 'user_id' }
+    )
     .select()
     .single()
 
-  return { data, error }
+  if (error) {
+    return { data: null, error }
+  }
+
+  return { data, error: null }
 }
 
 // ---------------------------------------------------------------------------
@@ -126,7 +108,11 @@ export async function addTasteProfileWine(
     .select()
     .single()
 
-  return { data, error }
+  if (error) {
+    return { data: null, error }
+  }
+
+  return { data, error: null }
 }
 
 // ---------------------------------------------------------------------------
@@ -138,9 +124,11 @@ export async function removeTasteProfileWine(
   userId: string,
   wineId: string
 ) {
-  return client
+  const { error } = await client
     .from('taste_profile_wines')
     .delete()
     .eq('user_id', userId)
     .eq('wine_id', wineId)
+
+  return { error }
 }
