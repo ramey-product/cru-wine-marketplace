@@ -54,7 +54,7 @@ export async function createWineAction(
     return { error: 'Failed to create wine' }
   }
 
-  revalidatePath('/wines')
+  revalidatePath('/(app)/[orgSlug]/wines', 'page')
   return { data }
 }
 
@@ -96,15 +96,15 @@ export async function updateWineAction(
     return { error: 'Unauthorized' }
   }
 
-  const { data, error } = await updateWine(supabase, wineId, parsed.data)
+  const { data, error } = await updateWine(supabase, wineId, orgId, parsed.data)
   if (error) {
     console.error('updateWineAction failed:', error)
     return { error: 'Failed to update wine' }
   }
 
-  revalidatePath('/wines')
+  revalidatePath('/(app)/[orgSlug]/wines', 'page')
   if (data?.slug) {
-    revalidatePath(`/wines/${data.slug}`)
+    revalidatePath(`/(app)/[orgSlug]/wines/${data.slug}`, 'page')
   }
   return { data }
 }

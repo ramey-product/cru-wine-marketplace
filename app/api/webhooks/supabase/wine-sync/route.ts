@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { timingSafeEqual } from 'crypto'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { syncWineToMedusa, type WineWebhookRow } from '@/lib/medusa/sync'
 
@@ -21,14 +22,25 @@ interface SupabaseWebhookPayload {
 function verifyWebhookSecret(req: NextRequest): boolean {
   const secret = process.env.SUPABASE_WEBHOOK_SECRET
   if (!secret) {
-    // If no secret is configured, skip verification (dev mode).
-    // In production, always set SUPABASE_WEBHOOK_SECRET.
-    console.warn('SUPABASE_WEBHOOK_SECRET not set — skipping signature verification')
-    return true
+    // Fail closed: reject requests when secret is not configured.
+    // In local development, set SUPABASE_WEBHOOK_SECRET in .env.local.
+    console.error('SUPABASE_WEBHOOK_SECRET not set — rejecting webhook request')
+    return false
   }
 
   const headerSecret = req.headers.get('x-webhook-secret')
-  return headerSecret === secret
+  if (!headerSecret) {
+    return false
+  }
+
+  // Timing-safe comparison to prevent timing attacks
+  try {
+    const a = Buffer.from(secret, 'utf-8')
+    const b = Buffer.from(headerSecret, 'utf-8')
+    return a.length === b.length && timingSafeEqual(a, b)
+  } catch {
+    return false
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -68,6 +80,8 @@ export async function POST(req: NextRequest) {
     // 5. Store medusa_product_id back on the wine row if it was just created
     if (result.action === 'created') {
       const supabase = createAdminClient()
+      // TODO: Remove `as never` once Supabase types are regenerated with
+      // the medusa_product_id column included in the Database type.
       const { error: updateError } = await supabase
         .from('wines')
         .update({ medusa_product_id: result.medusa_product_id } as never)
@@ -89,9 +103,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Wine sync to Medusa failed:', error)
 
-    // Return 500 so Supabase can retry the webhook delivery
+    // Return 500 so Supabase can retry the webhook delivery.
+    // Don't leak internal error details to the caller.
     return NextResponse.json(
-      { error: 'Medusa sync failed', detail: String(error) },
+      { error: 'Medusa sync failed' },
       { status: 500 }
     )
   }

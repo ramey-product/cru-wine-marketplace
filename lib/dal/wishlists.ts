@@ -1,18 +1,22 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
-import { WINE_SELECT } from '@/lib/dal/wines'
-
 type TypedClient = SupabaseClient<Database>
 
 // ---------------------------------------------------------------------------
 // Select for wishlist items with joined wine + producer data
+// PostgREST does not support nested !inner hints, so the inner join is only
+// on wines (ensures the wine exists) while the producer sub-select uses a
+// regular join (every wine has a producer via FK, so this is equivalent).
 // ---------------------------------------------------------------------------
 
 const WISHLIST_ITEM_SELECT = `
   id,
   notes,
   added_at,
-  wine:wines!inner(${WINE_SELECT.trim()})
+  wine:wines!inner(
+    *,
+    producer:producers(id, name, slug, region, country, hero_image_url)
+  )
 ` as const
 
 // ---------------------------------------------------------------------------

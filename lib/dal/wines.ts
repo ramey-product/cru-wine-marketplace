@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
-import type { WineFilters, Pagination } from '@/lib/validations/wines'
+import type { WineFilters, Pagination, CreateWineInput, UpdateWineInput } from '@/lib/validations/wines'
 
 type TypedClient = SupabaseClient<Database>
 
@@ -363,8 +363,6 @@ export async function getDistinctOccasions(client: TypedClient) {
 // Write operations — platform org admin only (enforced at Server Action layer)
 // ---------------------------------------------------------------------------
 
-import type { CreateWineInput, UpdateWineInput } from '@/lib/validations/wines'
-
 export async function createWine(
   client: TypedClient,
   data: CreateWineInput
@@ -379,12 +377,14 @@ export async function createWine(
 export async function updateWine(
   client: TypedClient,
   id: string,
+  orgId: string,
   data: UpdateWineInput
 ) {
   return client
     .from('wines')
     .update(data)
     .eq('id', id)
+    .eq('org_id', orgId)
     .select(WINE_SELECT)
     .single()
 }

@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 import type { Pagination } from '@/lib/validations/wines'
 import type { PaginatedResult } from '@/lib/dal/wines'
+import type { CreateProducerInput, UpdateProducerInput } from '@/lib/validations/producers'
 
 type TypedClient = SupabaseClient<Database>
 
@@ -182,8 +183,6 @@ export async function getDistinctProducerCountries(client: TypedClient) {
 // Write operations — platform org admin only (enforced at Server Action layer)
 // ---------------------------------------------------------------------------
 
-import type { CreateProducerInput, UpdateProducerInput } from '@/lib/validations/producers'
-
 export async function createProducer(
   client: TypedClient,
   data: CreateProducerInput
@@ -198,12 +197,14 @@ export async function createProducer(
 export async function updateProducer(
   client: TypedClient,
   id: string,
+  orgId: string,
   data: UpdateProducerInput
 ) {
   return client
     .from('producers')
     .update(data)
     .eq('id', id)
+    .eq('org_id', orgId)
     .select(PRODUCER_WITH_PHOTOS_SELECT)
     .single()
 }
@@ -237,12 +238,14 @@ export async function addProducerPhoto(
 
 export async function deleteProducerPhoto(
   client: TypedClient,
-  photoId: string
+  photoId: string,
+  orgId: string
 ) {
   return client
     .from('producer_photos')
     .delete()
     .eq('id', photoId)
+    .eq('org_id', orgId)
 }
 
 export async function reorderProducerPhotos(

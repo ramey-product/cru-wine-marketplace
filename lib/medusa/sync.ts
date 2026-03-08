@@ -93,8 +93,9 @@ async function medusaFetch(
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'x-medusa-access-token': apiKey,
       ...options.headers,
+      // API key last so callers cannot override it
+      'x-medusa-access-token': apiKey,
     },
   })
 }

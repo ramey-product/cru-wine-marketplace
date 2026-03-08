@@ -63,7 +63,7 @@ export async function createProducerAction(
     return { error: 'Failed to create producer' }
   }
 
-  revalidatePath('/producers')
+  revalidatePath('/(app)/[orgSlug]/producers', 'page')
   return { data }
 }
 
@@ -108,6 +108,7 @@ export async function updateProducerAction(
   const { data, error } = await updateProducer(
     supabase,
     producerId,
+    orgId,
     parsed.data
   )
   if (error) {
@@ -115,9 +116,9 @@ export async function updateProducerAction(
     return { error: 'Failed to update producer' }
   }
 
-  revalidatePath('/producers')
+  revalidatePath('/(app)/[orgSlug]/producers', 'page')
   if (data?.slug) {
-    revalidatePath(`/producers/${data.slug}`)
+    revalidatePath(`/(app)/[orgSlug]/producers/${data.slug}`, 'page')
   }
   return { data }
 }
@@ -166,7 +167,7 @@ export async function addProducerPhotoAction(
     return { error: 'Failed to add photo' }
   }
 
-  revalidatePath('/producers')
+  revalidatePath('/(app)/[orgSlug]/producers', 'page')
   return { data }
 }
 
@@ -202,13 +203,13 @@ export async function deleteProducerPhotoAction(
     return { error: 'Unauthorized' }
   }
 
-  const { error } = await deleteProducerPhoto(supabase, photoId)
+  const { error } = await deleteProducerPhoto(supabase, photoId, orgId)
   if (error) {
     console.error('deleteProducerPhotoAction failed:', error)
     return { error: 'Failed to delete photo' }
   }
 
-  revalidatePath('/producers')
+  revalidatePath('/(app)/[orgSlug]/producers', 'page')
   return { data: { success: true } }
 }
 
@@ -258,6 +259,6 @@ export async function reorderProducerPhotosAction(
     return { error: 'Failed to reorder photos' }
   }
 
-  revalidatePath('/producers')
+  revalidatePath('/(app)/[orgSlug]/producers', 'page')
   return { data: { success: true } }
 }

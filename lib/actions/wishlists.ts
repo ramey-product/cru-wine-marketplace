@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import {
   addToWishlist,
@@ -159,6 +160,11 @@ export async function fetchWishlistItems(
 // ---------------------------------------------------------------------------
 
 export async function checkWineInWishlist(wineId: string) {
+  const idParsed = z.string().uuid().safeParse(wineId)
+  if (!idParsed.success) {
+    return { data: false }
+  }
+
   const supabase = await createClient()
 
   const {
