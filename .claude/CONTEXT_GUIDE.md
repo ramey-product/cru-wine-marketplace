@@ -53,7 +53,7 @@
 
 | Category | Documents | When to Load |
 |----------|-----------|-------------|
-| **Required** | The specific epic/story being implemented | One at a time |
+| **Required** | The specific epic/story being implemented (see note below) | One at a time |
 | **Required** | `.claude/rules/supabase-migrations.md` | For any migration work |
 | **Required** | `.claude/rules/server-actions.md` | For any DAL/action work |
 | **As-needed** | `docs/architecture/SYSTEM_ARCHITECTURE.md` | Schema reference (specific sections only) |
@@ -61,11 +61,13 @@
 | **As-needed** | `.claude/rules/testing.md` | When writing tests |
 | **Skip** | All PRDs (already decomposed), product docs, competitive research |
 
+> **Finding a story file:** Open the parent epic (e.g., `epic-02-search-browse.md`) → find the Story Index table → follow the `File` link to the individual story file (e.g., `epic-02/story-01-wines-table.md`). Load only the specific story file you need, not the entire epic.
+
 ### Phase 4: Frontend Implementation (Checkpoint 4)
 
 | Category | Documents | When to Load |
 |----------|-----------|-------------|
-| **Required** | The specific epic/story being implemented | One at a time |
+| **Required** | The specific epic/story being implemented (see Phase 3 note on finding story files) | One at a time |
 | **Required** | `.claude/rules/components.md` | For any component work |
 | **As-needed** | `.claude/agents/ux-designer.md` | When delegating UX work |
 | **As-needed** | `.claude/agents/marketing-writer.md` | When delegating copy work |
@@ -105,7 +107,7 @@ When spawning a subagent, include **only** what that agent needs:
 
 ### Between Sessions
 - Write key decisions and findings to `.claude/agent-log.md`
-- Completed work plans persist in `.claude/work-plan/epics/`
+- Completed work plans persist in `.claude/work-plan/epics/` (parent epic files with Story Index tables, individual story files in `epic-XX/` subdirectories)
 - Use auto-memory (`~/.claude/projects/.../memory/`) for cross-session patterns
 
 ### Within Long Sessions
