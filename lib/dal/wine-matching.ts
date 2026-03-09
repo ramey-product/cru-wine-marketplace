@@ -249,11 +249,13 @@ export async function createMatchQueueItem(
 /**
  * Batch insert multiple match queue entries. Typically used during a CSV
  * import or POS sync to queue all unmatched wines at once.
+ *
+ * @param orgId - Top-level org_id enforced on all items to prevent mixed-org batches
  */
 export async function bulkCreateMatchQueueItems(
   client: TypedClient,
+  orgId: string,
   items: Array<{
-    org_id: string
     retailer_id: string
     raw_wine_name: string
     raw_producer?: string
@@ -269,7 +271,7 @@ export async function bulkCreateMatchQueueItems(
   }>
 ) {
   const rows = items.map((item) => ({
-    org_id: item.org_id,
+    org_id: orgId,
     retailer_id: item.retailer_id,
     raw_wine_name: item.raw_wine_name,
     raw_producer: item.raw_producer ?? null,
@@ -348,4 +350,69 @@ export async function getMatchQueueStats(
     total: Object.values(counts).reduce((sum, c) => sum + c, 0),
     error: null,
   }
+}
+
+// ---------------------------------------------------------------------------
+// getPendingMatchQueueEntries — batch fetch pending entries for processing
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch pending match queue entries for batch processing.
+ * Returns a lightweight select (no joined wine data) ordered oldest-first.
+ */
+export async function getPendingMatchQueueEntries(
+  client: TypedClient,
+  orgId: string,
+  limit: number = 100
+) {
+  const { data, error } = await client
+    .from('wine_match_queue')
+    .select(MATCH_QUEUE_SELECT)
+    .eq('org_id', orgId)
+    .eq('match_status', 'pending')
+    .order('created_at', { ascending: true })
+    .limit(limit)
+
+  if (error) {
+    console.error('getPendingMatchQueueEntries failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: data ?? [], error: null }
+}
+
+// ---------------------------------------------------------------------------
+// matchWineCandidates — DAL wrapper for match_wine_candidates RPC
+// ---------------------------------------------------------------------------
+
+/**
+ * Call the `match_wine_candidates` PostgreSQL RPC function for trigram-based
+ * fuzzy matching. Returns ranked wine candidates with similarity scores.
+ */
+export async function matchWineCandidates(
+  client: TypedClient,
+  params: {
+    searchName: string
+    searchProducer: string | null
+    searchVintage: number | null
+    searchVarietal: string | null
+    orgId: string
+    limit?: number
+  }
+) {
+  const { data, error } = await client.rpc('match_wine_candidates', {
+    p_search_name: params.searchName,
+    p_search_producer: params.searchProducer,
+    p_search_vintage: params.searchVintage,
+    p_search_varietal: params.searchVarietal,
+    p_org_id: params.orgId,
+    p_limit: params.limit ?? 5,
+  })
+
+  if (error) {
+    console.error('matchWineCandidates RPC failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: data ?? [], error: null }
 }

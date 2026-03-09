@@ -16,7 +16,7 @@ import type { TypedClient } from '@/lib/dal/types'
 import { normalizeWineName, normalizeForComparison } from '@/lib/utils/wine-name-normalizer'
 import { classifyMatchScore } from '@/lib/utils/string-similarity'
 import { upsertInventoryItem } from '@/lib/dal/inventory'
-import { resolveMatch } from '@/lib/dal/wine-matching'
+import { resolveMatch, matchWineCandidates, getPendingMatchQueueEntries } from '@/lib/dal/wine-matching'
 import type {
   MatchProcessingResult,
   SingleMatchResult,
@@ -99,16 +99,16 @@ export async function matchWineEntry(
     ? normalizeForComparison(entry.raw_varietal)
     : normalized.varietal ?? null
 
-  // 2. Call the RPC function for trigram-based fuzzy search
-  const { data: candidates, error: rpcError } = await client.rpc(
-    'match_wine_candidates',
+  // 2. Call trigram-based fuzzy search via DAL
+  const { data: candidates, error: rpcError } = await matchWineCandidates(
+    client,
     {
-      p_search_name: searchName,
-      p_search_producer: searchProducer,
-      p_search_vintage: searchVintage,
-      p_search_varietal: searchVarietal,
-      p_org_id: orgId,
-      p_limit: 5,
+      searchName,
+      searchProducer,
+      searchVintage,
+      searchVarietal,
+      orgId,
+      limit: 5,
     }
   )
 
@@ -163,8 +163,7 @@ export async function matchWineEntry(
     // Create/upsert inventory record
     let inventoryCreated = false
     if (entry.raw_price != null || entry.raw_quantity != null) {
-      const { error: inventoryError } = await upsertInventoryItem(client, {
-        org_id: orgId,
+      const { error: inventoryError } = await upsertInventoryItem(client, orgId, {
         retailer_id: entry.retailer_id,
         wine_id: best.wine_id,
         sku: entry.raw_sku ?? undefined,
@@ -253,16 +252,12 @@ export async function processMatchQueue(
 ): Promise<MatchProcessingResult> {
   const batchSize = options.batchSize ?? 100
 
-  // Fetch pending entries for this org
-  const { data: entries, error: fetchError } = await client
-    .from('wine_match_queue')
-    .select(
-      'id, org_id, retailer_id, raw_wine_name, raw_producer, raw_vintage, raw_varietal, raw_sku, raw_price, raw_quantity'
-    )
-    .eq('org_id', orgId)
-    .eq('match_status', 'pending')
-    .order('created_at', { ascending: true })
-    .limit(batchSize)
+  // Fetch pending entries for this org via DAL
+  const { data: entries, error: fetchError } = await getPendingMatchQueueEntries(
+    client,
+    orgId,
+    batchSize
+  )
 
   if (fetchError) {
     console.error('processMatchQueue: failed to fetch pending entries:', fetchError)

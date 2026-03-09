@@ -89,6 +89,10 @@ const INVENTORY_SELECT = `
 /**
  * Find retailers that have a specific wine in stock.
  *
+ * NOTE: Intentionally cross-org — this is a consumer-facing query that shows
+ * all active retailers carrying a wine, regardless of organization. Consumers
+ * browse across orgs to find purchase options. No org_id filter applied.
+ *
  * TODO: Once the `get_retailers_nearby` PostGIS RPC function exists, add
  * distance filtering and sorting by proximity. Currently returns all active
  * retailers with this wine in stock (no geographic filtering).
@@ -151,6 +155,7 @@ export async function getAvailabilityForWine(
  */
 export async function getRetailerInventory(
   client: TypedClient,
+  orgId: string,
   retailerId: string,
   filters: InventoryFilters = {},
   pagination: Pagination = { page: 1, per_page: 24 }
@@ -162,6 +167,7 @@ export async function getRetailerInventory(
   let query = client
     .from('retailer_inventory')
     .select(INVENTORY_WITH_WINE_SELECT, { count: 'exact' })
+    .eq('org_id', orgId)
     .eq('retailer_id', retailerId)
 
   if (filters.stock_status) {
@@ -173,7 +179,7 @@ export async function getRetailerInventory(
   }
 
   if (filters.query) {
-    query = query.ilike('wines.name', `%${filters.query}%`)
+    query = query.ilike('wine.name', `%${filters.query}%`)
   }
 
   const { data, count, error } = await query
@@ -203,6 +209,7 @@ export async function getRetailerInventory(
  */
 export async function upsertInventoryItem(
   client: TypedClient,
+  orgId: string,
   input: UpsertInventoryItemInput
 ) {
   const { data, error } = await client
@@ -210,6 +217,7 @@ export async function upsertInventoryItem(
     .upsert(
       {
         ...input,
+        org_id: orgId,
         last_synced_at: new Date().toISOString(),
       },
       { onConflict: 'retailer_id,wine_id' }

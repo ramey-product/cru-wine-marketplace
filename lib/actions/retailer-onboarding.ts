@@ -113,7 +113,8 @@ export async function submitOnboardingAction(
 
   const data = parsed.data
 
-  // 2. Auth check
+  // 2. Auth check (authentication only — no org permission check needed because
+  //    onboarding creates a brand-new org; the user becomes its first owner)
   const supabase = await createClient()
   const {
     data: { user },
@@ -126,6 +127,17 @@ export async function submitOnboardingAction(
   // 3. Generate slugs
   const orgSlug = slugify(data.store_name)
   const retailerSlug = slugify(data.store_name)
+
+  // -----------------------------------------------------------------------
+  // Steps 4–6: Bootstrap direct DB access (intentional exception)
+  //
+  // Onboarding creates a brand-new org + first membership. There is no
+  // existing org context to scope DAL functions against, so we query
+  // the organizations and memberships tables directly. The admin client
+  // (service-role) is used for the first membership insert because the
+  // memberships INSERT RLS policy requires the user to already be an
+  // admin/owner — impossible for the very first membership.
+  // -----------------------------------------------------------------------
 
   // 4. Check slug uniqueness for organization
   const { data: existingOrg } = await supabase
@@ -203,7 +215,6 @@ export async function submitOnboardingAction(
   let csvItemsQueued = 0
   if (data.csv_items && data.csv_items.length > 0) {
     const queueItems = data.csv_items.map((item) => ({
-      org_id: org.id,
       retailer_id: retailer.id,
       raw_wine_name: item.raw_wine_name,
       raw_producer: item.raw_producer,
@@ -212,11 +223,12 @@ export async function submitOnboardingAction(
       raw_sku: item.raw_sku,
       raw_price: item.raw_price,
       raw_quantity: item.raw_quantity,
-      match_status: 'pending',
+      match_status: 'pending' as const,
     }))
 
     const { count, error: queueError } = await bulkCreateMatchQueueItems(
       supabase,
+      org.id,
       queueItems
     )
 
@@ -226,13 +238,13 @@ export async function submitOnboardingAction(
         queueError
       )
     } else {
-      csvItemsQueued = count
+      csvItemsQueued = count ?? 0
     }
   }
 
   // 9. Revalidate paths
-  revalidatePath('/(app)/[orgSlug]', 'layout')
-  revalidatePath('/(app)/[orgSlug]/retailers', 'page')
+  revalidatePath(`/(app)/${org.slug}`, 'layout')
+  revalidatePath(`/(app)/${org.slug}/retailers`, 'page')
 
   // 10. Return result
   return {

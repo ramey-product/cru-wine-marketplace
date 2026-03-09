@@ -14,6 +14,41 @@ export const SyncSourceEnum = z.enum(['csv', 'pos_api', 'manual'])
 export type SyncSource = z.infer<typeof SyncSourceEnum>
 
 // ---------------------------------------------------------------------------
+// Sync log enums (aligned with retailer_sync_logs CHECK constraints)
+// ---------------------------------------------------------------------------
+
+/** sync_source values for retailer_sync_logs (POS providers + csv) */
+export const SyncLogSourceEnum = z.enum([
+  'square',
+  'lightspeed',
+  'shopify',
+  'clover',
+  'csv',
+])
+export type SyncLogSource = z.infer<typeof SyncLogSourceEnum>
+
+/** sync_type values for retailer_sync_logs */
+export const SyncTypeEnum = z.enum([
+  'csv_import',
+  'pos_full',
+  'pos_incremental',
+  'manual',
+  'webhook_event',
+  'staleness_check',
+])
+export type SyncType = z.infer<typeof SyncTypeEnum>
+
+/** status values for retailer_sync_logs */
+export const SyncLogStatusEnum = z.enum([
+  'started',
+  'completed',
+  'failed',
+  'partial',
+  'pending',
+])
+export type SyncLogStatus = z.infer<typeof SyncLogStatusEnum>
+
+// ---------------------------------------------------------------------------
 // Inventory mutation schemas
 // ---------------------------------------------------------------------------
 
