@@ -374,3 +374,30 @@ export async function updateWine(
     .select(WINE_SELECT)
     .single()
 }
+
+// ---------------------------------------------------------------------------
+// searchWinesForMatch — fuzzy wine search via match_wine_candidates RPC
+// ---------------------------------------------------------------------------
+
+export async function searchWinesForMatch(
+  client: TypedClient,
+  query: string,
+  orgId?: string,
+  limit: number = 10
+) {
+  const { data, error } = await client.rpc('match_wine_candidates', {
+    p_search_name: query,
+    p_search_producer: null,
+    p_search_vintage: null,
+    p_search_varietal: null,
+    p_org_id: orgId ?? null,
+    p_limit: limit,
+  })
+
+  if (error) {
+    console.error('searchWinesForMatch RPC failed:', error)
+    return { data: [], error }
+  }
+
+  return { data: data ?? [], error: null }
+}
