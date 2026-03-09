@@ -85,7 +85,7 @@ export async function importCsvAction(input: {
     validRows.length === 0
       ? 'failed'
       : errors.length > 0
-        ? 'completed_with_errors'
+        ? 'partial'
         : 'completed'
 
   // 7. Create sync log entry
@@ -94,7 +94,7 @@ export async function importCsvAction(input: {
     .insert({
       org_id,
       retailer_id,
-      sync_type: 'full',
+      sync_type: 'csv_import',
       sync_source: 'csv',
       status: syncLogStatus,
       records_processed: totalRows,

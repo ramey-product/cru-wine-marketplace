@@ -124,7 +124,7 @@ export async function getAvailabilityForWine(
     .select(INVENTORY_WITH_RETAILER_SELECT, { count: 'exact' })
     .eq('wine_id', wineId)
     .neq('stock_status', 'out_of_stock')
-    .eq('retailers.is_active', true)
+    .eq('retailer.is_active', true)
     .order('price', { ascending: true })
     .range(from, to)
 
@@ -286,6 +286,7 @@ export async function bulkUpsertInventory(
  */
 export async function updateStockStatus(
   client: TypedClient,
+  orgId: string,
   inventoryId: string,
   status: StockStatus
 ) {
@@ -296,6 +297,7 @@ export async function updateStockStatus(
       last_synced_at: new Date().toISOString(),
     })
     .eq('id', inventoryId)
+    .eq('org_id', orgId)
     .select(INVENTORY_SELECT)
     .single()
 
@@ -319,6 +321,7 @@ export async function updateStockStatus(
  */
 export async function getStaleInventory(
   client: TypedClient,
+  orgId: string,
   hoursThreshold: number,
   pagination: Pagination = { page: 1, per_page: 50 }
 ): Promise<PaginatedResult<unknown>> {
@@ -333,6 +336,7 @@ export async function getStaleInventory(
   const { data, count, error } = await client
     .from('retailer_inventory')
     .select(INVENTORY_WITH_WINE_SELECT, { count: 'exact' })
+    .eq('org_id', orgId)
     .lt('last_synced_at', cutoff)
     .neq('stock_status', 'out_of_stock')
     .order('last_synced_at', { ascending: true })

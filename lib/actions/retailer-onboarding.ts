@@ -38,7 +38,7 @@ const OnboardingInputSchema = z.object({
   store_name: z.string().min(1, 'Store name is required').max(255),
   address: z.string().min(1, 'Address is required').max(500),
   city: z.string().min(1, 'City is required').max(200),
-  state: z.string().length(2, 'State must be 2-letter abbreviation').default('CA'),
+  state: z.string().length(2, 'State must be 2-letter code').regex(/^[A-Z]{2}$/, 'State must be uppercase letters').default('CA'),
   zip: z
     .string()
     .min(5, 'ZIP code is required')

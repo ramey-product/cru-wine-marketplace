@@ -16,6 +16,7 @@ import type { TypedClient } from '@/lib/dal/types'
 import { normalizeWineName, normalizeForComparison } from '@/lib/utils/wine-name-normalizer'
 import { classifyMatchScore } from '@/lib/utils/string-similarity'
 import { upsertInventoryItem } from '@/lib/dal/inventory'
+import { resolveMatch } from '@/lib/dal/wine-matching'
 import type {
   MatchProcessingResult,
   SingleMatchResult,
@@ -140,16 +141,13 @@ export async function matchWineEntry(
   // 5. Update the queue entry based on match classification
   if (matchStatus === 'auto_matched') {
     // Auto-match: update queue entry AND create inventory record
-    // Note: We do NOT set reviewed_by for system-generated matches because
-    // the column is a FK to auth.users(id) and there is no "system" user row.
-    const { error: resolveError } = await client
-      .from('wine_match_queue')
-      .update({
-        match_status: 'auto_matched',
-        matched_wine_id: best.wine_id,
-        match_confidence: score,
-      })
-      .eq('id', entry.id)
+    // Uses DAL resolveMatch which includes org_id scoping and handles
+    // reviewed_by conditionally (omitted here for system-generated matches).
+    const { error: resolveError } = await resolveMatch(client, orgId, entry.id, {
+      match_status: 'auto_matched',
+      matched_wine_id: best.wine_id,
+      match_confidence: score,
+    })
 
     if (resolveError) {
       console.error(
@@ -197,16 +195,14 @@ export async function matchWineEntry(
   }
 
   if (matchStatus === 'pending') {
-    // Pending review: update queue entry with suggested match but keep as pending
-    // Note: We do NOT set reviewed_by — this is a system-suggested match awaiting human review.
-    const { error: resolveError } = await client
-      .from('wine_match_queue')
-      .update({
-        match_status: 'pending',
-        matched_wine_id: best.wine_id,
-        match_confidence: score,
-      })
-      .eq('id', entry.id)
+    // Pending review: update queue entry with suggested match but keep as pending.
+    // Uses DAL resolveMatch which includes org_id scoping. reviewed_by omitted
+    // since this is a system-suggested match awaiting human review.
+    const { error: resolveError } = await resolveMatch(client, orgId, entry.id, {
+      match_status: 'pending',
+      matched_wine_id: best.wine_id,
+      match_confidence: score,
+    })
 
     if (resolveError) {
       console.error(

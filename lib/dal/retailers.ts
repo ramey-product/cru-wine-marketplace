@@ -251,6 +251,7 @@ export async function createRetailer(
  */
 export async function updateRetailer(
   client: TypedClient,
+  orgId: string,
   retailerId: string,
   input: UpdateRetailerInput
 ) {
@@ -266,6 +267,7 @@ export async function updateRetailer(
     .from('retailers')
     .update(updatePayload)
     .eq('id', retailerId)
+    .eq('org_id', orgId)
     .select(RETAILER_SELECT)
     .single()
 
