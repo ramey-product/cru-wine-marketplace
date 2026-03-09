@@ -86,6 +86,7 @@ export interface MatchQueueFilters {
  */
 export async function getMatchQueue(
   client: TypedClient,
+  orgId: string,
   filters: MatchQueueFilters = {},
   pagination: Pagination = { page: 1, per_page: 24 }
 ): Promise<PaginatedResult<unknown>> {
@@ -96,6 +97,7 @@ export async function getMatchQueue(
   let query = client
     .from('wine_match_queue')
     .select(MATCH_QUEUE_WITH_WINE_SELECT, { count: 'exact' })
+    .eq('org_id', orgId)
 
   if (filters.match_status) {
     query = query.eq('match_status', filters.match_status)
@@ -110,10 +112,13 @@ export async function getMatchQueue(
   }
 
   if (filters.query) {
-    // Search across raw wine name and raw producer
-    query = query.or(
-      `raw_wine_name.ilike.%${filters.query}%,raw_producer.ilike.%${filters.query}%`
-    )
+    // Sanitize query for PostgREST filter string (escape special chars: . , ( ) ")
+    const sanitized = filters.query.replace(/[.,()"%\\]/g, '')
+    if (sanitized.length > 0) {
+      query = query.or(
+        `raw_wine_name.ilike.%${sanitized}%,raw_producer.ilike.%${sanitized}%`
+      )
+    }
   }
 
   const { data, count, error } = await query
@@ -146,24 +151,32 @@ export async function getMatchQueue(
  */
 export async function resolveMatch(
   client: TypedClient,
+  orgId: string,
   queueId: string,
   data: {
     match_status: string
     matched_wine_id?: string | null
     match_confidence?: number | null
-    reviewed_by: string
+    reviewed_by?: string | null
   }
 ) {
+  const updatePayload: Record<string, unknown> = {
+    match_status: data.match_status,
+    matched_wine_id: data.matched_wine_id ?? null,
+    match_confidence: data.match_confidence ?? null,
+  }
+
+  // Only set reviewed_by/reviewed_at for human reviews, not system auto-matches
+  if (data.reviewed_by) {
+    updatePayload.reviewed_by = data.reviewed_by
+    updatePayload.reviewed_at = new Date().toISOString()
+  }
+
   const { data: result, error } = await client
     .from('wine_match_queue')
-    .update({
-      match_status: data.match_status,
-      matched_wine_id: data.matched_wine_id ?? null,
-      match_confidence: data.match_confidence ?? null,
-      reviewed_by: data.reviewed_by,
-      reviewed_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('id', queueId)
+    .eq('org_id', orgId)
     .select(MATCH_QUEUE_SELECT)
     .single()
 
@@ -236,11 +249,13 @@ export async function createMatchQueueItem(
 /**
  * Batch insert multiple match queue entries. Typically used during a CSV
  * import or POS sync to queue all unmatched wines at once.
+ *
+ * @param orgId - Top-level org_id enforced on all items to prevent mixed-org batches
  */
 export async function bulkCreateMatchQueueItems(
   client: TypedClient,
+  orgId: string,
   items: Array<{
-    org_id: string
     retailer_id: string
     raw_wine_name: string
     raw_producer?: string
@@ -256,7 +271,7 @@ export async function bulkCreateMatchQueueItems(
   }>
 ) {
   const rows = items.map((item) => ({
-    org_id: item.org_id,
+    org_id: orgId,
     retailer_id: item.retailer_id,
     raw_wine_name: item.raw_wine_name,
     raw_producer: item.raw_producer ?? null,
@@ -294,6 +309,7 @@ export async function bulkCreateMatchQueueItems(
  */
 export async function getMatchQueueStats(
   client: TypedClient,
+  orgId: string,
   retailerId: string
 ) {
   const statuses = [
@@ -312,6 +328,7 @@ export async function getMatchQueueStats(
       const { count, error } = await client
         .from('wine_match_queue')
         .select('id', { count: 'exact', head: true })
+        .eq('org_id', orgId)
         .eq('retailer_id', retailerId)
         .eq('match_status', status)
 
@@ -333,4 +350,69 @@ export async function getMatchQueueStats(
     total: Object.values(counts).reduce((sum, c) => sum + c, 0),
     error: null,
   }
+}
+
+// ---------------------------------------------------------------------------
+// getPendingMatchQueueEntries — batch fetch pending entries for processing
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch pending match queue entries for batch processing.
+ * Returns a lightweight select (no joined wine data) ordered oldest-first.
+ */
+export async function getPendingMatchQueueEntries(
+  client: TypedClient,
+  orgId: string,
+  limit: number = 100
+) {
+  const { data, error } = await client
+    .from('wine_match_queue')
+    .select(MATCH_QUEUE_SELECT)
+    .eq('org_id', orgId)
+    .eq('match_status', 'pending')
+    .order('created_at', { ascending: true })
+    .limit(limit)
+
+  if (error) {
+    console.error('getPendingMatchQueueEntries failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: data ?? [], error: null }
+}
+
+// ---------------------------------------------------------------------------
+// matchWineCandidates — DAL wrapper for match_wine_candidates RPC
+// ---------------------------------------------------------------------------
+
+/**
+ * Call the `match_wine_candidates` PostgreSQL RPC function for trigram-based
+ * fuzzy matching. Returns ranked wine candidates with similarity scores.
+ */
+export async function matchWineCandidates(
+  client: TypedClient,
+  params: {
+    searchName: string
+    searchProducer: string | null
+    searchVintage: number | null
+    searchVarietal: string | null
+    orgId: string
+    limit?: number
+  }
+) {
+  const { data, error } = await client.rpc('match_wine_candidates', {
+    p_search_name: params.searchName,
+    p_search_producer: params.searchProducer,
+    p_search_vintage: params.searchVintage,
+    p_search_varietal: params.searchVarietal,
+    p_org_id: params.orgId,
+    p_limit: params.limit ?? 5,
+  })
+
+  if (error) {
+    console.error('matchWineCandidates RPC failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: data ?? [], error: null }
 }

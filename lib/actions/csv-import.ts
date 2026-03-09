@@ -8,6 +8,7 @@ import { parseCsv } from '@/lib/csv/parser'
 import { applyColumnMapping, detectStandardColumns } from '@/lib/csv/column-mapper'
 import { validateCsvRows } from '@/lib/csv/validator'
 import { bulkCreateMatchQueueItems } from '@/lib/dal/wine-matching'
+import { createSyncLog, updateSyncLog } from '@/lib/dal/retailers'
 import type { CsvRowError } from '@/lib/csv/validator'
 
 // ---------------------------------------------------------------------------
@@ -52,6 +53,7 @@ export async function importCsvAction(input: {
     return { error: 'Not authenticated' }
   }
 
+  // TODO: M1 — migrate to hasPermission(role, 'inventory:import') when RBAC system is built
   const isAdmin = await isPlatformOrgAdmin(supabase, user.id, org_id)
   if (!isAdmin) {
     return { error: 'Unauthorized' }
@@ -85,16 +87,16 @@ export async function importCsvAction(input: {
     validRows.length === 0
       ? 'failed'
       : errors.length > 0
-        ? 'completed_with_errors'
+        ? 'partial'
         : 'completed'
 
-  // 7. Create sync log entry
-  const { data: syncLog, error: syncLogError } = await supabase
-    .from('retailer_sync_logs')
-    .insert({
-      org_id,
+  // 7. Create sync log entry via DAL
+  const { data: syncLog, error: syncLogError } = await createSyncLog(
+    supabase,
+    org_id,
+    {
       retailer_id,
-      sync_type: 'full',
+      sync_type: 'csv_import',
       sync_source: 'csv',
       status: syncLogStatus,
       records_processed: totalRows,
@@ -105,21 +107,19 @@ export async function importCsvAction(input: {
       started_at: startedAt.toISOString(),
       completed_at: completedAt.toISOString(),
       duration_ms: durationMs,
-    })
-    .select('id')
-    .single()
+    }
+  )
 
   if (syncLogError) {
     console.error('importCsvAction: failed to create sync log:', syncLogError)
     return { error: 'Failed to create sync log entry' }
   }
 
-  syncLogId = syncLog.id
+  syncLogId = syncLog!.id
 
   // 8. Insert valid rows into match queue (with sync_log_id reference)
   if (validRows.length > 0) {
     const queueItems = validRows.map((row) => ({
-      org_id,
       retailer_id,
       raw_wine_name: row.wine_name,
       raw_producer: row.producer,
@@ -134,24 +134,22 @@ export async function importCsvAction(input: {
 
     const { error: insertError } = await bulkCreateMatchQueueItems(
       supabase,
+      org_id,
       queueItems
     )
 
     if (insertError) {
       console.error('importCsvAction: bulk insert failed:', insertError)
 
-      // Update sync log to reflect the failure
-      await supabase
-        .from('retailer_sync_logs')
-        .update({
-          status: 'failed',
-          records_created: 0,
-          error_details: [
-            ...(errors as unknown as Record<string, unknown>[]),
-            { row: 0, field: 'system', message: 'Failed to insert rows into match queue' },
-          ],
-        })
-        .eq('id', syncLogId)
+      // Update sync log to reflect the failure via DAL
+      await updateSyncLog(supabase, org_id, syncLogId!, {
+        status: 'failed',
+        records_created: 0,
+        error_details: [
+          ...(errors as unknown as Record<string, unknown>[]),
+          { row: 0, field: 'system', message: 'Failed to insert rows into match queue' },
+        ],
+      })
 
       return { error: 'Failed to insert rows into wine match queue' }
     }

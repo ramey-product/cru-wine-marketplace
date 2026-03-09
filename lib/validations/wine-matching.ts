@@ -1,6 +1,19 @@
 import { z } from 'zod'
 
 // ---------------------------------------------------------------------------
+// Match status enum (aligned with wine_match_queue CHECK constraint)
+// ---------------------------------------------------------------------------
+
+export const MatchStatusEnum = z.enum([
+  'pending',
+  'auto_matched',
+  'manual_matched',
+  'rejected',
+  'new_wine_created',
+])
+export type MatchStatus = z.infer<typeof MatchStatusEnum>
+
+// ---------------------------------------------------------------------------
 // Process match queue action input
 // ---------------------------------------------------------------------------
 
@@ -139,7 +152,7 @@ export interface MatchProcessingResult {
 export interface SingleMatchResult {
   /** The queue entry ID */
   entry_id: string
-  /** Match status: auto_matched, pending, or unchanged */
+  /** Match status: auto_matched, pending, or unmatched */
   status: 'auto_matched' | 'pending' | 'unmatched'
   /** Best match wine ID (if any candidate was found) */
   matched_wine_id?: string

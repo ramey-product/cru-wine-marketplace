@@ -60,6 +60,9 @@ const SYNC_LOG_SELECT = `
 /**
  * Look up a single retailer by its unique slug.
  * Returns the retailer row or null if not found.
+ *
+ * NOTE: Intentionally cross-org — slugs are globally unique and this is used
+ * on consumer-facing retailer profile pages where no org context exists.
  */
 export async function getRetailerBySlug(client: TypedClient, slug: string) {
   const { data, error } = await client
@@ -165,6 +168,7 @@ export async function getRetailersNearby(
  */
 export async function getRetailers(
   client: TypedClient,
+  orgId: string,
   filters: RetailerFilters = {},
   pagination: Pagination = { page: 1, per_page: 24 }
 ): Promise<PaginatedResult<unknown>> {
@@ -175,6 +179,7 @@ export async function getRetailers(
   let query = client
     .from('retailers')
     .select(RETAILER_SELECT, { count: 'exact' })
+    .eq('org_id', orgId)
 
   if (filters.is_active !== undefined) {
     query = query.eq('is_active', filters.is_active)
@@ -251,6 +256,7 @@ export async function createRetailer(
  */
 export async function updateRetailer(
   client: TypedClient,
+  orgId: string,
   retailerId: string,
   input: UpdateRetailerInput
 ) {
@@ -266,6 +272,7 @@ export async function updateRetailer(
     .from('retailers')
     .update(updatePayload)
     .eq('id', retailerId)
+    .eq('org_id', orgId)
     .select(RETAILER_SELECT)
     .single()
 
@@ -286,6 +293,7 @@ export async function updateRetailer(
  */
 export async function getRetailerSyncLogs(
   client: TypedClient,
+  orgId: string,
   retailerId: string,
   pagination: Pagination = { page: 1, per_page: 20 }
 ): Promise<PaginatedResult<unknown>> {
@@ -296,6 +304,7 @@ export async function getRetailerSyncLogs(
   const { data, count, error } = await client
     .from('retailer_sync_logs')
     .select(SYNC_LOG_SELECT, { count: 'exact' })
+    .eq('org_id', orgId)
     .eq('retailer_id', retailerId)
     .order('created_at', { ascending: false })
     .range(from, to)
@@ -311,4 +320,86 @@ export async function getRetailerSyncLogs(
     page,
     per_page,
   }
+}
+
+// ---------------------------------------------------------------------------
+// createSyncLog — insert a new sync log entry
+// ---------------------------------------------------------------------------
+
+/**
+ * Create a new retailer sync log entry. Called at the start or end of a
+ * CSV import or POS sync to record processing results.
+ */
+export async function createSyncLog(
+  client: TypedClient,
+  orgId: string,
+  data: {
+    retailer_id: string
+    sync_type: string
+    sync_source: string
+    status: string
+    records_processed?: number
+    records_created?: number
+    records_updated?: number
+    records_failed?: number
+    error_details?: Record<string, unknown>[] | null
+    started_at?: string
+    completed_at?: string
+    duration_ms?: number
+  }
+) {
+  const { data: result, error } = await client
+    .from('retailer_sync_logs')
+    .insert({
+      org_id: orgId,
+      ...data,
+    })
+    .select(SYNC_LOG_SELECT)
+    .single()
+
+  if (error) {
+    console.error('createSyncLog failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: result, error: null }
+}
+
+// ---------------------------------------------------------------------------
+// updateSyncLog — update an existing sync log entry
+// ---------------------------------------------------------------------------
+
+/**
+ * Update a sync log entry, typically to mark it as completed/failed
+ * after processing finishes.
+ */
+export async function updateSyncLog(
+  client: TypedClient,
+  orgId: string,
+  syncLogId: string,
+  data: {
+    status?: string
+    records_processed?: number
+    records_created?: number
+    records_updated?: number
+    records_failed?: number
+    error_details?: Record<string, unknown>[] | null
+    completed_at?: string
+    duration_ms?: number
+  }
+) {
+  const { data: result, error } = await client
+    .from('retailer_sync_logs')
+    .update(data)
+    .eq('id', syncLogId)
+    .eq('org_id', orgId)
+    .select(SYNC_LOG_SELECT)
+    .single()
+
+  if (error) {
+    console.error('updateSyncLog failed:', error)
+    return { data: null, error }
+  }
+
+  return { data: result, error: null }
 }
