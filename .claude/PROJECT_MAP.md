@@ -32,6 +32,12 @@
 | E-Commerce Module | `docs/architecture/MODULE_ECOMMERCE.md` | 1531 | Wine marketplace: Medusa.js v2 modules, auctions, P2P trading, delivery |
 | Integrations Module | `docs/architecture/MODULE_INTEGRATIONS.md` | 1719 | Third-party services: wine pricing, shipping, age verification, search |
 
+## Design System
+
+| Resource | Path | ~Lines | Description |
+|----------|------|--------|-------------|
+| UX Design Bible | `docs/design/UX_DESIGN_BIBLE.md` | 2575 | Complete design system: colors, typography, components, page specs, interactions, accessibility, tokens |
+
 ## PRDs (P0 — Launch Critical)
 
 | Resource | Path | ~Lines | RICE |
