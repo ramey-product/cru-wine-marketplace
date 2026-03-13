@@ -63,7 +63,7 @@ export async function searchWines(
       client
         .from('wine_tags')
         .select('wine_id')
-        .in('tag_name', filters.tags)
+        .in('tag_name', filters.tags) as unknown as readonly string[]
     ) as typeof q
   }
 
@@ -74,7 +74,7 @@ export async function searchWines(
       client
         .from('wine_occasions')
         .select('wine_id')
-        .in('occasion_name', filters.occasions)
+        .in('occasion_name', filters.occasions) as unknown as readonly string[]
     ) as typeof q
   }
 

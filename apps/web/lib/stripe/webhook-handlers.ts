@@ -416,7 +416,7 @@ export async function handlePaymentFailed(
   // Stripe associates sessions with PIs but the PI object doesn't carry
   // the session ID directly — we need to list sessions for this PI.
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2025-02-24.acacia',
   })
 
   let checkoutSessionId: string | null = null

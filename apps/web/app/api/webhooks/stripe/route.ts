@@ -28,9 +28,15 @@ import {
 // All business logic lives in webhook-handlers.ts.
 // ---------------------------------------------------------------------------
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-})
+let _stripe: Stripe | null = null
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-02-24.acacia',
+    })
+  }
+  return _stripe
+}
 
 // ---------------------------------------------------------------------------
 // POST /api/webhooks/stripe
@@ -54,7 +60,7 @@ export async function POST(request: NextRequest) {
   //    constructEvent throws if the signature is invalid or the body was tampered.
   let event: Stripe.Event
   try {
-    event = stripe.webhooks.constructEvent(
+    event = getStripe().webhooks.constructEvent(
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!

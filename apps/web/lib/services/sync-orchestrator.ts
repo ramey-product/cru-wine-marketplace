@@ -291,6 +291,7 @@ async function syncSingleRetailer(
 
     const { count, error: queueError } = await bulkCreateMatchQueueItems(
       supabase,
+      retailer.org_id,
       queueItems
     )
 
@@ -425,7 +426,7 @@ export async function checkStaleness(): Promise<StalenessResult> {
   if (result.stale_retailers.length > 0) {
     // Pick the first stale retailer's org for the log entry.
     // In practice, staleness is platform-wide, so we log once per check.
-    const firstStale = result.stale_retailers[0]
+    const firstStale = result.stale_retailers[0]!
 
     await createSyncLog(supabase, {
       org_id: firstStale.org_id,
@@ -512,7 +513,7 @@ async function createSyncLog(
       sync_source: data.sync_source,
       status: data.status,
       started_at: new Date().toISOString(),
-      error_details: data.error_details ?? null,
+      error_details: (data.error_details ?? null) as import('@/types/database').Json,
     })
     .select('id')
     .single()
@@ -553,7 +554,7 @@ async function updateSyncLog(
       records_created: data.records_created ?? 0,
       records_updated: data.records_updated ?? 0,
       records_failed: data.records_failed ?? 0,
-      error_details: data.error_details ?? null,
+      error_details: (data.error_details ?? null) as import('@/types/database').Json,
       completed_at: data.completed_at ?? null,
       duration_ms: data.duration_ms ?? null,
     })

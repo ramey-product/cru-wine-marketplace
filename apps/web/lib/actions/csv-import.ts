@@ -38,7 +38,7 @@ export async function importCsvAction(input: {
   // 1. Validate input
   const parsed = CsvImportInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { org_id, retailer_id, csv_content, column_mapping } = parsed.data
@@ -188,7 +188,7 @@ export async function detectColumnsAction(input: { csv_content: string }) {
   // 1. Validate input
   const parsed = DetectColumnsInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   // 2. Auth check (authenticated only, no org admin required)

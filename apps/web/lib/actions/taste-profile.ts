@@ -21,7 +21,7 @@ import type { TasteProfileInput } from '@/lib/validations/taste-profile'
 export async function saveTasteProfile(input: TasteProfileInput) {
   const parsed = TasteProfileSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -58,7 +58,7 @@ export async function addWineToProfile(wineId: string, source?: string) {
     source: source ?? 'manual_add',
   })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -93,7 +93,7 @@ export async function addWineToProfile(wineId: string, source?: string) {
 export async function removeWineFromProfile(wineId: string) {
   const parsed = RemoveTasteProfileWineSchema.safeParse({ wine_id: wineId })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

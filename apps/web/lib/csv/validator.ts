@@ -225,7 +225,7 @@ export function validateCsvRows(
   const errors: CsvRowError[] = []
 
   for (let i = 0; i < rows.length; i++) {
-    const { valid, error } = validateCsvRow(rows[i], i)
+    const { valid, error } = validateCsvRow(rows[i]!, i)
 
     if (valid) {
       validRows.push(valid)

@@ -29,7 +29,7 @@ export async function updatePreferences(formData: FormData) {
 
   const parsed = PreferencesSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

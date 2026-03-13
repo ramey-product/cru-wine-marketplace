@@ -353,6 +353,7 @@ export async function createSyncLog(
     .insert({
       org_id: orgId,
       ...data,
+      error_details: (data.error_details ?? null) as import('@/types/database').Json,
     })
     .select(SYNC_LOG_SELECT)
     .single()
@@ -390,7 +391,10 @@ export async function updateSyncLog(
 ) {
   const { data: result, error } = await client
     .from('retailer_sync_logs')
-    .update(data)
+    .update({
+      ...data,
+      error_details: (data.error_details ?? undefined) as import('@/types/database').Json | undefined,
+    })
     .eq('id', syncLogId)
     .eq('org_id', orgId)
     .select(SYNC_LOG_SELECT)

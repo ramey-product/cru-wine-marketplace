@@ -91,7 +91,7 @@ export async function getWines(
       client
         .from('wine_tags')
         .select('wine_id')
-        .in('tag_name', filters.tags)
+        .in('tag_name', filters.tags) as unknown as readonly string[]
     ) as typeof query
   }
 
@@ -102,7 +102,7 @@ export async function getWines(
       client
         .from('wine_occasions')
         .select('wine_id')
-        .in('occasion_name', filters.occasions)
+        .in('occasion_name', filters.occasions) as unknown as readonly string[]
     ) as typeof query
   }
 
@@ -387,10 +387,10 @@ export async function searchWinesForMatch(
 ) {
   const { data, error } = await client.rpc('match_wine_candidates', {
     p_search_name: query,
-    p_search_producer: null,
-    p_search_vintage: null,
-    p_search_varietal: null,
-    p_org_id: orgId ?? null,
+    p_search_producer: undefined,
+    p_search_vintage: undefined,
+    p_search_varietal: undefined,
+    p_org_id: orgId ?? undefined,
     p_limit: limit,
   })
 

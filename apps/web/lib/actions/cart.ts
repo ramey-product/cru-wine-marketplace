@@ -41,7 +41,7 @@ export async function addToCart(input: {
 }) {
   const parsed = AddToCartSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -120,7 +120,7 @@ export async function updateCartItemQuantity(input: {
 }) {
   const parsed = UpdateCartItemSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -162,7 +162,7 @@ export async function updateCartItemQuantity(input: {
 export async function removeFromCart(input: { lineItemId: string }) {
   const parsed = RemoveFromCartSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

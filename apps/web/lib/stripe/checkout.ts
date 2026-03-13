@@ -4,9 +4,15 @@ import Stripe from 'stripe'
 // Stripe client singleton
 // ---------------------------------------------------------------------------
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-})
+let _stripe: Stripe | null = null
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-02-24.acacia',
+    })
+  }
+  return _stripe
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -107,7 +113,7 @@ export async function createCheckoutSession(
       ? params.cancelUrl
       : `${params.cancelUrl}?session_id={CHECKOUT_SESSION_ID}`
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       mode: 'payment',
       line_items: stripeLineItems,
       success_url: successUrl,
@@ -155,7 +161,7 @@ export async function createRefund(
   reason?: string
 ): Promise<RefundResult> {
   try {
-    const refund = await stripe.refunds.create({
+    const refund = await getStripe().refunds.create({
       payment_intent: paymentIntentId,
       reason: 'requested_by_customer',
       ...(reason && {

@@ -705,9 +705,9 @@ export class ShopifyAdapter implements POSAdapter {
     // Extract 4-digit vintage year (1900-2099)
     const vintageMatch = name.match(/\b((?:19|20)\d{2})\b/)
     if (vintageMatch) {
-      vintage = vintageMatch[1]
+      vintage = vintageMatch[1] ?? null
       // Remove the vintage from the wine name
-      wineName = wineName.replace(vintageMatch[0], '').trim()
+      wineName = wineName.replace(vintageMatch[0]!, '').trim()
     }
 
     // Check for common varietals in the name
@@ -884,7 +884,7 @@ export class ShopifyAdapter implements POSAdapter {
         // Extract URL from angle brackets: <url>
         const urlMatch = trimmed.match(/<([^>]+)>/)
         if (urlMatch) {
-          return urlMatch[1]
+          return urlMatch[1] ?? null
         }
       }
     }

@@ -24,7 +24,7 @@ import {
 export async function addWineToWishlist(wineId: string, notes?: string) {
   const parsed = AddToWishlistSchema.safeParse({ wine_id: wineId, notes })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -61,7 +61,7 @@ export async function removeWishlistItem(wishlistItemId: string) {
     wishlist_item_id: wishlistItemId,
   })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -96,7 +96,7 @@ export async function removeWineFromWishlistAction(wineId: string) {
     wine_id: wineId,
   })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

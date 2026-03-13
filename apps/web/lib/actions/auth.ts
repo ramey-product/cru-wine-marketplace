@@ -22,7 +22,7 @@ export async function signUp(formData: FormData) {
 
   const parsed = SignUpSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -61,7 +61,7 @@ export async function signIn(formData: FormData) {
 
   const parsed = SignInSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -122,7 +122,7 @@ export async function resetPassword(formData: FormData) {
 
   const parsed = ResetPasswordSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -140,7 +140,7 @@ export async function updatePassword(formData: FormData) {
 
   const parsed = UpdatePasswordSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -165,7 +165,7 @@ export async function updateUserProfile(formData: FormData) {
 
   const parsed = UpdateProfileSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

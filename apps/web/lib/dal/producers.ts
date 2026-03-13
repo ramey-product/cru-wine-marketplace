@@ -258,7 +258,7 @@ export async function reorderProducerPhotos(
     const { error } = await client
       .from('producer_photos')
       .update({ display_order: i })
-      .eq('id', orderedIds[i])
+      .eq('id', orderedIds[i]!)
       .eq('producer_id', producerId)
       .eq('org_id', orgId)
 

@@ -134,7 +134,7 @@ export async function matchWineEntry(
   }
 
   // 4. Take the best candidate (already sorted by composite_score DESC from RPC)
-  const best = typedCandidates[0]
+  const best = typedCandidates[0]!
   const score = best.composite_score
   const matchStatus = classifyMatchScore(score)
 
@@ -164,6 +164,7 @@ export async function matchWineEntry(
     let inventoryCreated = false
     if (entry.raw_price != null || entry.raw_quantity != null) {
       const { error: inventoryError } = await upsertInventoryItem(client, orgId, {
+        org_id: orgId,
         retailer_id: entry.retailer_id,
         wine_id: best.wine_id,
         sku: entry.raw_sku ?? undefined,
@@ -340,14 +341,14 @@ function parseVintageString(raw: string): number | null {
 
   // Full 4-digit year
   const fullYear = trimmed.match(/\b((?:19|20)\d{2})\b/)
-  if (fullYear) {
-    return parseInt(fullYear[1], 10)
+  if (fullYear?.[1]) {
+    return parseInt(fullYear[1]!, 10)
   }
 
   // 2-digit year with apostrophe (e.g., "'19", "'23")
   const shortYear = trimmed.match(/^'?(\d{2})$/)
-  if (shortYear) {
-    const twoDigit = parseInt(shortYear[1], 10)
+  if (shortYear?.[1]) {
+    const twoDigit = parseInt(shortYear[1]!, 10)
     // Assume 2000s for 00-30, 1900s for 31-99
     return twoDigit <= 30 ? 2000 + twoDigit : 1900 + twoDigit
   }

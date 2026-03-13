@@ -39,21 +39,25 @@ export function parseCsv(content: string): CsvParseResult {
     return { headers: [], rows: [] }
   }
 
-  const headers = records[0].map((h) => h.trim())
+  const headerRecord = records[0]!
+  const headers = headerRecord.map((h) => h.trim())
   const rows: Record<string, string>[] = []
 
   for (let i = 1; i < records.length; i++) {
-    const record = records[i]
+    const record = records[i]!
 
     // Skip completely empty rows
-    if (record.length === 1 && record[0].trim() === '') {
+    if (record.length === 1 && record[0]?.trim() === '') {
       continue
     }
 
     const row: Record<string, string> = {}
     for (let j = 0; j < headers.length; j++) {
-      const value = j < record.length ? record[j] : ''
-      row[headers[j]] = value.trim()
+      const header = headers[j]
+      const value = j < record.length ? (record[j] ?? '') : ''
+      if (header) {
+        row[header] = value.trim()
+      }
     }
     rows.push(row)
   }
