@@ -98,8 +98,11 @@ export async function generateMetadata({
     openGraph: {
       title: `${displayName} by ${wine.producer.name}`,
       description: wine.tasting_notes ?? wine.description ?? undefined,
+      type: 'website',
+      url: `https://cru.wine/wines/${wine.slug}`,
       ...(wine.image_url && { images: [{ url: wine.image_url, width: 600, height: 800, alt: displayName }] }),
     },
+    twitter: { card: 'summary_large_image' },
   }
 }
 
