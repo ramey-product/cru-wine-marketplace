@@ -63,5 +63,22 @@ export function captureRecommendationEvent(
   })
 }
 
+export function batchCaptureImpressions(
+  userId: string,
+  wineIds: string[],
+  source: 'engine' | 'curated_collection'
+) {
+  const ph = getPostHogClient()
+  if (!ph) return
+
+  for (const wine_id of wineIds) {
+    ph.capture({
+      distinctId: userId,
+      event: RECOMMENDATION_EVENTS.IMPRESSION,
+      properties: { wine_id, recommendation_source: source },
+    })
+  }
+}
+
 export { RECOMMENDATION_EVENTS }
 export type { RecommendationEventType, RecommendationEventProperties }
