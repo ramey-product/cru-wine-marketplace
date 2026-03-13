@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      curated_collection_items: {
+        Row: {
+          id: string
+          org_id: string
+          collection_id: string
+          wine_id: string
+          position: number
+          curator_note: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          collection_id: string
+          wine_id: string
+          position?: number
+          curator_note?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          collection_id?: string
+          wine_id?: string
+          position?: number
+          curator_note?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curated_collection_items_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curated_collection_items_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "curated_collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curated_collection_items_wine_id_fkey"
+            columns: ["wine_id"]
+            isOneToOne: false
+            referencedRelation: "wines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      curated_collections: {
+        Row: {
+          id: string
+          org_id: string
+          title: string
+          slug: string
+          description: string | null
+          cover_image_url: string | null
+          curator_id: string
+          display_order: number
+          is_active: boolean
+          start_date: string | null
+          end_date: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          title: string
+          slug: string
+          description?: string | null
+          cover_image_url?: string | null
+          curator_id: string
+          display_order?: number
+          is_active?: boolean
+          start_date?: string | null
+          end_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          title?: string
+          slug?: string
+          description?: string | null
+          cover_image_url?: string | null
+          curator_id?: string
+          display_order?: number
+          is_active?: boolean
+          start_date?: string | null
+          end_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curated_collections_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_holds: {
         Row: {
           id: string
@@ -1254,6 +1365,35 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_wine_dismissals: {
+        Row: {
+          id: string
+          user_id: string
+          wine_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          wine_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          wine_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_wine_dismissals_wine_id_fkey"
+            columns: ["wine_id"]
+            isOneToOne: false
+            referencedRelation: "wines"
             referencedColumns: ["id"]
           },
         ]
