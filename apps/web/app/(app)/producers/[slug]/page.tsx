@@ -139,10 +139,13 @@ export async function generateMetadata({
     openGraph: {
       title: producer.name,
       description: producer.tagline ?? undefined,
+      type: 'website',
+      url: `https://cru.wine/producers/${producer.slug}`,
       ...(producer.hero_image_url && {
         images: [{ url: producer.hero_image_url, width: 1200, height: 675, alt: producer.name }],
       }),
     },
+    twitter: { card: 'summary_large_image' },
   }
 }
 
