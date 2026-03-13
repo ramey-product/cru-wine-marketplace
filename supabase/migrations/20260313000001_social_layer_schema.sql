@@ -62,11 +62,12 @@ CREATE INDEX idx_share_events_shareable
 -- =============================================================================
 
 ALTER TABLE public.profiles
-  ADD COLUMN IF NOT EXISTS username TEXT UNIQUE,
+  ADD COLUMN IF NOT EXISTS username TEXT,
   ADD COLUMN IF NOT EXISTS bio TEXT CHECK (char_length(bio) <= 160),
   ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT true;
 
--- Partial unique index on username (only non-null values)
+-- Partial unique index on username — only enforces uniqueness for non-null values,
+-- allowing multiple users to have NULL username (haven't set one yet).
 CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_username
   ON public.profiles (username) WHERE username IS NOT NULL;
 
