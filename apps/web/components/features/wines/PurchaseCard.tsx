@@ -1,19 +1,26 @@
 'use client'
 
+import { useState } from 'react'
 import { Heart, Share2, ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { RetailerSelectionSheet } from '@/components/features/orders/RetailerSelectionSheet'
 
 interface PurchaseCardProps {
   price: string
   isAvailable: boolean
   wineName: string
+  wineId?: string
 }
 
-export function PurchaseCard({ price, isAvailable, wineName }: PurchaseCardProps) {
-  // TODO: Wire up buy, wishlist, and share actions
+export function PurchaseCard({ price, isAvailable, wineName, wineId = '' }: PurchaseCardProps) {
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  const handleAddToCart = async (_retailerOrgId: string) => {
+    // TODO: Call addToCart server action
+  }
 
   const handleBuy = () => {
-    // TODO: Open retailer selection sheet
+    setSheetOpen(true)
   }
 
   const handleWishlist = () => {
@@ -120,6 +127,14 @@ export function PurchaseCard({ price, isAvailable, wineName }: PurchaseCardProps
           </button>
         </div>
       </div>
+      {/* Retailer Selection Sheet */}
+      <RetailerSelectionSheet
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        wineName={wineName}
+        wineId={wineId}
+        onAddToCart={handleAddToCart}
+      />
     </>
   )
 }
