@@ -44,11 +44,44 @@ Deno.serve(async (req: Request) => {
 
   for (const profile of profiles) {
     try {
-      // Delete auth user (service role required).
-      // The profiles.id FK has ON DELETE CASCADE, which automatically
-      // removes the profile row and its user_preferences.
-      // If this fails, deletion_scheduled_at markers remain intact
-      // so the cron job will retry on the next run.
+      // Step 1: Anonymize PII on the profile row.
+      // This ensures personal data is scrubbed even if the auth deletion
+      // fails — the profile row will have no PII on next retry.
+      const { error: anonymizeError } = await supabase
+        .from('profiles')
+        .update({
+          email: `deleted-${profile.id}@deleted.cru`,
+          full_name: 'Deleted User',
+          display_name: null,
+          avatar_url: null,
+          deletion_requested_at: null,
+          deletion_scheduled_at: null,
+        })
+        .eq('id', profile.id)
+
+      if (anonymizeError) {
+        results.push({ userId: profile.id, success: false, error: anonymizeError.message })
+        continue
+      }
+
+      // Step 2: Clear user preferences
+      await supabase
+        .from('user_preferences')
+        .delete()
+        .eq('user_id', profile.id)
+
+      // Step 3: Remove wishlist items and wishlists
+      // Wishlist items cascade from wishlists, so deleting wishlists is sufficient.
+      await supabase
+        .from('wishlists')
+        .delete()
+        .eq('user_id', profile.id)
+
+      // Step 4: Delete auth user (service role required).
+      // The profiles.id FK has ON DELETE CASCADE, which removes the
+      // now-anonymized profile row. If this fails, the profile remains
+      // anonymized (PII already scrubbed) and deletion_scheduled_at is
+      // cleared, so it won't be re-processed.
       const { error: authDeleteError } =
         await supabase.auth.admin.deleteUser(profile.id)
 
