@@ -100,6 +100,11 @@ export async function signInWithGoogle() {
   return { error: 'Could not retrieve OAuth URL' }
 }
 
+// TODO: [EPIC-01/STORY-03] Implement signInWithApple
+// Requires Apple Developer Program enrollment and Sign in with Apple capability.
+// Follow the same pattern as signInWithGoogle using provider: 'apple'.
+// See: https://supabase.com/docs/guides/auth/social-login/auth-apple
+
 export async function signOut() {
   const supabase = await createClient()
 
