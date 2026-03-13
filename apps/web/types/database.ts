@@ -725,6 +725,51 @@ export type Database = {
           },
         ]
       }
+      retailer_members: {
+        Row: {
+          id: string
+          org_id: string
+          retailer_id: string
+          user_id: string
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          retailer_id: string
+          user_id: string
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          retailer_id?: string
+          user_id?: string
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retailer_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retailer_members_retailer_id_fkey"
+            columns: ["retailer_id"]
+            isOneToOne: false
+            referencedRelation: "retailers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       retailer_inventory: {
         Row: {
           id: string
@@ -788,6 +833,102 @@ export type Database = {
             columns: ["wine_id"]
             isOneToOne: false
             referencedRelation: "wines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      retailer_notification_preferences: {
+        Row: {
+          id: string
+          org_id: string
+          retailer_member_id: string
+          new_order_email: boolean
+          daily_summary_email: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          retailer_member_id: string
+          new_order_email?: boolean
+          daily_summary_email?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          retailer_member_id?: string
+          new_order_email?: boolean
+          daily_summary_email?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retailer_notification_preferences_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retailer_notification_preferences_retailer_member_id_fkey"
+            columns: ["retailer_member_id"]
+            isOneToOne: true
+            referencedRelation: "retailer_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      retailer_stock_overrides: {
+        Row: {
+          id: string
+          org_id: string
+          retailer_id: string
+          wine_id: string
+          override_status: string
+          overridden_by: string
+          cleared_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          retailer_id: string
+          wine_id: string
+          override_status: string
+          overridden_by: string
+          cleared_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          retailer_id?: string
+          wine_id?: string
+          override_status?: string
+          overridden_by?: string
+          cleared_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retailer_stock_overrides_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "retailer_stock_overrides_retailer_id_fkey"
+            columns: ["retailer_id"]
+            isOneToOne: false
+            referencedRelation: "retailers"
             referencedColumns: ["id"]
           },
         ]
@@ -882,6 +1023,11 @@ export type Database = {
           commission_rate: number | null
           is_active: boolean
           onboarded_at: string | null
+          pickup_enabled: boolean
+          delivery_enabled: boolean
+          delivery_fee_cents: number | null
+          estimated_delivery_minutes: number | null
+          hours_of_operation: Json | null
           created_at: string
           updated_at: string
         }
@@ -905,6 +1051,11 @@ export type Database = {
           commission_rate?: number | null
           is_active?: boolean
           onboarded_at?: string | null
+          pickup_enabled?: boolean
+          delivery_enabled?: boolean
+          delivery_fee_cents?: number | null
+          estimated_delivery_minutes?: number | null
+          hours_of_operation?: Json | null
           created_at?: string
           updated_at?: string
         }
@@ -928,6 +1079,11 @@ export type Database = {
           commission_rate?: number | null
           is_active?: boolean
           onboarded_at?: string | null
+          pickup_enabled?: boolean
+          delivery_enabled?: boolean
+          delivery_fee_cents?: number | null
+          estimated_delivery_minutes?: number | null
+          hours_of_operation?: Json | null
           created_at?: string
           updated_at?: string
         }
