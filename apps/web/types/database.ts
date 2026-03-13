@@ -125,6 +125,42 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          id: string
+          follower_id: string
+          following_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          follower_id: string
+          following_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          follower_id?: string
+          following_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_holds: {
         Row: {
           id: string
@@ -619,6 +655,9 @@ export type Database = {
           full_name: string | null
           display_name: string | null
           avatar_url: string | null
+          username: string | null
+          bio: string | null
+          is_public: boolean
           age_confirmed_at: string | null
           deletion_requested_at: string | null
           deletion_scheduled_at: string | null
@@ -631,6 +670,9 @@ export type Database = {
           full_name?: string | null
           display_name?: string | null
           avatar_url?: string | null
+          username?: string | null
+          bio?: string | null
+          is_public?: boolean
           age_confirmed_at?: string | null
           deletion_requested_at?: string | null
           deletion_scheduled_at?: string | null
@@ -643,6 +685,9 @@ export type Database = {
           full_name?: string | null
           display_name?: string | null
           avatar_url?: string | null
+          username?: string | null
+          bio?: string | null
+          is_public?: boolean
           age_confirmed_at?: string | null
           deletion_requested_at?: string | null
           deletion_scheduled_at?: string | null
@@ -895,6 +940,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      share_events: {
+        Row: {
+          id: string
+          user_id: string | null
+          shareable_type: string
+          shareable_id: string
+          platform: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          shareable_type: string
+          shareable_id: string
+          platform: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          shareable_type?: string
+          shareable_id?: string
+          platform?: string
+          created_at?: string
+        }
+        Relationships: []
       }
       taste_profile_wines: {
         Row: {

@@ -89,3 +89,33 @@ export async function anonymizeProfile(client: TypedClient, userId: string) {
     .select()
     .single()
 }
+
+// --- Social Profile Functions ---
+
+export async function getUserByUsername(
+  client: TypedClient,
+  username: string
+) {
+  return client
+    .from('profiles')
+    .select('*')
+    .eq('username', username)
+    .maybeSingle()
+}
+
+export async function updateProfileSocial(
+  client: TypedClient,
+  userId: string,
+  data: {
+    username?: string | null
+    bio?: string | null
+    is_public?: boolean
+  }
+) {
+  return client
+    .from('profiles')
+    .update(data)
+    .eq('id', userId)
+    .select()
+    .single()
+}
