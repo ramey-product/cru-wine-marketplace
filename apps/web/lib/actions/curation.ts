@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getRecommendationCandidates } from '@/lib/dal/curation'
+import { generateMatchReasons } from '@/lib/curation/explanation-templates'
 
 // ---------------------------------------------------------------------------
 // Scoring weights — configurable, not hardcoded in scoring logic
@@ -41,14 +42,16 @@ export interface RecommendationResult {
     producer: { id: string; name: string; slug: string }
   }
   match_score: number
-  /** Populated by Story 04 — empty array for now */
+  /** Plain-language explanation fragments for why this wine was recommended */
   match_reasons: string[]
 }
 
 interface MatchFactors {
   affinityMatches: number
+  matchedFlavors: string[]
   hasAversion: boolean
   isAvailable: boolean
+  isAdventureBonus: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -83,11 +86,12 @@ function scoreWine(
   const flavorProfile = (wine.flavor_profile ?? {}) as Record<string, number>
   const profileFlavors = Object.keys(flavorProfile)
 
-  // 1. Flavor affinity matches — count affinities present in the wine's profile
+  // 1. Flavor affinity matches — find affinities present in the wine's profile
   //    above the 0.3 threshold (avoids weak/trace flavors)
-  const affinityMatches = tasteProfile.flavor_affinities.filter(
+  const matchedFlavors = tasteProfile.flavor_affinities.filter(
     (aff) => profileFlavors.includes(aff) && (flavorProfile[aff] ?? 0) > 0.3
-  ).length
+  )
+  const affinityMatches = matchedFlavors.length
 
   // 2. Aversion violation check — binary flag, true if ANY user-aversion flavor
   //    is present in the wine above the 0.5 threshold (strong presence)
@@ -104,7 +108,8 @@ function scoreWine(
   // 5. Adventureness diversity bonus — for high-adventurousness users,
   //    give a bonus to wines that DON'T match their affinities.
   //    This pushes diversity into the recommendation results.
-  const adventurenessBonus = affinityMatches === 0 ? 1 : 0
+  const isAdventureBonus = affinityMatches === 0
+  const adventurenessBonus = isAdventureBonus ? 1 : 0
 
   // Calculate total score
   const score =
@@ -118,7 +123,7 @@ function scoreWine(
 
   return {
     score,
-    matchFactors: { affinityMatches, hasAversion, isAvailable },
+    matchFactors: { affinityMatches, matchedFlavors, hasAversion, isAvailable, isAdventureBonus },
   }
 }
 
@@ -191,7 +196,7 @@ export async function generateRecommendations(): Promise<
   const topWines = scoredWines.slice(0, MAX_RECOMMENDATIONS)
 
   // 5. Build result
-  const results: RecommendationResult[] = topWines.map(({ wine, score }) => ({
+  const results: RecommendationResult[] = topWines.map(({ wine, score, matchFactors }) => ({
     wine_id: wine.id,
     wine: {
       id: wine.id,
@@ -206,7 +211,11 @@ export async function generateRecommendations(): Promise<
       producer: wine.producer,
     },
     match_score: Math.round(score * 100) / 100,
-    match_reasons: [], // Populated in Story 04
+    match_reasons: generateMatchReasons(matchFactors, {
+      varietal: wine.varietal,
+      region: wine.region,
+      producerName: wine.producer.name,
+    }),
   }))
 
   return { data: results }
