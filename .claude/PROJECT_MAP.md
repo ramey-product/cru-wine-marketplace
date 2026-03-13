@@ -4,7 +4,7 @@
 > All agents MUST read this file at the start of every task instead of hardcoding paths.
 > When the filesystem changes, update THIS file — not individual agent definitions.
 >
-> Last updated: 2026-03-08
+> Last updated: 2026-03-12
 
 ---
 
@@ -90,6 +90,7 @@
 | Epics Directory | `.claude/work-plan/epics/` | Epic summary files with Developer Stories reference tables (no inline story content) |
 | Story Files | `.claude/work-plan/stories/epic-XX/story-XX-slug.md` | Individual developer story files (95 total across 9 epics). Find via Story Index table in parent epic file |
 | Analysis Directory | `.claude/work-plan/analysis/` | Architecture review, risks, cross-cutting concerns, implementation sequence |
+| Epic 05c Type Safety | `.claude/work-plan/epics/epic-05c-type-safety-fixes.md` | Pre-existing TS errors + build workaround cleanup |
 
 ## Scripts
 
@@ -100,25 +101,43 @@
 
 ---
 
+## Monorepo Infrastructure
+
+| Resource | Path | Description |
+|----------|------|-------------|
+| Root Workspace | `package.json` | pnpm workspace root, turbo scripts |
+| Workspace Config | `pnpm-workspace.yaml` | apps/* + packages/* workspaces |
+| Turbo Pipeline | `turbo.json` | build, lint, typecheck, dev, test tasks |
+| Shared TS Config | `packages/config/tsconfig/` | base.json + nextjs.json |
+| Shared ESLint | `packages/config/eslint/next.js` | Next.js ESLint config |
+| Shared Tailwind | `packages/config/tailwind/base.ts` | Brand colors, fonts |
+| Shared Constants | `packages/shared/src/` | TAX_RATE, HOLD_TTL_MINUTES |
+| UI Library | `packages/ui/src/` | Scaffold — components extracted when needed |
+| Web App | `apps/web/` | Next.js 15 app (moved from root) |
+| Vercel Config | `vercel.json` | Build command, output dir, crons |
+
 ## Codebase Conventions (Structural — Not File Lookups)
 
 > These are **architectural patterns**, not resource locations. They define where code
 > should be *written*, not where documents live. These belong in agent definitions
 > and CLAUDE.md, not in this map.
+>
+> **Note:** All app source code now lives under `apps/web/`. The `@/` import alias
+> resolves within `apps/web/` via tsconfig paths.
 
 | Convention | Path Pattern | Governed By |
 |------------|-------------|-------------|
 | Migrations | `supabase/migrations/` | `.claude/rules/supabase-migrations.md` |
 | RLS Tests | `supabase/tests/` | `.claude/rules/testing.md` |
-| Data Access Layer | `lib/dal/` | `.claude/rules/server-actions.md` |
-| Server Actions | `lib/actions/` | `.claude/rules/server-actions.md` |
-| Validation Schemas | `lib/validations/` | `.claude/rules/server-actions.md` |
-| Supabase Clients | `lib/supabase/` | `CLAUDE.md` |
-| Stripe Helpers | `lib/stripe/` | `CLAUDE.md` |
-| Medusa Client | `lib/medusa/` | `CLAUDE.md` |
-| UI Primitives | `components/ui/` | `.claude/rules/components.md` |
-| Feature Components | `components/features/` | `.claude/rules/components.md` |
-| Org-Scoped Routes | `app/(app)/[orgSlug]/` | `CLAUDE.md` |
-| Auth Routes | `app/(auth)/` | `CLAUDE.md` |
-| API / Webhooks | `app/api/` | `.claude/rules/api-routes.md` |
-| Generated Types | `types/database.ts` | `CLAUDE.md` |
+| Data Access Layer | `apps/web/lib/dal/` | `.claude/rules/server-actions.md` |
+| Server Actions | `apps/web/lib/actions/` | `.claude/rules/server-actions.md` |
+| Validation Schemas | `apps/web/lib/validations/` | `.claude/rules/server-actions.md` |
+| Supabase Clients | `apps/web/lib/supabase/` | `CLAUDE.md` |
+| Stripe Helpers | `apps/web/lib/stripe/` | `CLAUDE.md` |
+| Medusa Client | `apps/web/lib/medusa/` | `CLAUDE.md` |
+| UI Primitives | `apps/web/components/ui/` | `.claude/rules/components.md` |
+| Feature Components | `apps/web/components/features/` | `.claude/rules/components.md` |
+| Org-Scoped Routes | `apps/web/app/(app)/[orgSlug]/` | `CLAUDE.md` |
+| Auth Routes | `apps/web/app/(auth)/` | `CLAUDE.md` |
+| API / Webhooks | `apps/web/app/api/` | `.claude/rules/api-routes.md` |
+| Generated Types | `apps/web/types/database.ts` | `CLAUDE.md` |
