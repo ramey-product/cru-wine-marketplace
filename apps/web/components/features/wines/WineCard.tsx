@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AvailabilityIndicator } from './AvailabilityIndicator'
+import { formatWinePrice, formatVarietalRegion } from './utils'
 
 interface WineCardProps {
   wine: {
@@ -22,38 +23,6 @@ interface WineCardProps {
   isAvailable?: boolean
 }
 
-function formatPrice(priceMin: number | null, priceMax: number | null): string {
-  if (priceMin === null && priceMax === null) {
-    return 'Check availability'
-  }
-
-  const fmt = (n: number) =>
-    n % 1 === 0 ? `$${n}` : `$${n.toFixed(2)}`
-
-  if (priceMin !== null && priceMax !== null) {
-    if (priceMin === priceMax) {
-      return fmt(priceMin)
-    }
-    return `${fmt(priceMin)}–${fmt(priceMax)}`
-  }
-
-  return fmt(priceMin ?? priceMax!)
-}
-
-function formatVarietalRegion(
-  varietal: string | null,
-  region: string | null,
-  country: string | null
-): string | null {
-  const parts: string[] = []
-  if (varietal) parts.push(varietal)
-
-  const location = [region, country].filter(Boolean).join(', ')
-  if (location) parts.push(location)
-
-  return parts.length > 0 ? parts.join(' \u2014 ') : null
-}
-
 export function WineCard({
   wine,
   showAvailability = true,
@@ -61,12 +30,13 @@ export function WineCard({
   isAvailable = false,
 }: WineCardProps) {
   const varietalRegion = formatVarietalRegion(wine.varietal, wine.region, wine.country)
-  const price = formatPrice(wine.price_min, wine.price_max)
+  const price = formatWinePrice(wine.price_min, wine.price_max)
   const displayName = wine.vintage ? `${wine.name} ${wine.vintage}` : wine.name
 
   return (
     <Link
       href={`/wines/${wine.slug}`}
+      aria-label={`Wine: ${displayName}, by ${wine.producer.name}, ${price}${showAvailability ? (isAvailable ? ', available nearby' : ', check availability') : ''}`}
       className="group cursor-pointer rounded-lg border border-border bg-card overflow-hidden
                  hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 block"
     >
@@ -114,7 +84,7 @@ export function WineCard({
           <p className="text-sm text-muted-foreground">{varietalRegion}</p>
         )}
 
-        <p className="text-lg font-semibold font-mono">{price}</p>
+        <p className="text-lg font-semibold font-mono" aria-label={`Price: ${price}`}>{price}</p>
 
         {showStoryHook && wine.description && (
           <p className="text-sm text-muted-foreground line-clamp-2">

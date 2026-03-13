@@ -21,7 +21,7 @@ export function TopNav() {
 
   return (
     <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <nav aria-label="Main navigation" className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left: Wordmark */}
         <Link
           href="/"
@@ -38,9 +38,9 @@ export function TopNav() {
               key={link.href}
               href={link.href}
               className={cn(
-                'text-sm transition-colors',
+                'text-sm font-medium transition-colors relative',
                 isActive(link.href)
-                  ? 'text-foreground font-medium'
+                  ? 'text-foreground after:absolute after:bottom-[-17px] after:left-0 after:right-0 after:h-0.5 after:bg-primary'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >

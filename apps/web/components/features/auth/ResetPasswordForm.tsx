@@ -68,6 +68,7 @@ export function ResetPasswordForm() {
         {state?.error && (
           <div
             className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            id="form-error"
             role="alert"
           >
             {state.error}
@@ -87,9 +88,10 @@ export function ResetPasswordForm() {
             type="email"
             autoComplete="email"
             required
-            aria-label="Email address"
+            aria-required="true"
+            aria-describedby={state?.error ? 'form-error' : undefined}
             className={cn(
-              'flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground',
+              'flex h-10 w-full rounded-lg border border-input bg-muted/50 px-3 py-2 text-sm text-foreground',
               'placeholder:text-muted-foreground',
               'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-card',
               'disabled:cursor-not-allowed disabled:opacity-50'
