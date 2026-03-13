@@ -1,8 +1,16 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getRecommendationCandidates } from '@/lib/dal/curation'
+import { dismissWine, undismissWine } from '@/lib/dal/wine-dismissals'
 import { generateMatchReasons } from '@/lib/curation/explanation-templates'
+import { createCachedRecommendations } from '@/lib/curation/cache'
+import { DismissWineSchema } from '@/lib/validations/curation'
+import {
+  captureRecommendationEvent,
+  RECOMMENDATION_EVENTS,
+} from '@/lib/analytics/posthog'
 
 // ---------------------------------------------------------------------------
 // Scoring weights — configurable, not hardcoded in scoring logic
@@ -218,5 +226,159 @@ export async function generateRecommendations(): Promise<
     }),
   }))
 
+  return { data: results }
+}
+
+// ---------------------------------------------------------------------------
+// dismissRecommendation — record that a user dismissed a wine recommendation
+// ---------------------------------------------------------------------------
+
+export async function dismissRecommendation(wineId: string) {
+  // 1. Zod validate
+  const parsed = DismissWineSchema.safeParse({ wine_id: wineId })
+  if (!parsed.success) {
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+  }
+
+  // 2. Auth check
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { error: 'Not authenticated' }
+  }
+
+  // 3. DAL call — dismissWine
+  const { error } = await dismissWine(supabase, user.id, parsed.data.wine_id)
+  if (error) {
+    console.error('dismissRecommendation failed:', error)
+    return { error: 'Failed to dismiss wine' }
+  }
+
+  // 4. PostHog capture (fire-and-forget — non-blocking)
+  captureRecommendationEvent(user.id, RECOMMENDATION_EVENTS.DISMISS, {
+    wine_id: parsed.data.wine_id,
+    recommendation_source: 'engine',
+  })
+
+  // 5. Revalidate — recommendations may change
+  revalidatePath('/', 'layout')
+
+  return { data: { dismissed: true } }
+}
+
+// ---------------------------------------------------------------------------
+// undismissRecommendation — remove a dismissal so the wine can reappear
+// ---------------------------------------------------------------------------
+
+export async function undismissRecommendation(wineId: string) {
+  // 1. Zod validate
+  const parsed = DismissWineSchema.safeParse({ wine_id: wineId })
+  if (!parsed.success) {
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+  }
+
+  // 2. Auth check
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { error: 'Not authenticated' }
+  }
+
+  // 3. DAL call — undismissWine
+  const { error } = await undismissWine(supabase, user.id, parsed.data.wine_id)
+  if (error) {
+    console.error('undismissRecommendation failed:', error)
+    return { error: 'Failed to undismiss wine' }
+  }
+
+  // 4. Revalidate — recommendations may change
+  revalidatePath('/', 'layout')
+
+  return { data: { undismissed: true } }
+}
+
+// ---------------------------------------------------------------------------
+// getRecommendations — cached wrapper for the home screen
+// ---------------------------------------------------------------------------
+
+/**
+ * Get cached recommendations for the authenticated user.
+ * Falls back to generating fresh recommendations on cache miss.
+ *
+ * Uses Next.js `unstable_cache` with per-user tags so invalidation
+ * (after taste-profile updates, order completions, or catalog changes)
+ * only evicts the affected user's cache entry.
+ */
+export async function getRecommendations(): Promise<
+  | { data: RecommendationResult[] | null; error?: undefined }
+  | { error: string; data?: undefined }
+> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { error: 'Not authenticated' }
+  }
+
+  const getCached = createCachedRecommendations(user.id, async () => {
+    // Must create a fresh Supabase client inside the cached function —
+    // the outer `supabase` is request-scoped and cannot be closed over.
+    const client = await createClient()
+    const { data: candidateData, error: fetchError } =
+      await getRecommendationCandidates(client, user.id)
+
+    if (fetchError || !candidateData || !candidateData.tasteProfile) {
+      return null
+    }
+
+    const { tasteProfile, candidates, excludedWineIds, availableWineIds } =
+      candidateData
+
+    const scoredWines = candidates
+      .filter((wine) => !excludedWineIds.has(wine.id))
+      .map((wine) => {
+        const { score, matchFactors } = scoreWine(
+          wine,
+          tasteProfile,
+          availableWineIds
+        )
+        return { wine, score, matchFactors }
+      })
+      .sort((a, b) => b.score - a.score)
+
+    const topWines = scoredWines.slice(0, MAX_RECOMMENDATIONS)
+
+    return topWines.map(({ wine, score, matchFactors }) => ({
+      wine_id: wine.id,
+      wine: {
+        id: wine.id,
+        name: wine.name,
+        slug: wine.slug,
+        varietal: wine.varietal,
+        region: wine.region,
+        country: wine.country,
+        image_url: wine.image_url,
+        price_min: wine.price_min,
+        price_max: wine.price_max,
+        producer: wine.producer,
+      },
+      match_score: Math.round(score * 100) / 100,
+      match_reasons: generateMatchReasons(matchFactors, {
+        varietal: wine.varietal,
+        region: wine.region,
+        producerName: wine.producer.name,
+      }),
+    }))
+  })
+
+  const results = await getCached()
   return { data: results }
 }
