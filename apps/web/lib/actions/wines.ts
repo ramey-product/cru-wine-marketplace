@@ -27,7 +27,7 @@ export async function createWineAction(
 
   const parsed = CreateWineSchema.safeParse({ ...input, slug })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -79,7 +79,7 @@ export async function updateWineAction(
 
   const parsed = UpdateWineSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

@@ -7,11 +7,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   transpilePackages: ["@cru/ui", "@cru/shared"],
   outputFileTracingRoot: resolve(__dirname, "../../"),
-  typescript: {
-    // Pre-existing TS errors from tables not yet in database.ts types.
-    // Remove once `supabase gen types` is run and types are updated.
-    ignoreBuildErrors: true,
-  },
   eslint: {
     // ESLint not yet configured for all files.
     // Remove once eslint setup is complete.

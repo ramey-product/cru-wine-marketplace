@@ -81,7 +81,7 @@ export async function initiateCheckout(
   // 1. Zod validate
   const parsed = initiateCheckoutSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   // 2. Business rules: delivery requires address, age must be verified
@@ -266,7 +266,7 @@ export async function updateOrderStatusAction(
   // 1. Zod validate
   const parsed = updateOrderStatusSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   // 2. Auth check
@@ -352,7 +352,7 @@ export async function cancelOrder(
   // 1. Zod validate
   const parsed = cancelOrderSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   // 2. Auth check

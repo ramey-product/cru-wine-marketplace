@@ -171,7 +171,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       sync_source: 'shopify',
       status: 'pending',
       started_at: now,
-      error_details: errorDetails,
+      error_details: errorDetails as import('@/types/database').Json,
     })
 
   if (logError) {

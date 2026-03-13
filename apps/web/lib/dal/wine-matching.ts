@@ -402,9 +402,9 @@ export async function matchWineCandidates(
 ) {
   const { data, error } = await client.rpc('match_wine_candidates', {
     p_search_name: params.searchName,
-    p_search_producer: params.searchProducer,
-    p_search_vintage: params.searchVintage,
-    p_search_varietal: params.searchVarietal,
+    p_search_producer: params.searchProducer ?? undefined,
+    p_search_vintage: params.searchVintage ?? undefined,
+    p_search_varietal: params.searchVarietal ?? undefined,
     p_org_id: params.orgId,
     p_limit: params.limit ?? 5,
   })

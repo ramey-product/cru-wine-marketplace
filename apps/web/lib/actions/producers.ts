@@ -36,7 +36,7 @@ export async function createProducerAction(
 
   const parsed = CreateProducerSchema.safeParse({ ...input, slug })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -88,7 +88,7 @@ export async function updateProducerAction(
 
   const parsed = UpdateProducerSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -140,7 +140,7 @@ export async function addProducerPhotoAction(
 ) {
   const parsed = AddPhotoSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -228,7 +228,7 @@ export async function reorderProducerPhotosAction(
 ) {
   const parsed = ReorderPhotosSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

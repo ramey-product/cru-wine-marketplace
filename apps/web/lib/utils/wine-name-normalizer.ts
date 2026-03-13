@@ -401,7 +401,7 @@ export function splitProducerAndWine(
     const parts = input.split(pattern)
     if (parts.length >= 2) {
       // Heuristic: the first part is usually the producer
-      const producer = parts[0].trim()
+      const producer = parts[0]!.trim()
       const wineName = parts.slice(1).join(' ').trim()
       if (producer.length > 0 && wineName.length > 0) {
         return { producer, wineName }

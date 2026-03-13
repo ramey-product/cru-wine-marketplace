@@ -88,7 +88,7 @@ export async function triggerPOSSyncAction(
   // 1. Validate input
   const parsed = TriggerPOSSyncInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { retailer_id, sync_type } = parsed.data
@@ -208,6 +208,7 @@ export async function triggerPOSSyncAction(
 
     const { count, error: queueError } = await bulkCreateMatchQueueItems(
       supabase,
+      retailer.org_id,
       queueItems
     )
 
@@ -295,7 +296,7 @@ export async function testPOSConnectionAction(
   // 1. Validate input
   const parsed = TestPOSConnectionInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { retailer_id } = parsed.data
@@ -420,7 +421,7 @@ async function updateSyncLog(
       records_created: data.records_created ?? 0,
       records_updated: data.records_updated ?? 0,
       records_failed: data.records_failed ?? 0,
-      error_details: data.error_details ?? null,
+      error_details: (data.error_details ?? null) as import('@/types/database').Json,
       completed_at: data.completed_at ?? null,
       duration_ms: data.duration_ms ?? null,
     })

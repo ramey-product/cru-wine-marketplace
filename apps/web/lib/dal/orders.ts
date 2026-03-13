@@ -262,7 +262,7 @@ export async function createOrder(client: TypedClient, input: CreateOrderInput) 
       user_id: input.userId,
       status: input.status ?? 'pending',
       fulfillment_type: input.fulfillmentType,
-      delivery_address: input.deliveryAddress ?? null,
+      delivery_address: (input.deliveryAddress ?? null) as import('@/types/database').Json,
       delivery_fee: input.deliveryFee ?? 0,
       subtotal: input.subtotal,
       tax: input.tax,

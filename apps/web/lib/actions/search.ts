@@ -16,7 +16,7 @@ import { SearchQuerySchema, DeleteSearchSchema } from '@/lib/validations/search'
 export async function saveSearch(query: string) {
   const parsed = SearchQuerySchema.safeParse({ query })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()
@@ -46,7 +46,7 @@ export async function saveSearch(query: string) {
 export async function removeRecentSearch(searchId: string) {
   const parsed = DeleteSearchSchema.safeParse({ searchId })
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const supabase = await createClient()

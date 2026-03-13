@@ -108,7 +108,7 @@ export async function submitOnboardingAction(
   // 1. Validate input
   const parsed = OnboardingInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const data = parsed.data

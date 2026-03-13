@@ -44,7 +44,7 @@ export async function processMatchQueueAction(input: {
   // 1. Validate input
   const parsed = ProcessMatchQueueInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { org_id, batch_size } = parsed.data
@@ -105,7 +105,7 @@ export async function retryMatchAction(input: { queue_entry_id: string }) {
   // 1. Validate input
   const parsed = RetryMatchInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { queue_entry_id } = parsed.data
@@ -184,7 +184,7 @@ export async function approveMatchAction(input: { queue_entry_id: string }) {
   // 1. Validate input
   const parsed = ApproveMatchInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { queue_entry_id } = parsed.data
@@ -228,7 +228,7 @@ export async function approveMatchAction(input: { queue_entry_id: string }) {
   }
 
   // 6. Resolve the match
-  const { error: resolveError } = await resolveMatch(supabase, queue_entry_id, {
+  const { error: resolveError } = await resolveMatch(supabase, entry.org_id, queue_entry_id, {
     match_status: 'manual_matched',
     matched_wine_id: entry.matched_wine_id,
     match_confidence: entry.match_confidence,
@@ -240,7 +240,7 @@ export async function approveMatchAction(input: { queue_entry_id: string }) {
   }
 
   // 7. Create inventory record
-  const { error: inventoryError } = await upsertInventoryItem(supabase, {
+  const { error: inventoryError } = await upsertInventoryItem(supabase, entry.org_id, {
     org_id: entry.org_id,
     retailer_id: entry.retailer_id,
     wine_id: entry.matched_wine_id,
@@ -270,7 +270,7 @@ export async function rejectMatchAction(input: { queue_entry_id: string }) {
   // 1. Validate input
   const parsed = RejectMatchInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { queue_entry_id } = parsed.data
@@ -308,7 +308,7 @@ export async function rejectMatchAction(input: { queue_entry_id: string }) {
   }
 
   // 6. Resolve as rejected
-  const { error: resolveError } = await resolveMatch(supabase, queue_entry_id, {
+  const { error: resolveError } = await resolveMatch(supabase, entry.org_id, queue_entry_id, {
     match_status: 'rejected',
     matched_wine_id: null,
     match_confidence: null,
@@ -336,7 +336,7 @@ export async function manualMatchAction(input: {
   // 1. Validate input
   const parsed = ManualMatchInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { queue_entry_id, wine_id } = parsed.data
@@ -386,7 +386,7 @@ export async function manualMatchAction(input: {
   }
 
   // 7. Resolve the match
-  const { error: resolveError } = await resolveMatch(supabase, queue_entry_id, {
+  const { error: resolveError } = await resolveMatch(supabase, entry.org_id, queue_entry_id, {
     match_status: 'manual_matched',
     matched_wine_id: wine_id,
     match_confidence: 1.0,
@@ -398,7 +398,7 @@ export async function manualMatchAction(input: {
   }
 
   // 8. Create inventory record
-  const { error: inventoryError } = await upsertInventoryItem(supabase, {
+  const { error: inventoryError } = await upsertInventoryItem(supabase, entry.org_id, {
     org_id: entry.org_id,
     retailer_id: entry.retailer_id,
     wine_id,
@@ -436,7 +436,7 @@ export async function createWineFromQueueAction(input: {
   // 1. Validate input
   const parsed = CreateWineFromQueueInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { queue_entry_id, producer_id, ...overrides } = parsed.data
@@ -495,7 +495,7 @@ export async function createWineFromQueueAction(input: {
   }
 
   // 7. Resolve the queue entry
-  const { error: resolveError } = await resolveMatch(supabase, queue_entry_id, {
+  const { error: resolveError } = await resolveMatch(supabase, entry.org_id, queue_entry_id, {
     match_status: 'new_wine_created',
     matched_wine_id: newWine.id,
     match_confidence: 1.0,
@@ -507,7 +507,7 @@ export async function createWineFromQueueAction(input: {
   }
 
   // 8. Create inventory record
-  const { error: inventoryError } = await upsertInventoryItem(supabase, {
+  const { error: inventoryError } = await upsertInventoryItem(supabase, entry.org_id, {
     org_id: entry.org_id,
     retailer_id: entry.retailer_id,
     wine_id: newWine.id,
@@ -541,7 +541,7 @@ export async function batchApproveMatchesAction(input: {
   // 1. Validate input
   const parsed = BatchApproveMatchesInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { org_id, min_confidence } = parsed.data
@@ -585,7 +585,7 @@ export async function batchApproveMatchesAction(input: {
 
   for (const entry of entries) {
     // Resolve match
-    const { error: resolveError } = await resolveMatch(supabase, entry.id, {
+    const { error: resolveError } = await resolveMatch(supabase, entry.org_id, entry.id, {
       match_status: 'manual_matched',
       matched_wine_id: entry.matched_wine_id,
       match_confidence: entry.match_confidence,
@@ -598,7 +598,7 @@ export async function batchApproveMatchesAction(input: {
     }
 
     // Create inventory
-    const { error: inventoryError } = await upsertInventoryItem(supabase, {
+    const { error: inventoryError } = await upsertInventoryItem(supabase, entry.org_id, {
       org_id: entry.org_id,
       retailer_id: entry.retailer_id,
       wine_id: entry.matched_wine_id!,
@@ -642,7 +642,7 @@ export async function searchWinesAction(input: {
   // 1. Validate input
   const parsed = SearchWinesInputSchema.safeParse(input)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
+    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
   }
 
   const { org_id, query, limit } = parsed.data

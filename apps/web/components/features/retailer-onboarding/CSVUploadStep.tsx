@@ -127,7 +127,7 @@ export function CSVUploadStep({
           return
         }
 
-        const headers = rows[0]
+        const headers = rows[0]!
         const dataRows = rows.slice(1)
         const columnMap = detectColumns(headers)
 
@@ -138,24 +138,25 @@ export function CSVUploadStep({
           return
         }
 
+        const wineNameIdx = columnMap.raw_wine_name!
         const csvItems: CsvRow[] = dataRows
           .map((row) => ({
-            raw_wine_name: row[columnMap.raw_wine_name] ?? '',
+            raw_wine_name: row[wineNameIdx] ?? '',
             raw_producer:
-              columnMap.raw_producer !== undefined ? row[columnMap.raw_producer] : undefined,
+              columnMap.raw_producer !== undefined ? row[columnMap.raw_producer!] : undefined,
             raw_vintage:
-              columnMap.raw_vintage !== undefined ? row[columnMap.raw_vintage] : undefined,
+              columnMap.raw_vintage !== undefined ? row[columnMap.raw_vintage!] : undefined,
             raw_varietal:
-              columnMap.raw_varietal !== undefined ? row[columnMap.raw_varietal] : undefined,
+              columnMap.raw_varietal !== undefined ? row[columnMap.raw_varietal!] : undefined,
             raw_sku:
-              columnMap.raw_sku !== undefined ? row[columnMap.raw_sku] : undefined,
+              columnMap.raw_sku !== undefined ? row[columnMap.raw_sku!] : undefined,
             raw_price:
               columnMap.raw_price !== undefined
-                ? parseFloat(row[columnMap.raw_price]?.replace(/[$,]/g, '') ?? '')
+                ? parseFloat(row[columnMap.raw_price!]?.replace(/[$,]/g, '') ?? '')
                 : undefined,
             raw_quantity:
               columnMap.raw_quantity !== undefined
-                ? parseInt(row[columnMap.raw_quantity] ?? '', 10)
+                ? parseInt(row[columnMap.raw_quantity!] ?? '', 10)
                 : undefined,
           }))
           .filter((item) => item.raw_wine_name.length > 0)
