@@ -26,7 +26,7 @@ export function ProducerWineGrid({ producerName, wines }: ProducerWineGridProps)
       <section aria-labelledby="producer-wines-heading">
         <h2
           id="producer-wines-heading"
-          className="font-display text-2xl font-bold text-foreground mb-6"
+          className="text-2xl font-semibold text-foreground mb-6"
         >
           Wines by {producerName}
         </h2>
@@ -41,7 +41,7 @@ export function ProducerWineGrid({ producerName, wines }: ProducerWineGridProps)
     <section aria-labelledby="producer-wines-heading">
       <h2
         id="producer-wines-heading"
-        className="font-display text-2xl font-bold text-foreground mb-6"
+        className="text-2xl font-semibold text-foreground mb-6"
       >
         Wines by {producerName}
       </h2>

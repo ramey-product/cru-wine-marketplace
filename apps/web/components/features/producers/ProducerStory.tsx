@@ -15,7 +15,7 @@ export function ProducerStory({ storyContent }: ProducerStoryProps) {
     <section aria-labelledby="producer-story-heading">
       <h2
         id="producer-story-heading"
-        className="font-display text-2xl font-bold text-foreground mb-4"
+        className="text-2xl font-semibold text-foreground mb-4"
       >
         The Story
       </h2>

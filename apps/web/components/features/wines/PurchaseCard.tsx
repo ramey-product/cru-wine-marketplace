@@ -85,7 +85,7 @@ export function PurchaseCard({ price, isAvailable, wineName }: PurchaseCardProps
       </div>
 
       {/* Mobile: Sticky bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card px-4 py-3 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-md px-4 py-3 lg:hidden">
         <div className="flex items-center gap-3 max-w-7xl mx-auto">
           <div className="flex-1 min-w-0">
             <p className="text-lg font-semibold font-mono text-foreground">{price}</p>

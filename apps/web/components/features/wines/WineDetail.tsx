@@ -161,7 +161,7 @@ export function WineDetail({ wine }: WineDetailProps) {
 
         {/* Availability section (mobile only — desktop shows in PurchaseCard sidebar) */}
         <div className="lg:hidden">
-          <WineAvailability />
+          <WineAvailability id="availability-mobile" />
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export function WineDetail({ wine }: WineDetailProps) {
         />
         {/* Availability in desktop sidebar */}
         <div className="hidden lg:block mt-6">
-          <WineAvailability />
+          <WineAvailability id="availability-desktop" />
         </div>
       </div>
     </div>

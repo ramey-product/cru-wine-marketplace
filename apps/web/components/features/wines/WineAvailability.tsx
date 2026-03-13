@@ -10,15 +10,17 @@ interface Retailer {
 
 interface WineAvailabilityProps {
   retailers?: Retailer[] | null
+  id?: string
 }
 
-export function WineAvailability({ retailers }: WineAvailabilityProps) {
+export function WineAvailability({ retailers, id = 'availability' }: WineAvailabilityProps) {
+  const headingId = `${id}-heading`
   // TODO: Wire up real retailer availability data
   if (!retailers || retailers.length === 0) {
     return (
-      <section aria-labelledby="availability-heading">
+      <section aria-labelledby={headingId}>
         <h2
-          id="availability-heading"
+          id={headingId}
           className="text-lg font-semibold text-foreground mb-3"
         >
           Availability
@@ -34,9 +36,9 @@ export function WineAvailability({ retailers }: WineAvailabilityProps) {
   }
 
   return (
-    <section aria-labelledby="availability-heading">
+    <section aria-labelledby={headingId}>
       <h2
-        id="availability-heading"
+        id={headingId}
         className="text-lg font-semibold text-foreground mb-3"
       >
         Available Nearby

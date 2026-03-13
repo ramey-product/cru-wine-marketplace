@@ -26,6 +26,8 @@ export function SearchCommand() {
 
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const router = useRouter()
 
@@ -42,7 +44,34 @@ export function SearchCommand() {
     setQuery('')
     setResults([])
     setActiveIndex(-1)
+    // Restore focus to trigger button
+    triggerRef.current?.focus()
   }, [])
+
+  // Focus trap within dialog
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return
+    const dialog = dialogRef.current
+    const focusableSelector = 'input, button, [tabindex]:not([tabindex="-1"])'
+
+    function handleTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector))
+      if (focusable.length === 0) return
+      const first = focusable[0]!
+      const last = focusable[focusable.length - 1]!
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
+    dialog.addEventListener('keydown', handleTab)
+    return () => dialog.removeEventListener('keydown', handleTab)
+  }, [isOpen])
 
   // Cmd+K / Ctrl+K shortcut
   useEffect(() => {
@@ -232,6 +261,7 @@ export function SearchCommand() {
   if (!isOpen) {
     return (
       <button
+        ref={triggerRef}
         onClick={open}
         className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-1.5 text-sm
                    text-muted-foreground hover:bg-muted transition-colors"
@@ -257,6 +287,7 @@ export function SearchCommand() {
 
       {/* Dialog */}
       <div
+        ref={dialogRef}
         className="fixed inset-x-0 top-[20%] z-50 mx-auto w-full max-w-lg px-4"
         role="dialog"
         aria-label="Search wines"
