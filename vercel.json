@@ -1,4 +1,8 @@
 {
+  "buildCommand": "pnpm turbo build --filter=@cru/web",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
   "crons": [
     {
       "path": "/api/cron/inventory-sync?type=full",
