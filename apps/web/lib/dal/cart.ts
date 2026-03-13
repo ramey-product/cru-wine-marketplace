@@ -56,7 +56,6 @@ async function cartMedusaFetch(
 // ---------------------------------------------------------------------------
 
 /** Opaque Medusa cart object — shape depends on Medusa version/config. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MedusaCart = Record<string, any>
 
 interface CartResult {
