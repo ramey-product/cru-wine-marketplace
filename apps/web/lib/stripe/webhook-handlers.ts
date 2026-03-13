@@ -130,7 +130,6 @@ export async function handleCheckoutCompleted(
   // Map Medusa line items to the shape expected by createOrder.
   // The cart shape is loosely typed (MedusaCart = Record<string, any>), so
   // we defensively fall back to safe defaults on missing fields.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cartItems: Array<any> = Array.isArray(cart.items) ? cart.items : []
 
   const orderItems = cartItems.map((item) => ({
