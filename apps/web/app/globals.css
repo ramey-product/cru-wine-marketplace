@@ -1,3 +1,102 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cru Design System — UX Design Bible Section 2 */
+    --background: 40 20% 98%;
+    --foreground: 20 14% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 10%;
+    --primary: 333 62% 34%;
+    --primary-foreground: 30 100% 97%;
+    --secondary: 27 50% 64%;
+    --secondary-foreground: 20 14% 10%;
+    --muted: 30 14% 95%;
+    --muted-foreground: 25 6% 45%;
+    --accent: 27 50% 64%;
+    --accent-foreground: 20 14% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 12% 89%;
+    --input: 30 12% 89%;
+    --ring: 333 62% 34%;
+    --radius: 0.5rem;
+
+    /* Cru semantic feedback tokens */
+    --cru-success: 142 71% 37%;
+    --cru-success-bg: 138 76% 97%;
+    --cru-warning: 38 92% 44%;
+    --cru-warning-bg: 48 96% 97%;
+    --cru-error: 0 72% 51%;
+    --cru-error-bg: 0 86% 97%;
+    --cru-info: 217 91% 53%;
+    --cru-info-bg: 214 95% 97%;
+
+    /* Wine-inspired accent palette */
+    --cru-wine-red: 333 62% 34%;
+    --cru-wine-rose: 354 60% 75%;
+    --cru-wine-white: 40 50% 80%;
+    --cru-wine-sparkling: 54 74% 75%;
+    --cru-wine-orange: 30 72% 47%;
+    --cru-wine-dessert: 36 36% 60%;
+
+    /* Region accents */
+    --cru-region-france: 231 59% 52%;
+    --cru-region-italy: 146 51% 36%;
+    --cru-region-california: 24 72% 49%;
+    --cru-region-spain: 0 45% 58%;
+    --cru-region-other: 210 10% 50%;
+
+    /* Motion tokens */
+    --motion-fast: 100ms;
+    --motion-normal: 200ms;
+    --motion-slow: 350ms;
+    --motion-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .dark {
+    --background: 20 14% 4%;
+    --foreground: 40 20% 98%;
+    --card: 20 14% 10%;
+    --card-foreground: 40 20% 98%;
+    --popover: 20 14% 10%;
+    --popover-foreground: 40 20% 98%;
+    --primary: 333 62% 34%;
+    --primary-foreground: 30 100% 97%;
+    --secondary: 27 50% 64%;
+    --secondary-foreground: 20 14% 10%;
+    --muted: 20 10% 15%;
+    --muted-foreground: 25 6% 63%;
+    --accent: 27 50% 64%;
+    --accent-foreground: 20 14% 10%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 6% 26%;
+    --input: 20 6% 26%;
+    --ring: 333 62% 34%;
+
+    /* Dark mode feedback tokens */
+    --cru-success: 142 71% 45%;
+    --cru-success-bg: 143 64% 12%;
+    --cru-warning: 43 96% 56%;
+    --cru-warning-bg: 28 73% 16%;
+    --cru-error: 0 84% 60%;
+    --cru-error-bg: 0 63% 15%;
+    --cru-info: 217 91% 68%;
+    --cru-info-bg: 215 50% 20%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

@@ -1,9 +1,28 @@
 import type { Metadata } from 'next'
+import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Cru Wine Marketplace',
-  description: 'Multi-tenant B2B wine marketplace connecting retailers and consumers',
+  description: 'Discover wines you\'ll love from local retailers who know them best.',
 }
 
 export default function RootLayout({
@@ -12,8 +31,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 antialiased">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="min-h-screen font-sans">
         {children}
       </body>
     </html>
