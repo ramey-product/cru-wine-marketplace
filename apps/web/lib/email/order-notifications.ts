@@ -98,3 +98,85 @@ export async function sendRetailerNewOrderNotification(
     itemCount: params.itemCount,
   })
 }
+
+// ---------------------------------------------------------------------------
+// Order Status Change Notifications (EPIC-09/STORY-10)
+// ---------------------------------------------------------------------------
+
+/** Parameters for consumer-facing order status change emails. */
+export interface OrderStatusChangeParams {
+  /** Recipient email address. */
+  email: string
+  /** Platform order ID (UUID). */
+  orderId: string
+  /** Human-readable order number (e.g. "CRU-2024-001"). */
+  orderNumber: string
+  /** New order status. */
+  newStatus: 'confirmed' | 'ready_for_pickup' | 'out_for_delivery' | 'completed' | 'cancelled'
+  /** Display name of the retailer fulfilling the order. */
+  retailerName: string
+  /** Whether the consumer collects in store or receives a delivery. */
+  fulfillmentType: 'pickup' | 'delivery'
+  /** Retailer address (for pickup notifications). */
+  retailerAddress?: string
+  /** Retailer hours of operation (for pickup notifications). */
+  retailerHours?: string
+  /** Estimated delivery time (for delivery notifications). */
+  estimatedDeliveryTime?: string
+  /** Cancellation reason (required when newStatus is 'cancelled'). */
+  cancellationReason?: string
+}
+
+/** Email subject lines per status. */
+const STATUS_SUBJECTS: Record<OrderStatusChangeParams['newStatus'], string> = {
+  confirmed: 'Your Cru order is confirmed',
+  ready_for_pickup: 'Your wine is ready for pickup',
+  out_for_delivery: 'Your wine is on its way',
+  completed: 'Order complete — enjoy your wine!',
+  cancelled: 'Your order has been cancelled',
+}
+
+/**
+ * Send an order status change notification to the consumer.
+ *
+ * Called after a retailer changes order status via the dashboard.
+ * Non-blocking — errors are logged, never thrown, so the status
+ * change itself always succeeds.
+ *
+ * TODO: Integrate with email service (Resend + React Email) in Phase 2.
+ */
+export async function sendOrderStatusChangeEmail(
+  params: OrderStatusChangeParams
+): Promise<void> {
+  try {
+    const subject = STATUS_SUBJECTS[params.newStatus]
+
+    // TODO: Replace with actual email sending via Resend in Phase 2
+    // import { Resend } from 'resend'
+    // const resend = new Resend(process.env.RESEND_API_KEY)
+    // await resend.emails.send({
+    //   from: 'Cru <orders@cru.wine>',
+    //   to: params.email,
+    //   subject,
+    //   react: OrderStatusEmailTemplate(params),
+    // })
+    console.log('[EMAIL STUB] Order status change notification', {
+      to: params.email,
+      subject,
+      orderId: params.orderId,
+      orderNumber: params.orderNumber,
+      newStatus: params.newStatus,
+      retailerName: params.retailerName,
+      fulfillmentType: params.fulfillmentType,
+      ...(params.retailerAddress && { retailerAddress: params.retailerAddress }),
+      ...(params.cancellationReason && { cancellationReason: params.cancellationReason }),
+    })
+  } catch (error) {
+    // Non-blocking: log error but don't throw so status change still succeeds
+    console.error('[EMAIL ERROR] Failed to send order status change email', {
+      orderId: params.orderId,
+      newStatus: params.newStatus,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+}
