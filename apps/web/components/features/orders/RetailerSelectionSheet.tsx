@@ -199,8 +199,9 @@ export function RetailerSelectionSheet({
   retailers = MOCK_RETAILERS,
 }: RetailerSelectionSheetProps) {
   const sorted = sortByBestValue(retailers)
-  const inStockCount = sorted.filter((r) => r.inStock).length
-  const badges = computeBadges(sorted.filter((r) => r.inStock))
+  const inStockRetailers = sorted.filter((r) => r.inStock)
+  const inStockCount = inStockRetailers.length
+  const badges = computeBadges(inStockRetailers)
 
   const handleAddToCart = async (retailerOrgId: string) => {
     await onAddToCart(retailerOrgId)
@@ -221,14 +222,18 @@ export function RetailerSelectionSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-3 px-4 pb-6">
-          {sorted.map((retailer) => (
+        <div
+          role="list"
+          aria-label="Available retailers"
+          className="space-y-3 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
+        >
+          {sorted.map((retailer, index) => (
             <RetailerCard
               key={retailer.id}
               retailer={retailer}
-              wineId={wineId}
               onAddToCart={handleAddToCart}
               badge={badges.get(retailer.id)}
+              index={index}
             />
           ))}
         </div>

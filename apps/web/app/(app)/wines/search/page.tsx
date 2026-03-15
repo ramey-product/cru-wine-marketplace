@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { WineGrid } from '@/components/features/browse/WineGrid'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 import { FilterPanel } from '@/components/features/browse/FilterPanel'
 import { FilterChips } from '@/components/features/browse/FilterChips'
 import { BrowseEmptyState } from '@/components/features/browse/BrowseEmptyState'
@@ -116,7 +116,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               <p className="text-sm text-muted-foreground mb-4">
                 {wines.length} {wines.length === 1 ? 'result' : 'results'} for &ldquo;{query}&rdquo;
               </p>
-              <WineGrid wines={wines} />
+              <WineGridClient wines={wines} />
 
               {/* TODO: Add Load More button when total > wines.length */}
             </>

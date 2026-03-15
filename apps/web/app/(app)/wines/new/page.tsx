@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { WineGrid } from '@/components/features/browse/WineGrid'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 import { BrowseEmptyState } from '@/components/features/browse/BrowseEmptyState'
 import { PLACEHOLDER_WINES } from '../_lib/placeholder-wines'
 
@@ -34,7 +34,7 @@ export default async function NewWinesPage() {
           <p className="text-sm text-muted-foreground mb-4">
             {wines.length} {wines.length === 1 ? 'wine' : 'wines'}
           </p>
-          <WineGrid wines={wines} />
+          <WineGridClient wines={wines} />
         </>
       ) : (
         <BrowseEmptyState message="No new wines yet. Check back soon for new arrivals." />

@@ -1,4 +1,4 @@
-import { WineCard } from '@/components/features/wines/WineCard'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 
 interface ProducerWine {
   id: string
@@ -45,11 +45,11 @@ export function ProducerWineGrid({ producerName, wines }: ProducerWineGridProps)
       >
         Wines by {producerName}
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {wines.map((wine) => (
-          <WineCard key={wine.id} wine={wine} showStoryHook={false} />
-        ))}
-      </div>
+      <WineGridClient
+        wines={wines}
+        showAvailability={false}
+        gridClassName="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+      />
     </section>
   )
 }
