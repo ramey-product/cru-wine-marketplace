@@ -142,6 +142,55 @@ export const PLACEHOLDER_WINES: PlaceholderWine[] = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// Mock availability data — keyed by wine ID
+// Simulates what the DAL would return from spatial retailer queries.
+// ---------------------------------------------------------------------------
+
+import type { WineAvailability } from '@/components/features/wines/WineCard'
+
+export const MOCK_AVAILABILITY: Record<string, WineAvailability> = {
+  '1': {
+    nearbyRetailerCount: 3,
+    lowestPrice: 8500, // cents
+    closestRetailer: { name: 'Wine House Los Angeles', distanceMiles: 1.2 },
+  },
+  '2': {
+    nearbyRetailerCount: 2,
+    lowestPrice: 12000,
+    closestRetailer: { name: 'The Cork & Bottle', distanceMiles: 2.8 },
+  },
+  '3': {
+    nearbyRetailerCount: 1,
+    lowestPrice: 20000,
+    closestRetailer: { name: 'Vino Locale', distanceMiles: 4.5 },
+  },
+  '4': {
+    nearbyRetailerCount: 5,
+    lowestPrice: 2200,
+    closestRetailer: { name: 'Sunset Wine & Spirits', distanceMiles: 0.8 },
+  },
+  '5': {
+    nearbyRetailerCount: 2,
+    lowestPrice: 4500,
+    closestRetailer: { name: 'Wine House Los Angeles', distanceMiles: 1.2 },
+  },
+  '6': {
+    nearbyRetailerCount: 0,
+    lowestPrice: 0,
+  },
+  '7': {
+    nearbyRetailerCount: 1,
+    lowestPrice: 18000,
+    closestRetailer: { name: 'Grand Cru Selections', distanceMiles: 6.1 },
+  },
+  '8': {
+    nearbyRetailerCount: 4,
+    lowestPrice: 9500,
+    closestRetailer: { name: 'Sunset Wine & Spirits', distanceMiles: 0.8 },
+  },
+}
+
 export const PLACEHOLDER_REGIONS = [
   'Napa Valley',
   'Bordeaux',
