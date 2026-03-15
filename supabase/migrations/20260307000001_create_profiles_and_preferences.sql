@@ -5,7 +5,7 @@
 -- These are USER-SCOPED tables (no org_id). They use auth.uid() for RLS
 -- instead of the org_id membership subquery pattern.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Enum type for notification frequency

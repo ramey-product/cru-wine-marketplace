@@ -5,7 +5,7 @@
 --   Follow relationships are between users, not org-owned data.
 --   Share events are personal user behavior logs, not org-tied content.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Follows table

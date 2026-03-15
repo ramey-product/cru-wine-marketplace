@@ -19,7 +19,7 @@
 --   URL: https://<your-domain>/api/webhooks/supabase/wine-sync
 --   Headers: x-webhook-secret = <SUPABASE_WEBHOOK_SECRET>
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- Enable pg_net extension (required for HTTP requests from triggers)
 CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;

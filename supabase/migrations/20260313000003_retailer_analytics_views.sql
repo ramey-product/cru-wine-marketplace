@@ -5,7 +5,7 @@
 -- Monetary values in orders are INTEGER cents (e.g., total = 1299 means $12.99).
 -- Commission is calculated at query time using the retailer's commission_rate.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Retailer Order Analytics materialized view
@@ -68,7 +68,7 @@ CREATE OR REPLACE FUNCTION public.refresh_retailer_analytics()
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = 'public', 'extensions'
 AS $$
 BEGIN
   REFRESH MATERIALIZED VIEW CONCURRENTLY public.retailer_order_analytics;

@@ -6,7 +6,7 @@
 -- Made org-scoped via org_id (derived from the retailer's org) for RLS consistency.
 -- Only org members can view and manage their match queue entries.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Wine Match Queue table

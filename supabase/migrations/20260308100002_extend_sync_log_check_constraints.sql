@@ -7,7 +7,7 @@
 --   - Webhook handlers (sync_type='webhook_event', status='pending')
 --   - Staleness check cron (sync_type='staleness_check')
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Drop and recreate sync_type constraint with additional values

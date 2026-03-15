@@ -5,7 +5,7 @@
 -- RLS enforces user_id = auth.uid() ownership on wishlists,
 -- and wishlist_items access is gated through wishlist ownership.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Wishlists table

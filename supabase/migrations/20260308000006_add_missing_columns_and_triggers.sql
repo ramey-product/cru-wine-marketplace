@@ -6,7 +6,7 @@
 --   3. taste_profiles: add auto-increment trigger for `profile_version` column
 --      to support atomic upsert operations in the DAL layer
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Add updated_at column to taste_profile_wines

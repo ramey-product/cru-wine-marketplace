@@ -4,7 +4,7 @@
 -- retailer org members see orders placed against their organization.
 -- Monetary values are stored as INTEGER cents (e.g. 1299 = $12.99).
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Orders table
