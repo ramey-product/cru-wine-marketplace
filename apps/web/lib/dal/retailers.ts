@@ -171,7 +171,6 @@ export async function getRetailersNearby(
 
   // RPC function created in migration 20260314120000. Type assertion needed
   // until `supabase gen types` is re-run after applying the migration.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (client as any).rpc('find_nearby_retailers', {
     p_lat: lat,
     p_lng: lng,
@@ -217,7 +216,6 @@ export async function findWinesAvailableNearby(
 
   // RPC function created in migration 20260314120000. Type assertion needed
   // until `supabase gen types` is re-run after applying the migration.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (client as any).rpc('find_wines_available_nearby', {
     p_lat: lat,
     p_lng: lng,
