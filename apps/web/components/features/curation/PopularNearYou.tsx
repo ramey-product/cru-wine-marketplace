@@ -19,7 +19,6 @@ export function PopularNearYou() {
             wine={wine}
             showAvailability
             showStoryHook
-            isAvailable={Number(wine.id) % 2 === 0}
           />
         ))}
       </div>
