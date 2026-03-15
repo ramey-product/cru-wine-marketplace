@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Clock, Star } from 'lucide-react'
+import { Clock, RefreshCw, Star } from 'lucide-react'
 import { OrderStatusBadge } from './OrderStatusBadge'
 
 type OrderStatus = 'pending' | 'confirmed' | 'ready_for_pickup' | 'out_for_delivery' | 'completed' | 'cancelled'
@@ -71,9 +71,15 @@ export function OrderCard({ order, relativeTime, estimatedReadyTime }: OrderCard
       )}
 
       {order.status === 'completed' && (
-        <div className="mt-2 flex items-center gap-1.5 text-xs text-primary">
-          <Star className="h-3 w-3" aria-hidden="true" />
-          <span>Rate your wines</span>
+        <div className="mt-2 flex items-center gap-3">
+          <div className="flex items-center gap-1.5 text-xs text-primary">
+            <Star className="h-3 w-3" aria-hidden="true" />
+            <span>Rate your wines</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <RefreshCw className="h-3 w-3" aria-hidden="true" />
+            <span>Order again</span>
+          </div>
         </div>
       )}
     </Link>

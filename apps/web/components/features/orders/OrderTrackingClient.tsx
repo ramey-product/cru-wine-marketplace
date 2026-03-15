@@ -2,12 +2,14 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { Clock, MapPin, Phone, Mail, Wifi, WifiOff, Star } from 'lucide-react'
+import { useState } from 'react'
+import { Clock, MapPin, Phone, Mail, RefreshCw, Wifi, WifiOff, Star } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { OrderProgressStepper } from './OrderProgressStepper'
 import { OrderStatusBadge } from './OrderStatusBadge'
 import { OrderStatusTimeline } from './OrderStatusTimeline'
 import { OrderMapThumbnail } from './OrderMapThumbnail'
+import { ReorderDialog } from './ReorderDialog'
 import { useOrderStatus } from '@/hooks/useOrderStatus'
 import { useOrderTracking } from '@/lib/order-tracking/OrderTrackingContext'
 import type { OrderStatus, FulfillmentType } from '@/lib/order-tracking/types'
@@ -166,6 +168,7 @@ interface OrderTrackingClientProps {
 
 export function OrderTrackingClient({ order }: OrderTrackingClientProps) {
   const { trackOrder } = useOrderTracking()
+  const [reorderOpen, setReorderOpen] = useState(false)
 
   // Real-time status updates
   const {
@@ -367,23 +370,47 @@ export function OrderTrackingClient({ order }: OrderTrackingClientProps) {
         </div>
       </div>
 
-      {/* Feedback banner for completed orders */}
+      {/* Completed order actions */}
       {currentStatus === 'completed' && (
-        <Link
-          href={`/orders/${order.id}/feedback`}
-          className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 hover:bg-primary/10 transition-colors"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-            <Star className="h-4 w-4 text-primary" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">Rate your wines</p>
-            <p className="text-xs text-muted-foreground">
-              Help us pick better wines for you next time
-            </p>
-          </div>
-        </Link>
+        <div className="space-y-3">
+          <Link
+            href={`/orders/${order.id}/feedback`}
+            className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 hover:bg-primary/10 transition-colors"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+              <Star className="h-4 w-4 text-primary" aria-hidden="true" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">Rate your wines</p>
+              <p className="text-xs text-muted-foreground">
+                Help us pick better wines for you next time
+              </p>
+            </div>
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setReorderOpen(true)}
+            className="flex w-full items-center gap-3 rounded-lg border border-border bg-card p-4 hover:bg-muted transition-colors"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+              <RefreshCw className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="text-sm font-medium">Order again</p>
+              <p className="text-xs text-muted-foreground">
+                Re-add these wines to your cart
+              </p>
+            </div>
+          </button>
+        </div>
       )}
+
+      <ReorderDialog
+        orderId={order.id}
+        open={reorderOpen}
+        onOpenChange={setReorderOpen}
+      />
     </div>
   )
 }
