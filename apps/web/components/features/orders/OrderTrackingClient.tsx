@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { Clock, MapPin, Phone, Mail, Wifi, WifiOff } from 'lucide-react'
+import { Clock, MapPin, Phone, Mail, Wifi, WifiOff, Star } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { OrderProgressStepper } from './OrderProgressStepper'
 import { OrderStatusBadge } from './OrderStatusBadge'
@@ -366,6 +366,24 @@ export function OrderTrackingClient({ order }: OrderTrackingClientProps) {
           </div>
         </div>
       </div>
+
+      {/* Feedback banner for completed orders */}
+      {currentStatus === 'completed' && (
+        <Link
+          href={`/orders/${order.id}/feedback`}
+          className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 hover:bg-primary/10 transition-colors"
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+            <Star className="h-4 w-4 text-primary" aria-hidden="true" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium">Rate your wines</p>
+            <p className="text-xs text-muted-foreground">
+              Help us pick better wines for you next time
+            </p>
+          </div>
+        </Link>
+      )}
     </div>
   )
 }

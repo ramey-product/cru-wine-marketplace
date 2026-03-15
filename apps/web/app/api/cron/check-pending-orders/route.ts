@@ -33,7 +33,8 @@ export async function GET(request: Request) {
     ).toISOString()
 
     // Query pending orders older than threshold that haven't been notified
-    const { data: stalePendingOrders, error: queryError } = await adminClient
+    // proactive_notification_sent column added by migration 20260315000001 — not yet in generated types
+    const { data: stalePendingOrders, error: queryError } = await (adminClient as any)
       .from('orders')
       .select(`
         id,
@@ -64,7 +65,7 @@ export async function GET(request: Request) {
 
     for (const order of stalePendingOrders) {
       // Mark as notified first (idempotent — prevents duplicate sends on retry)
-      const { error: updateError } = await adminClient
+      const { error: updateError } = await (adminClient as any)
         .from('orders')
         .update({ proactive_notification_sent: true })
         .eq('id', order.id)
