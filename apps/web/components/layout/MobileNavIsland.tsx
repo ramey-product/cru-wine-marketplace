@@ -19,6 +19,7 @@ import { useCart } from '@/lib/cart/CartContext'
 import { formatCartPrice } from '@/lib/cart/cart-store'
 import { useOrderTracking } from '@/lib/order-tracking/OrderTrackingContext'
 import { STATUS_LABELS } from '@/lib/order-tracking/types'
+import { ActiveOrderMiniCard } from '@/components/features/orders/ActiveOrderMiniCard'
 import {
   Sheet,
   SheetContent,
@@ -239,6 +240,7 @@ function TabRow() {
   const pathname = usePathname()
   const [sheetOpen, setSheetOpen] = useState(false)
   const { cart } = useCart()
+  const { activeOrders } = useOrderTracking()
 
   function isActive(href: string): boolean {
     if (href === '/home') return pathname === '/home' || pathname === '/'
@@ -337,6 +339,42 @@ function TabRow() {
                 </div>
               )}
             </div>
+
+            {/* ---- Active Orders Section ---- */}
+            {activeOrders.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-medium">Active Orders</p>
+                  {activeOrders.length > 3 && (
+                    <Link
+                      href="/orders"
+                      onClick={() => setSheetOpen(false)}
+                      className="text-xs font-medium text-primary hover:underline"
+                    >
+                      View all
+                    </Link>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  {activeOrders.slice(0, 3).map((order) => (
+                    <ActiveOrderMiniCard
+                      key={order.orderId}
+                      order={order}
+                      onClick={() => setSheetOpen(false)}
+                    />
+                  ))}
+                </div>
+                {activeOrders.length <= 3 && (
+                  <Link
+                    href="/orders"
+                    onClick={() => setSheetOpen(false)}
+                    className="mt-2 block text-center text-xs font-medium text-primary hover:underline"
+                  >
+                    View All Orders
+                  </Link>
+                )}
+              </div>
+            )}
 
             {/* ---- Quick Paths Section ---- */}
             <div className="space-y-1">
