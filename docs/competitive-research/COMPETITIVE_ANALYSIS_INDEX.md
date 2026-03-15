@@ -176,12 +176,29 @@ See `wine_competitive_analysis_2025_2026.md` for full source links.
 
 ---
 
+### 4. **local-marketplace-ux-analysis.md** (~500 lines)
+**Best For**: Commerce UX patterns from local delivery marketplaces
+- Uber Eats and Grubhub end-to-end commerce flow analysis
+- Proximity/distance display patterns
+- Order tracking and post-purchase engagement
+- Discovery and browsing architecture
+- Cart and checkout optimization
+- Re-engagement loops and retention patterns
+- Mobile-first interaction design
+- Gap analysis vs. Cru's current PRDs
+- Top 7 prioritized product recommendations
+
+**Time to Read**: 20-30 minutes
+
+---
+
 ## Usage Recommendations
 
 **For Executive Briefs**: Use COMPETITIVE_SUMMARY.md
 **For Product Strategy**: Use wine_competitive_analysis_2025_2026.md + COMPETITIVE_MATRIX.md
 **For Competitive Comparisons**: Use COMPETITIVE_MATRIX.md
 **For Deep Dives**: Use wine_competitive_analysis_2025_2026.md
+**For Commerce UX Design**: Use local-marketplace-ux-analysis.md
 **For Investor Presentations**: Cite COMPETITIVE_SUMMARY.md + supporting sections from full analysis
 
 ---
