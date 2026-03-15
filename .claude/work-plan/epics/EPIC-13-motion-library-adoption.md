@@ -236,10 +236,33 @@ The platform currently uses four different animation approaches: CSS transitions
 
 ---
 
-### STORY 13/10: Mobile Tab Bar Active Indicator
+### STORY 13/10: Nav Island Wing Transition Animations
+**Points:** 3 | **Assignee:** fullstack-1
+
+**What:** Enhance MobileNavIsland wing transitions with directional crossfades, background color interpolation, and micro-interactions.
+
+**Build:**
+1. **Mode swap crossfade (cart ↔ order):** When cart clears after order placement and the wing transitions from cart mode to order tracking mode, animate with directional slide — cart exits left (x: -20, opacity: 0, 150ms), order enters from right (x: 20→0, opacity: 0→1, 200ms). Use `AnimatePresence mode="wait"` with keyed content.
+2. **Background color interpolation:** Animate the wing container background from `primary` to `emerald-700` over ~400ms during cart→order transition using Motion's `animate` with color values rather than instant class swap.
+3. **Order status text transition:** When order status updates in real-time (e.g., "Being prepared" → "Ready for pickup"), animate the status label with slide-up/fade (same pattern as cart price counter: y: -8→0, opacity: 0→1).
+4. **Track/View Cart CTA micro-bounce:** Add `whileTap={{ scale: 0.97 }}` to both CTAs (matching BuyButton pattern).
+5. **Wing entrance content stagger:** On initial wing appearance, stagger internal elements (dot → status text → retailer → CTA) with 50ms intervals for a polished reveal.
+
+**Acceptance Criteria:**
+- [ ] Cart→order wing transition uses directional slide crossfade
+- [ ] Background color morphs smoothly between primary and emerald
+- [ ] Status text updates animate (not instant swap)
+- [ ] CTAs have press feedback (scale 0.97)
+- [ ] Reduced motion: all transitions are instant
+- [ ] No layout shift during mode swap
+- [ ] Works correctly on rapid cart clear + order placement sequence
+
+---
+
+### STORY 13/11: Mobile Tab Bar Active Indicator
 **Points:** 2 | **Assignee:** fullstack-4
 
-**What:** Add a spring-animated active indicator to the mobile tab bar.
+**What:** Add a spring-animated active indicator to the MobileNavIsland tab row.
 
 **Build:**
 1. Active tab indicator (bottom border or background pill): `motion.div` with `layoutId="activeTab"`
@@ -256,7 +279,7 @@ The platform currently uses four different animation approaches: CSS transitions
 
 ---
 
-### STORY 13/11: Loading Skeleton Enhancement
+### STORY 13/12: Loading Skeleton Enhancement
 **Points:** 2 | **Assignee:** fullstack-4
 
 **What:** Evaluate and enhance loading skeletons with Motion shimmer.
@@ -301,14 +324,15 @@ All stories require Frontend Lead review for:
 3. **13/02** (WineCard hover) — visible on every browse page
 4. **13/04** (Grid stagger) — visible on every wine grid
 5. **13/08** (Cart layout) — completes the commerce animation story
-6. **13/05** (Toasts) — system-wide improvement
-7. **13/06** (Dropdown/Accordion) — component-level polish
-8. **13/07** (Scroll reveals) — home feed enhancement
-9. **13/10** (Tab bar) — mobile navigation polish
-10. **13/11** (Skeletons) — loading state polish
-11. **13/09** (Gallery gestures) — most complex, can be deferred
+6. **13/10** (Nav Island wing transitions) — polishes the new island UX
+7. **13/05** (Toasts) — system-wide improvement
+8. **13/06** (Dropdown/Accordion) — component-level polish
+9. **13/07** (Scroll reveals) — home feed enhancement
+10. **13/11** (Tab bar active indicator) — mobile navigation polish
+11. **13/12** (Skeletons) — loading state polish
+12. **13/09** (Gallery gestures) — most complex, can be deferred
 
-Total estimated points: **33**
+Total estimated points: **36**
 
 ---
 

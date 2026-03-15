@@ -56,6 +56,12 @@
     --motion-normal: 200ms;
     --motion-slow: 350ms;
     --motion-easing: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Mobile Nav Island */
+    --nav-island-height: 3.5rem;
+    --nav-island-inset: 0.75rem;
+    --nav-island-radius: 1.25rem;
+    --nav-island-bottom: calc(var(--nav-island-inset) + env(safe-area-inset-bottom, 0px));
   }
 
   .dark {
