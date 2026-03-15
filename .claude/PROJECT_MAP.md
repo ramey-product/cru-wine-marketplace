@@ -85,6 +85,7 @@
 | Agent Log | `.claude/agent-log.md` | Running status log maintained by pm-orchestrator |
 | Kickoff Prompt | `.claude/kickoff-prompt.md` | Pre-development planning prompt (Checkpoints 1-2) |
 | Context Mgmt Rule | `.claude/rules/context-management.md` | Global rule: incremental loading, no bulk doc loading |
+| Mock Data Registry | `.claude/MOCK_DATA_REGISTRY.md` | All placeholder/mock data that must be replaced with real DAL queries before production |
 
 ## Work Plan (Checkpoint 2 Output)
 
