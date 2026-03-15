@@ -104,56 +104,137 @@ export async function getRetailerByOrgId(client: TypedClient, orgId: string) {
 }
 
 // ---------------------------------------------------------------------------
-// getRetailersNearby — proximity query with PostGIS fallback
+// Nearby query result types
+// ---------------------------------------------------------------------------
+
+export interface NearbyRetailer {
+  id: string
+  org_id: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  state: string
+  zip: string
+  phone: string | null
+  email: string | null
+  website: string | null
+  fulfillment_capabilities: string[]
+  delivery_radius_miles: number | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  distance_miles: number
+  total_count: number
+}
+
+export interface NearbyWine {
+  wine_id: string
+  wine_name: string
+  wine_slug: string
+  wine_varietal: string | null
+  wine_region: string | null
+  wine_appellation: string | null
+  wine_image_url: string | null
+  wine_vintage: number | null
+  producer_id: string
+  producer_name: string | null
+  producer_slug: string | null
+  retailer_id: string
+  retailer_name: string
+  retailer_slug: string
+  retailer_city: string
+  price: number
+  distance_miles: number
+  retailer_count: number
+  total_count: number
+}
+
+// ---------------------------------------------------------------------------
+// getRetailersNearby — proximity query via PostGIS RPC
 // ---------------------------------------------------------------------------
 
 /**
- * Find active retailers near a geographic point.
- *
- * TODO: Wire up PostGIS proximity query when the `get_retailers_nearby` RPC
- * function is created in a later migration. The RPC should accept lat, lng,
- * radius_miles and use ST_DWithin for efficient spatial filtering against
- * the GIST-indexed `location` column.
- *
- * Current implementation: returns all active retailers sorted by name with
- * pagination. No distance filtering or sorting is applied.
+ * Find active retailers near a geographic point using PostGIS spatial queries.
+ * Uses the `find_nearby_retailers` RPC function with GIST-indexed ST_DWithin
+ * for efficient spatial filtering.
  */
 export async function getRetailersNearby(
   client: TypedClient,
-  _lat: number,
-  _lng: number,
-  _radiusMiles: number,
+  lat: number,
+  lng: number,
+  radiusMiles: number = 25,
   pagination: Pagination = { page: 1, per_page: 24 }
-): Promise<PaginatedResult<unknown>> {
+): Promise<PaginatedResult<NearbyRetailer>> {
   const { page, per_page } = pagination
-  const from = (page - 1) * per_page
-  const to = from + per_page - 1
+  const offset = (page - 1) * per_page
 
-  // TODO: Replace with RPC call once DB function exists:
-  // const { data, count, error } = await client
-  //   .rpc('get_retailers_nearby', {
-  //     p_lat: lat,
-  //     p_lng: lng,
-  //     p_radius_miles: radiusMiles,
-  //     p_limit: per_page,
-  //     p_offset: from,
-  //   })
-
-  const { data, count, error } = await client
-    .from('retailers')
-    .select(RETAILER_SELECT, { count: 'exact' })
-    .eq('is_active', true)
-    .order('name', { ascending: true })
-    .range(from, to)
+  // RPC function created in migration 20260314120000. Type assertion needed
+  // until `supabase gen types` is re-run after applying the migration.
+  const { data, error } = await (client as any).rpc('find_nearby_retailers', {
+    p_lat: lat,
+    p_lng: lng,
+    p_radius_miles: radiusMiles,
+    p_limit: per_page,
+    p_offset: offset,
+  })
 
   if (error) {
-    console.error('getRetailersNearby query failed:', error)
+    console.error('getRetailersNearby RPC failed:', error)
     return { data: [], total: 0, page, per_page }
   }
 
+  const rows = (data ?? []) as NearbyRetailer[]
+  const first = rows[0]
+  const total = first ? Number(first.total_count) : 0
+
   return {
-    data: data ?? [],
-    total: count ?? 0,
+    data: rows,
+    total,
+    page,
+    per_page,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// findWinesAvailableNearby — wines in stock at nearby retailers
+// ---------------------------------------------------------------------------
+
+/**
+ * Find wines available at nearby retailers, deduplicated by wine with
+ * the closest retailer's price and distance for each wine.
+ */
+export async function findWinesAvailableNearby(
+  client: TypedClient,
+  lat: number,
+  lng: number,
+  radiusMiles: number = 25,
+  pagination: Pagination = { page: 1, per_page: 24 }
+): Promise<PaginatedResult<NearbyWine>> {
+  const { page, per_page } = pagination
+  const offset = (page - 1) * per_page
+
+  // RPC function created in migration 20260314120000. Type assertion needed
+  // until `supabase gen types` is re-run after applying the migration.
+  const { data, error } = await (client as any).rpc('find_wines_available_nearby', {
+    p_lat: lat,
+    p_lng: lng,
+    p_radius_miles: radiusMiles,
+    p_limit: per_page,
+    p_offset: offset,
+  })
+
+  if (error) {
+    console.error('findWinesAvailableNearby RPC failed:', error)
+    return { data: [], total: 0, page, per_page }
+  }
+
+  const rows = (data ?? []) as NearbyWine[]
+  const total = rows.length > 0 ? Number(rows[0]!.total_count) : 0
+
+  return {
+    data: rows,
+    total,
     page,
     per_page,
   }
