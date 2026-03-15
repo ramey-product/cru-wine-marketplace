@@ -65,8 +65,8 @@ export function FulfillmentStep({
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Fulfillment Capabilities</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Fulfillment Capabilities</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         How will customers receive their orders? Select all that apply.
       </p>
 
@@ -78,26 +78,26 @@ export function FulfillmentStep({
               key={option.value}
               className={`flex cursor-pointer items-start gap-3 rounded-lg border-2 p-4 transition-colors ${
                 isChecked
-                  ? 'border-purple-600 bg-purple-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-border/80'
               }`}
             >
               <input
                 type="checkbox"
                 checked={isChecked}
                 onChange={() => toggleCapability(option.value)}
-                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 aria-label={`Enable ${option.label}`}
               />
               <div>
                 <span
                   className={`text-sm font-medium ${
-                    isChecked ? 'text-purple-700' : 'text-gray-900'
+                    isChecked ? 'text-primary' : 'text-foreground'
                   }`}
                 >
                   {option.label}
                 </span>
-                <p className="text-xs text-gray-500">{option.description}</p>
+                <p className="text-xs text-muted-foreground">{option.description}</p>
               </div>
             </label>
           )
@@ -106,10 +106,10 @@ export function FulfillmentStep({
 
       {/* Delivery Radius */}
       {showDeliveryRadius && (
-        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <div className="mt-4 rounded-lg border border-border bg-muted/50 p-4">
           <label
             htmlFor="delivery_radius"
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Delivery Radius (miles)
           </label>
@@ -126,11 +126,11 @@ export function FulfillmentStep({
                   : undefined,
               })
             }
-            className="block w-32 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="block w-32 rounded-md border border-border px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="10"
             aria-label="Delivery radius in miles"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             Maximum distance you&apos;ll deliver from your store.
           </p>
         </div>
@@ -145,7 +145,7 @@ export function FulfillmentStep({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Go back to POS selection"
         >
           Back
@@ -153,7 +153,7 @@ export function FulfillmentStep({
         <button
           type="button"
           onClick={handleNext}
-          className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Continue to inventory upload"
         >
           Continue

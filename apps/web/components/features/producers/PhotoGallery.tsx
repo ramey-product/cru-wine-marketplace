@@ -39,16 +39,31 @@ export function PhotoGallery({ photos, producerName }: PhotoGalleryProps) {
               key={photo.id}
               className="flex-shrink-0 w-72 sm:w-80 snap-start"
             >
-              <div className="aspect-[4/3] overflow-hidden rounded-lg bg-muted">
-                <Image
-                  src={photo.image_url}
-                  alt={photo.caption ?? `${producerName} photo`}
-                  width={480}
-                  height={360}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+              {/*
+               * TODO: Replace this button with a full lightbox/dialog implementation.
+               * The lightbox should render an <Image> at full viewport size with zoom
+               * support and prev/next navigation. A Radix Dialog + react-medium-image-zoom
+               * (or a custom sheet) would be a good fit. Deferred to a later sprint.
+               */}
+              <button
+                type="button"
+                className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
+                aria-label={`View full size: ${photo.caption ?? `${producerName} photo`}`}
+                onClick={() => {
+                  // TODO: open lightbox here
+                }}
+              >
+                <div className="aspect-[4/3] overflow-hidden rounded-lg bg-muted">
+                  <Image
+                    src={photo.image_url}
+                    alt={photo.caption ?? `${producerName} photo`}
+                    width={480}
+                    height={360}
+                    className="w-full h-full object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+              </button>
               {photo.caption && (
                 <p className="mt-2 text-sm text-muted-foreground">{photo.caption}</p>
               )}

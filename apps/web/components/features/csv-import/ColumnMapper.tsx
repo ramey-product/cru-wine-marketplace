@@ -83,10 +83,10 @@ export function ColumnMapper({
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">
         Map CSV Columns
       </h2>
-      <p className="mb-2 text-sm text-gray-500">
+      <p className="mb-2 text-sm text-muted-foreground">
         Match your CSV columns to the standard fields below. Required fields are
         marked with an asterisk.
       </p>
@@ -102,22 +102,22 @@ export function ColumnMapper({
       )}
 
       {/* Mapping table */}
-      <div className="overflow-hidden rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <div className="overflow-hidden rounded-lg border border-border">
+        <table className="min-w-full divide-y divide-border text-sm">
+          <thead className="bg-muted/50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-500">
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 CSV Column
               </th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500">
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Maps To
               </th>
-              <th className="px-4 py-3 text-center font-medium text-gray-500">
+              <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                 Status
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
+          <tbody className="divide-y divide-border bg-background">
             {headers.map((header) => {
               const currentValue = mapping[header] ?? ''
               const isAutoDetected = header in detectedMapping
@@ -134,14 +134,14 @@ export function ColumnMapper({
                       : ''
                   }
                 >
-                  <td className="px-4 py-3 font-medium text-gray-900">
+                  <td className="px-4 py-3 font-medium text-foreground">
                     {header}
                   </td>
                   <td className="px-4 py-3">
                     <select
                       value={currentValue}
                       onChange={(e) => handleChange(header, e.target.value)}
-                      className="block w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="block w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
                       aria-label={`Map column "${header}"`}
                     >
                       <option value="">— Unmapped —</option>
@@ -175,7 +175,7 @@ export function ColumnMapper({
                       </span>
                     )}
                     {!currentValue && (
-                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+                      <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                         Skipped
                       </span>
                     )}
@@ -188,9 +188,9 @@ export function ColumnMapper({
       </div>
 
       {/* Summary */}
-      <div className="mt-4 flex items-center gap-4 text-xs text-gray-500">
+      <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
         <span>{totalMapped} of {headers.length} columns mapped</span>
-        <span className="text-gray-300">|</span>
+        <span className="text-muted-foreground/40">|</span>
         <span>
           Required:{' '}
           {REQUIRED_FIELDS.map((f) => {
@@ -225,7 +225,7 @@ export function ColumnMapper({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Go back to file upload"
         >
           Back
@@ -233,7 +233,7 @@ export function ColumnMapper({
         <button
           type="button"
           onClick={handleConfirm}
-          className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Confirm column mapping and continue"
         >
           Continue

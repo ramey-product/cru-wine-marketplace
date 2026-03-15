@@ -1,22 +1,24 @@
-import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { WineGrid } from '@/components/features/browse/WineGrid'
 import { FilterPanel } from '@/components/features/browse/FilterPanel'
 import { FilterChips } from '@/components/features/browse/FilterChips'
 import { BrowseEmptyState } from '@/components/features/browse/BrowseEmptyState'
+import { BrowseTabs } from '@/components/features/browse/BrowseTabs'
+import type { BrowseTab } from '@/components/features/browse/BrowseTabs'
+import { BrowseCategoryGrid } from '@/components/features/browse/BrowseCategoryGrid'
 import {
   PLACEHOLDER_WINES,
   PLACEHOLDER_REGIONS,
   PLACEHOLDER_VARIETALS,
+  PLACEHOLDER_OCCASIONS,
+  PLACEHOLDER_PRODUCERS,
+  getRegionCategories,
+  getVarietalCategories,
 } from './_lib/placeholder-wines'
-
-export const metadata: Metadata = {
-  title: 'Browse Wines | Cru',
-  description: 'Discover our curated selection of wines from trusted producers around the world.',
-}
 
 interface WinesPageProps {
   searchParams: Promise<{
+    browse?: string
     region?: string | string[]
     varietal?: string | string[]
     price_min?: string
@@ -25,15 +27,23 @@ interface WinesPageProps {
   }>
 }
 
+const VALID_BROWSE_TABS = new Set<BrowseTab>(['region', 'varietal', 'occasion', 'producer'])
+
 export default async function WinesPage({ searchParams }: WinesPageProps) {
   const params = await searchParams
+
+  // Determine active browse tab
+  const browseParam = params.browse as string | undefined
+  const activeTab: BrowseTab = browseParam && VALID_BROWSE_TABS.has(browseParam as BrowseTab)
+    ? (browseParam as BrowseTab)
+    : 'all'
 
   // TODO: Replace with real DAL call: getWines(client, filters, pagination)
   // const client = createServerClient()
   // const filters: WineFilters = { regions, varietals, price_min, price_max }
   // const { data: wines, total } = await getWines(client, filters, { page, per_page: 24 })
 
-  // Parse filter params
+  // Parse filter params (only relevant for "all" tab)
   const regionFilter = Array.isArray(params.region)
     ? params.region
     : params.region
@@ -65,6 +75,10 @@ export default async function WinesPage({ searchParams }: WinesPageProps) {
 
   const hasFilters = regionFilter.length > 0 || varietalFilter.length > 0 || priceMin !== null || priceMax !== null
 
+  // Build category data for non-"all" tabs
+  const regionCategories = getRegionCategories()
+  const varietalCategories = getVarietalCategories()
+
   return (
     <>
       <div className="mb-6">
@@ -74,38 +88,54 @@ export default async function WinesPage({ searchParams }: WinesPageProps) {
         </p>
       </div>
 
-      <div className="flex gap-8">
-        {/* Sidebar — hidden on mobile */}
-        <div className="hidden lg:block">
-          <Suspense fallback={null}>
-            <FilterPanel
-              availableRegions={PLACEHOLDER_REGIONS}
-              availableVarietals={PLACEHOLDER_VARIETALS}
-            />
-          </Suspense>
+      <Suspense fallback={null}>
+        <BrowseTabs />
+      </Suspense>
+
+      {activeTab !== 'all' ? (
+        /* Category grouping view */
+        <BrowseCategoryGrid
+          tab={activeTab}
+          regions={regionCategories}
+          varietals={varietalCategories}
+          occasions={PLACEHOLDER_OCCASIONS}
+          producers={PLACEHOLDER_PRODUCERS}
+        />
+      ) : (
+        /* All wines grid view */
+        <div className="flex gap-8">
+          {/* Sidebar -- hidden on mobile */}
+          <div className="hidden lg:block">
+            <Suspense fallback={null}>
+              <FilterPanel
+                availableRegions={PLACEHOLDER_REGIONS}
+                availableVarietals={PLACEHOLDER_VARIETALS}
+              />
+            </Suspense>
+          </div>
+
+          {/* Main content */}
+          <div className="flex-1 min-w-0">
+            <Suspense fallback={null}>
+              <FilterChips />
+            </Suspense>
+
+            {wines.length > 0 ? (
+              <>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {wines.length} {wines.length === 1 ? 'wine' : 'wines'}
+                  {hasFilters ? ' matching your filters' : ''}
+                </p>
+                <WineGrid wines={wines} />
+
+                {/* TODO: Add Load More button when total > wines.length */}
+              </>
+            ) : (
+              <BrowseEmptyState />
+            )}
+          </div>
         </div>
-
-        {/* Main content */}
-        <div className="flex-1 min-w-0">
-          <Suspense fallback={null}>
-            <FilterChips />
-          </Suspense>
-
-          {wines.length > 0 ? (
-            <>
-              <p className="text-sm text-muted-foreground mb-4">
-                {wines.length} {wines.length === 1 ? 'wine' : 'wines'}
-                {hasFilters ? ' matching your filters' : ''}
-              </p>
-              <WineGrid wines={wines} />
-
-              {/* TODO: Add Load More button when total > wines.length */}
-            </>
-          ) : (
-            <BrowseEmptyState />
-          )}
-        </div>
-      </div>
+      )}
     </>
   )
 }

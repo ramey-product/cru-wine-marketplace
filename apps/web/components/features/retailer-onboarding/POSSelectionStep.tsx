@@ -50,8 +50,8 @@ export function POSSelectionStep({
 }: POSSelectionStepProps) {
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Point of Sale System</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Point of Sale System</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         Select your POS system for inventory sync. You can skip this step and add it later.
       </p>
 
@@ -69,20 +69,20 @@ export function POSSelectionStep({
               }
               className={`flex flex-col rounded-lg border-2 p-4 text-left transition-colors ${
                 isSelected
-                  ? 'border-purple-600 bg-purple-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-border/80'
               }`}
               aria-pressed={isSelected}
               aria-label={`Select ${option.label} as your POS system`}
             >
               <span
                 className={`text-sm font-medium ${
-                  isSelected ? 'text-purple-700' : 'text-gray-900'
+                  isSelected ? 'text-primary' : 'text-foreground'
                 }`}
               >
                 {option.label}
               </span>
-              <span className="mt-1 text-xs text-gray-500">
+              <span className="mt-1 text-xs text-muted-foreground">
                 {option.description}
               </span>
             </button>
@@ -95,7 +95,7 @@ export function POSSelectionStep({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Go back to store details"
         >
           Back
@@ -103,7 +103,7 @@ export function POSSelectionStep({
         <button
           type="button"
           onClick={onNext}
-          className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Continue to fulfillment options"
         >
           Continue

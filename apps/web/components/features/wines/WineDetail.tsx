@@ -1,9 +1,9 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { TastingNotes } from './TastingNotes'
 import { FoodPairings } from './FoodPairings'
 import { WineAvailability } from './WineAvailability'
 import { PurchaseCard } from './PurchaseCard'
+import { WineImageGallery } from './WineImageGallery'
 import { formatWinePrice, formatVarietalRegion } from './utils'
 
 interface WineDetailProps {
@@ -49,39 +49,16 @@ export function WineDetail({ wine }: WineDetailProps) {
     <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-10">
       {/* Left column: Image + Wine info */}
       <div className="space-y-8">
-        {/* Wine image */}
-        <div className="aspect-[3/4] max-w-md mx-auto lg:mx-0 overflow-hidden rounded-lg bg-muted">
-          {wine.image_url ? (
-            <Image
-              src={wine.image_url}
-              alt={displayName}
-              width={600}
-              height={800}
-              className="w-full h-full object-cover"
-              priority
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="64"
-                height="64"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M8 22h8" />
-                <path d="M7 10h10" />
-                <path d="M12 15v7" />
-                <path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z" />
-              </svg>
-            </div>
-          )}
-        </div>
+        {/* Wine image gallery */}
+        <WineImageGallery
+          wineName={displayName}
+          images={[
+            { url: wine.image_url, alt: `${displayName} — bottle front` },
+            { url: null, alt: `${displayName} — label detail` },
+            { url: null, alt: `${displayName} — vineyard` },
+            { url: null, alt: `${displayName} — bottle back` },
+          ]}
+        />
 
         {/* Producer overline */}
         <div className="space-y-1">

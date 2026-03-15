@@ -139,10 +139,10 @@ export function OnboardingWizard() {
                   <span
                     className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
                       isActive
-                        ? 'bg-purple-600 text-white'
+                        ? 'bg-primary text-primary-foreground'
                         : isCompleted
-                          ? 'bg-purple-100 text-purple-700'
-                          : 'bg-gray-200 text-gray-500'
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-muted text-muted-foreground'
                     }`}
                   >
                     {isCompleted ? (
@@ -155,7 +155,7 @@ export function OnboardingWizard() {
                   </span>
                   <span
                     className={`text-xs ${
-                      isActive ? 'font-medium text-purple-600' : 'text-gray-500'
+                      isActive ? 'font-medium text-primary' : 'text-muted-foreground'
                     }`}
                   >
                     {step.label}
@@ -164,7 +164,7 @@ export function OnboardingWizard() {
                 {step.number < STEPS.length && (
                   <div
                     className={`mx-2 h-0.5 flex-1 ${
-                      currentStep > step.number ? 'bg-purple-300' : 'bg-gray-200'
+                      currentStep > step.number ? 'bg-primary/30' : 'bg-border'
                     }`}
                   />
                 )}
@@ -175,7 +175,7 @@ export function OnboardingWizard() {
       </nav>
 
       {/* Step Content */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-border bg-background p-6 shadow-sm">
         {currentStep === 1 && (
           <StoreDetailsStep
             formData={formData}

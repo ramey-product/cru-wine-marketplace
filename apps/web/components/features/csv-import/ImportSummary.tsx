@@ -57,7 +57,7 @@ function StatCard({ label, value, icon: Icon, colorClass, bgClass, borderClass }
     >
       <Icon className={`h-7 w-7 ${colorClass}`} aria-hidden="true" />
       <span className={`text-3xl font-bold ${colorClass}`}>{value.toLocaleString()}</span>
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-muted-foreground">{label}</span>
     </div>
   )
 }
@@ -86,11 +86,11 @@ export function ImportSummary({
   return (
     <div>
       {/* Heading */}
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Import Complete</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Import Complete</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         {successCount > 0 ? (
           <>
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-foreground">
               {successCount.toLocaleString()} wine{successCount !== 1 ? 's' : ''}
             </span>{' '}
             successfully imported.{' '}
@@ -137,7 +137,7 @@ export function ImportSummary({
       </div>
 
       {/* Total processed note */}
-      <p className="mb-6 text-xs text-gray-400 text-center">
+      <p className="mb-6 text-xs text-muted-foreground/70 text-center">
         {total.toLocaleString()} total row{total !== 1 ? 's' : ''} processed
         {syncLogId && (
           <> &middot; Sync log: <span className="font-mono">{syncLogId}</span></>

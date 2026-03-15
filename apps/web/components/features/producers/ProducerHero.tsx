@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { ShareButton } from '@/components/features/producers/ShareButton'
 
 interface ProducerHeroProps {
   name: string
@@ -6,6 +7,8 @@ interface ProducerHeroProps {
   country: string | null
   tagline: string | null
   heroImageUrl: string | null
+  /** Canonical URL for this producer profile, used by the share button. */
+  shareUrl?: string
 }
 
 export function ProducerHero({
@@ -14,6 +17,7 @@ export function ProducerHero({
   country,
   tagline,
   heroImageUrl,
+  shareUrl,
 }: ProducerHeroProps) {
   const location = [region, country].filter(Boolean).join(', ')
 
@@ -53,9 +57,21 @@ export function ProducerHero({
 
       {/* Producer name + location + tagline */}
       <div className="space-y-2">
-        <h1 className="font-display text-4xl font-bold text-foreground">
-          {name}
-        </h1>
+        {/* Name row — share button sits at the trailing edge */}
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="font-display text-4xl font-bold text-foreground">
+            {name}
+          </h1>
+          {shareUrl && (
+            <div className="flex-shrink-0 pt-1">
+              <ShareButton
+                url={shareUrl}
+                title={name}
+                text={tagline ?? undefined}
+              />
+            </div>
+          )}
+        </div>
         {location && (
           <p className="text-base text-muted-foreground">{location}</p>
         )}

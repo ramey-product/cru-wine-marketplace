@@ -183,6 +183,7 @@ export default async function ProducerProfilePage({
         country={producer.country}
         tagline={producer.tagline}
         heroImageUrl={producer.hero_image_url}
+        shareUrl={`https://cru.wine/producers/${producer.slug}`}
       />
 
       {/* Story + Quick Facts layout */}

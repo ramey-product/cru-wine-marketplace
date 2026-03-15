@@ -1,9 +1,10 @@
-import { ClipboardList } from 'lucide-react'
 import { OrderQueue, type MockOrder } from '@/components/features/retailer/OrderQueue'
+import { DashboardGreeting } from '@/components/features/retailer/DashboardGreeting'
+import { DashboardStatCards, type DashboardStats } from '@/components/features/retailer/DashboardStatCards'
 
 export const metadata = {
-  title: 'Order Queue | Retailer Dashboard | Cru',
-  description: 'Manage incoming orders, confirm fulfillment, and track order status.',
+  title: 'Dashboard | Retailer | Cru',
+  description: 'Manage incoming orders, monitor inventory sync, and track daily revenue.',
 }
 
 type OrderStatus =
@@ -14,7 +15,7 @@ type OrderStatus =
   | 'completed'
   | 'cancelled'
 
-// TODO: Replace with getRetailerOrders(supabase, retailerId) DAL call
+// TODO: Replace with getRetailerOrders(supabase, orgId) DAL call
 const MOCK_ORDERS: MockOrder[] = [
   {
     id: 'order-1',
@@ -78,29 +79,26 @@ const MOCK_ORDERS: MockOrder[] = [
   },
 ]
 
-export default function RetailerDashboardPage() {
-  const orders = MOCK_ORDERS
-  const pendingCount = orders.filter((o) => o.status === 'pending').length
+// TODO: Replace with getRetailerDashboardStats(supabase, orgId) DAL call
+const MOCK_STATS: DashboardStats = {
+  pendingOrderCount: MOCK_ORDERS.filter((o) => o.status === 'pending').length,
+  todayRevenueCents: 124500, // $1,245.00
+  todayRevenuePctChange: 12,  // +12% from yesterday
+  lastSyncedAt: new Date(Date.now() - 5 * 60000).toISOString(), // 5 min ago
+  syncStatus: 'healthy',
+}
 
+export default function RetailerDashboardPage() {
   return (
     <div className="space-y-6">
-      {/* Header stats */}
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-            <ClipboardList className="h-4 w-4 text-primary" aria-hidden="true" />
-          </div>
-          <div>
-            <p className="text-2xl font-semibold tabular-nums">{pendingCount}</p>
-            <p className="text-xs text-muted-foreground">
-              {pendingCount === 1 ? 'Pending order' : 'Pending orders'}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Personalised greeting + current date */}
+      <DashboardGreeting storeName="Wine House Los Angeles" />
+
+      {/* KPI stat cards: Pending Orders | Today's Revenue | Sync Status */}
+      <DashboardStatCards stats={MOCK_STATS} />
 
       {/* Order queue */}
-      <OrderQueue orders={orders} />
+      <OrderQueue orders={MOCK_ORDERS} />
     </div>
   )
 }

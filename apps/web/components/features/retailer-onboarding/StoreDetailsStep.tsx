@@ -63,23 +63,23 @@ export function StoreDetailsStep({
   }
 
   const inputClass = (field: string) =>
-    `block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+    `block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary ${
       errors[field]
         ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-        : 'border-gray-300 focus:border-purple-500'
+        : 'border-border focus:border-primary'
     }`
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Store Details</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Store Details</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         Tell us about your wine store.
       </p>
 
       <div className="space-y-4">
         {/* Store Name */}
         <div>
-          <label htmlFor="store_name" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="store_name" className="mb-1 block text-sm font-medium text-foreground">
             Store Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -98,7 +98,7 @@ export function StoreDetailsStep({
 
         {/* Address */}
         <div>
-          <label htmlFor="address" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="address" className="mb-1 block text-sm font-medium text-foreground">
             Street Address <span className="text-red-500">*</span>
           </label>
           <input
@@ -118,7 +118,7 @@ export function StoreDetailsStep({
         {/* City, State, ZIP */}
         <div className="grid grid-cols-6 gap-4">
           <div className="col-span-3">
-            <label htmlFor="city" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="city" className="mb-1 block text-sm font-medium text-foreground">
               City <span className="text-red-500">*</span>
             </label>
             <input
@@ -136,7 +136,7 @@ export function StoreDetailsStep({
           </div>
 
           <div className="col-span-1">
-            <label htmlFor="state" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="state" className="mb-1 block text-sm font-medium text-foreground">
               State <span className="text-red-500">*</span>
             </label>
             <select
@@ -155,7 +155,7 @@ export function StoreDetailsStep({
           </div>
 
           <div className="col-span-2">
-            <label htmlFor="zip" className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="zip" className="mb-1 block text-sm font-medium text-foreground">
               ZIP Code <span className="text-red-500">*</span>
             </label>
             <input
@@ -178,13 +178,13 @@ export function StoreDetailsStep({
         <input type="hidden" value={formData.longitude} />
 
         {/* Contact Info (optional) */}
-        <div className="border-t border-gray-200 pt-4">
-          <h3 className="mb-3 text-sm font-medium text-gray-700">
+        <div className="border-t border-border pt-4">
+          <h3 className="mb-3 text-sm font-medium text-foreground">
             Contact Information (optional)
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label htmlFor="phone" className="mb-1 block text-sm font-medium text-gray-700">
+              <label htmlFor="phone" className="mb-1 block text-sm font-medium text-foreground">
                 Phone
               </label>
               <input
@@ -198,7 +198,7 @@ export function StoreDetailsStep({
               />
             </div>
             <div>
-              <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="mb-1 block text-sm font-medium text-foreground">
                 Email
               </label>
               <input
@@ -215,7 +215,7 @@ export function StoreDetailsStep({
               )}
             </div>
             <div>
-              <label htmlFor="website" className="mb-1 block text-sm font-medium text-gray-700">
+              <label htmlFor="website" className="mb-1 block text-sm font-medium text-foreground">
                 Website
               </label>
               <input
@@ -240,7 +240,7 @@ export function StoreDetailsStep({
         <button
           type="button"
           onClick={handleNext}
-          className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Continue to POS selection"
         >
           Continue

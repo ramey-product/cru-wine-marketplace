@@ -5,6 +5,7 @@ import { CuratedCollectionsRow } from '@/components/features/curation/CuratedCol
 import { PopularNearYou } from '@/components/features/curation/PopularNearYou'
 import { TasteProfileCTA } from '@/components/features/curation/TasteProfileCTA'
 import { SectionSkeleton } from '@/components/features/curation/SectionSkeleton'
+import { DiscoverProducers } from '@/components/features/home/DiscoverProducers'
 
 export const metadata = {
   title: 'Home | Cru',
@@ -30,6 +31,8 @@ export default function HomePage() {
       <Suspense fallback={<SectionSkeleton variant="carousel" />}>
         <CuratedCollectionsRow />
       </Suspense>
+
+      <DiscoverProducers />
 
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <PopularNearYou />

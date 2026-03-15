@@ -216,10 +216,10 @@ function StepIndicator({ current }: { current: WizardStep }) {
                   className={cn(
                     'flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ring-2',
                     isCompleted
-                      ? 'bg-purple-600 text-white ring-purple-600'
+                      ? 'bg-primary text-primary-foreground ring-primary'
                       : isActive
-                        ? 'bg-white text-purple-600 ring-purple-600'
-                        : 'bg-white text-gray-400 ring-gray-300'
+                        ? 'bg-background text-primary ring-primary'
+                        : 'bg-background text-muted-foreground ring-border'
                   )}
                   aria-current={isActive ? 'step' : undefined}
                 >
@@ -245,10 +245,10 @@ function StepIndicator({ current }: { current: WizardStep }) {
                   className={cn(
                     'mt-1 text-xs font-medium hidden sm:block',
                     isActive
-                      ? 'text-purple-600'
+                      ? 'text-primary'
                       : isCompleted
-                        ? 'text-gray-600'
-                        : 'text-gray-400'
+                        ? 'text-muted-foreground'
+                        : 'text-muted-foreground/70'
                   )}
                 >
                   {step.label}
@@ -260,7 +260,7 @@ function StepIndicator({ current }: { current: WizardStep }) {
                 <div
                   className={cn(
                     'mx-2 h-0.5 flex-1',
-                    idx < currentIdx ? 'bg-purple-600' : 'bg-gray-300'
+                    idx < currentIdx ? 'bg-primary' : 'bg-border'
                   )}
                   aria-hidden="true"
                 />
@@ -332,8 +332,8 @@ function UploadStep({ onFileAccepted, isPending }: UploadStepProps) {
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Upload CSV File</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Upload CSV File</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         Upload a CSV file containing your retailer inventory. Maximum file size is 10 MB.
       </p>
 
@@ -354,20 +354,20 @@ function UploadStep({ onFileAccepted, isPending }: UploadStepProps) {
         }}
         className={cn(
           'flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-8 py-12 text-center transition-colors cursor-pointer',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
           dragOver
-            ? 'border-purple-500 bg-purple-50'
+            ? 'border-primary bg-primary/5'
             : fileError
               ? 'border-red-400 bg-red-50'
               : fileName
-                ? 'border-green-400 bg-green-50'
-                : 'border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100'
+                ? 'border-emerald-400 bg-emerald-50'
+                : 'border-border bg-muted/50 hover:border-border hover:bg-muted'
         )}
       >
         <UploadCloud
           className={cn(
             'mb-3 h-10 w-10',
-            dragOver ? 'text-purple-500' : fileError ? 'text-red-400' : 'text-gray-400'
+            dragOver ? 'text-primary' : fileError ? 'text-red-400' : 'text-muted-foreground/70'
           )}
           aria-hidden="true"
         />
@@ -381,10 +381,10 @@ function UploadStep({ onFileAccepted, isPending }: UploadStepProps) {
           </>
         ) : (
           <>
-            <p className="text-sm font-medium text-gray-700">
+            <p className="text-sm font-medium text-foreground">
               Drag &amp; drop your CSV here
             </p>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               or click to browse your files
             </p>
           </>
@@ -415,12 +415,12 @@ function UploadStep({ onFileAccepted, isPending }: UploadStepProps) {
 
       {/* Processing indicator */}
       {isPending && (
-        <p className="mt-3 text-sm text-gray-500 text-center">
+        <p className="mt-3 text-sm text-muted-foreground text-center">
           Detecting columns…
         </p>
       )}
 
-      <p className="mt-4 text-xs text-gray-400">
+      <p className="mt-4 text-xs text-muted-foreground/70">
         Supported format: CSV (.csv) &middot; Max size: 10 MB
       </p>
     </div>
@@ -587,7 +587,7 @@ export function CsvImportWizard({ orgId, retailerId }: CsvImportWizardProps) {
   const { step } = state
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+    <div className="rounded-xl border border-border bg-background p-6 shadow-sm sm:p-8">
       {/* Step indicator */}
       <StepIndicator current={step} />
 

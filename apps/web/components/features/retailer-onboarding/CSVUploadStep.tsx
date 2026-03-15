@@ -218,8 +218,8 @@ export function CSVUploadStep({
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Initial Inventory</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Initial Inventory</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         Upload a CSV of your wine inventory to get started. This step is optional
         &mdash; you can add inventory later.
       </p>
@@ -236,12 +236,12 @@ export function CSVUploadStep({
             onDrop={handleDrop}
             className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
               isDragOver
-                ? 'border-purple-500 bg-purple-50'
-                : 'border-gray-300 bg-gray-50'
+                ? 'border-primary bg-primary/5'
+                : 'border-border bg-muted/50'
             }`}
           >
             <svg
-              className="mb-3 h-10 w-10 text-gray-400"
+              className="mb-3 h-10 w-10 text-muted-foreground/70"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -253,10 +253,10 @@ export function CSVUploadStep({
                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               />
             </svg>
-            <p className="mb-2 text-sm text-gray-600">
+            <p className="mb-2 text-sm text-muted-foreground">
               Drag and drop your CSV file here, or
             </p>
-            <label className="cursor-pointer rounded-md bg-white px-4 py-2 text-sm font-medium text-purple-600 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50">
+            <label className="cursor-pointer rounded-md bg-background px-4 py-2 text-sm font-medium text-primary shadow-sm ring-1 ring-border hover:bg-muted/50">
               Browse Files
               <input
                 ref={fileInputRef}
@@ -267,7 +267,7 @@ export function CSVUploadStep({
                 aria-label="Upload CSV file"
               />
             </label>
-            <p className="mt-2 text-xs text-gray-400">
+            <p className="mt-2 text-xs text-muted-foreground/70">
               CSV or TSV up to 10 MB
             </p>
           </div>
@@ -278,9 +278,9 @@ export function CSVUploadStep({
             </div>
           )}
 
-          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-            <h3 className="text-sm font-medium text-gray-700">Expected Columns</h3>
-            <p className="mt-1 text-xs text-gray-500">
+          <div className="mt-4 rounded-lg border border-border bg-muted/50 p-4">
+            <h3 className="text-sm font-medium text-foreground">Expected Columns</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
               Your CSV should include at minimum a <strong>Wine Name</strong> column.
               Other recognized columns: Producer, Vintage, Varietal, SKU, Price, Quantity.
             </p>
@@ -312,7 +312,7 @@ export function CSVUploadStep({
               <button
                 type="button"
                 onClick={clearUpload}
-                className="text-sm text-gray-500 underline hover:text-gray-700"
+                className="text-sm text-muted-foreground underline hover:text-foreground"
                 aria-label="Remove uploaded file"
               >
                 Remove
@@ -321,27 +321,27 @@ export function CSVUploadStep({
           </div>
 
           {/* Preview Table */}
-          <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
+          <div className="mt-4 overflow-x-auto rounded-lg border border-border">
+            <table className="min-w-full divide-y divide-border text-sm">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Wine</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Producer</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Vintage</th>
-                  <th className="px-3 py-2 text-right font-medium text-gray-500">Price</th>
-                  <th className="px-3 py-2 text-right font-medium text-gray-500">Qty</th>
+                  <th className="px-3 py-2 text-left font-medium text-muted-foreground">Wine</th>
+                  <th className="px-3 py-2 text-left font-medium text-muted-foreground">Producer</th>
+                  <th className="px-3 py-2 text-left font-medium text-muted-foreground">Vintage</th>
+                  <th className="px-3 py-2 text-right font-medium text-muted-foreground">Price</th>
+                  <th className="px-3 py-2 text-right font-medium text-muted-foreground">Qty</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody className="divide-y divide-border bg-background">
                 {previewRows.map((row, i) => (
                   <tr key={i}>
-                    <td className="px-3 py-2 text-gray-900">{row.raw_wine_name}</td>
-                    <td className="px-3 py-2 text-gray-600">{row.raw_producer ?? '—'}</td>
-                    <td className="px-3 py-2 text-gray-600">{row.raw_vintage ?? '—'}</td>
-                    <td className="px-3 py-2 text-right text-gray-600">
+                    <td className="px-3 py-2 text-foreground">{row.raw_wine_name}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{row.raw_producer ?? '—'}</td>
+                    <td className="px-3 py-2 text-muted-foreground">{row.raw_vintage ?? '—'}</td>
+                    <td className="px-3 py-2 text-right text-muted-foreground">
                       {row.raw_price != null ? `$${row.raw_price.toFixed(2)}` : '—'}
                     </td>
-                    <td className="px-3 py-2 text-right text-gray-600">
+                    <td className="px-3 py-2 text-right text-muted-foreground">
                       {row.raw_quantity ?? '—'}
                     </td>
                   </tr>
@@ -349,7 +349,7 @@ export function CSVUploadStep({
               </tbody>
             </table>
             {totalRows > 5 && (
-              <div className="border-t border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-500">
+              <div className="border-t border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
                 Showing 5 of {totalRows} rows
               </div>
             )}
@@ -362,7 +362,7 @@ export function CSVUploadStep({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           aria-label="Go back to fulfillment options"
         >
           Back
@@ -372,7 +372,7 @@ export function CSVUploadStep({
             <button
               type="button"
               onClick={onNext}
-              className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="Skip inventory upload"
             >
               Skip
@@ -381,7 +381,7 @@ export function CSVUploadStep({
           <button
             type="button"
             onClick={onNext}
-            className="rounded-md bg-purple-600 px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             aria-label="Continue to review"
           >
             Continue

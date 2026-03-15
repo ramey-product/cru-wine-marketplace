@@ -112,8 +112,8 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
   return (
     <div>
       {/* Page heading */}
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Preview Import</h2>
-      <p className="mb-4 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Preview Import</h2>
+      <p className="mb-4 text-sm text-muted-foreground">
         Review your data before importing. Cells highlighted in red contain validation
         errors and will not be imported.
       </p>
@@ -154,14 +154,14 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
       </div>
 
       {/* Data table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200 text-sm" role="table">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="min-w-full divide-y divide-border text-sm" role="table">
+          <thead className="bg-muted/50">
             <tr>
               {/* Row number column */}
               <th
                 scope="col"
-                className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide w-10"
+                className="px-3 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide w-10"
               >
                 #
               </th>
@@ -169,18 +169,18 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
                 <th
                   key={col.key}
                   scope="col"
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide"
+                  className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide"
                 >
                   {col.label}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
+          <tbody className="divide-y divide-border bg-background">
             {previewRows.map((row, rowIdx) => (
-              <tr key={rowIdx} className="hover:bg-gray-50/50">
+              <tr key={rowIdx} className="hover:bg-muted/50">
                 {/* Row number */}
-                <td className="px-3 py-2.5 text-xs text-gray-400 font-mono">
+                <td className="px-3 py-2.5 text-xs text-muted-foreground/70 font-mono">
                   {rowIdx + 1}
                 </td>
                 {activeColumns.map((col) => {
@@ -192,7 +192,7 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
                     <td
                       key={col.key}
                       className={cn(
-                        'px-4 py-2.5 text-gray-900',
+                        'px-4 py-2.5 text-foreground',
                         errorMsg
                           ? 'bg-red-50 text-red-900'
                           : isAutoDetected && value
@@ -220,7 +220,7 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
                         <span
                           className={cn(
                             'truncate max-w-[160px]',
-                            !value && 'text-gray-400 italic'
+                            !value && 'text-muted-foreground/70 italic'
                           )}
                         >
                           {value || '—'}
@@ -247,7 +247,7 @@ export function ImportPreview({ rows, mapping, onConfirm, onBack }: ImportPrevie
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded bg-red-100 border border-red-200" />
           Validation error (hover for details)

@@ -36,12 +36,12 @@ function SectionHeader({
   onEdit: (step: number) => void
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-      <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+    <div className="flex items-center justify-between border-b border-border pb-2">
+      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       <button
         type="button"
         onClick={() => onEdit(step)}
-        className="text-xs font-medium text-purple-600 hover:text-purple-700"
+        className="text-xs font-medium text-primary hover:text-primary/80"
         aria-label={`Edit ${title}`}
       >
         Edit
@@ -53,8 +53,8 @@ function SectionHeader({
 function Field({ label, value }: { label: string; value: string | undefined }) {
   return (
     <div>
-      <dt className="text-xs text-gray-500">{label}</dt>
-      <dd className="text-sm text-gray-900">{value || '—'}</dd>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="text-sm text-foreground">{value || '—'}</dd>
     </div>
   )
 }
@@ -71,8 +71,8 @@ export function ReviewStep({
 
   return (
     <div>
-      <h2 className="mb-1 text-xl font-semibold text-gray-900">Review & Submit</h2>
-      <p className="mb-6 text-sm text-gray-500">
+      <h2 className="mb-1 text-xl font-semibold text-foreground">Review & Submit</h2>
+      <p className="mb-6 text-sm text-muted-foreground">
         Review your store details before creating your account.
       </p>
 
@@ -112,8 +112,8 @@ export function ReviewStep({
           <SectionHeader title="Fulfillment" step={3} onEdit={onEdit} />
           <dl className="mt-3 space-y-2">
             <div>
-              <dt className="text-xs text-gray-500">Methods</dt>
-              <dd className="text-sm text-gray-900">
+              <dt className="text-xs text-muted-foreground">Methods</dt>
+              <dd className="text-sm text-foreground">
                 {formData.fulfillment_capabilities
                   .map((c) => FULFILLMENT_LABELS[c] ?? c)
                   .join(', ')}
@@ -157,7 +157,7 @@ export function ReviewStep({
           type="button"
           onClick={onBack}
           disabled={isSubmitting}
-          className="rounded-md border border-gray-300 bg-white px-6 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+          className="rounded-md border border-border bg-background px-6 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
           aria-label="Go back to inventory upload"
         >
           Back
@@ -166,7 +166,7 @@ export function ReviewStep({
           type="button"
           onClick={onSubmit}
           disabled={isSubmitting}
-          className="rounded-md bg-purple-600 px-8 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
+          className="rounded-md bg-primary px-8 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
           aria-label="Create your store"
         >
           {isSubmitting ? (

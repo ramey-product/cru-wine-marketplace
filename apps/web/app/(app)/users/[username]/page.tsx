@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { UserProfileCard } from '@/components/features/social/UserProfileCard'
+import { ProfileTabs } from '@/components/features/social/ProfileTabs'
 
 // TODO: Replace with real DAL calls
 // import { createClient } from '@/lib/supabase/server'
@@ -78,12 +80,9 @@ export default async function UserProfilePage({ params }: PageProps) {
         isOwnProfile={isOwnProfile}
       />
 
-      {/* TODO: Activity feed placeholder */}
-      <div className="border-t border-border pt-8">
-        <p className="text-sm text-muted-foreground italic">
-          Activity feed coming soon.
-        </p>
-      </div>
+      <Suspense fallback={<div className="h-12 animate-pulse rounded bg-muted" />}>
+        <ProfileTabs username={user.username} />
+      </Suspense>
     </div>
   )
 }

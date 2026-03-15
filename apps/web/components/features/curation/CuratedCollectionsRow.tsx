@@ -21,12 +21,13 @@ export function CuratedCollectionsRow() {
         </Link>
       </div>
 
-      <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4 -mx-4 px-4">
+      {/* 2-up on mobile, 4-up on desktop — per UX Design Bible §9.1 */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {MOCK_COLLECTIONS.map((collection) => (
           <Link
             key={collection.id}
             href={`/collections/${collection.slug}`}
-            className="snap-start flex-shrink-0 w-[280px] group"
+            className="group"
           >
             <div className="rounded-lg border border-border overflow-hidden hover:shadow-md transition-all duration-200">
               <div className="aspect-[16/9] bg-muted flex items-center justify-center">

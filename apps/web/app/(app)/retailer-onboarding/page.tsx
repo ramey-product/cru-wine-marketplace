@@ -20,10 +20,10 @@ export default async function RetailerOnboardingPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Welcome to Cru
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <p className="mt-2 text-lg text-muted-foreground">
           Let&apos;s get your store set up on the marketplace.
         </p>
       </div>

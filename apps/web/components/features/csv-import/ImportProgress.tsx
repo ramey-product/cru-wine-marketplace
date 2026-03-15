@@ -111,15 +111,15 @@ export function ImportProgress({
       {status === 'processing' && (
         <>
           <Loader2
-            className="mb-4 h-10 w-10 animate-spin text-purple-600"
+            className="mb-4 h-10 w-10 animate-spin text-primary"
             aria-hidden="true"
           />
 
-          <h3 className="mb-1 text-lg font-semibold text-gray-900">
+          <h3 className="mb-1 text-lg font-semibold text-foreground">
             Importing your inventory…
           </h3>
 
-          <p className="mb-6 text-sm text-gray-500">
+          <p className="mb-6 text-sm text-muted-foreground">
             {total > 0
               ? `Processing row ${Math.min(progress, total)} of ${total}`
               : 'Processing rows…'}
@@ -128,7 +128,7 @@ export function ImportProgress({
           {/* Progress bar */}
           <div className="w-full max-w-sm">
             <div
-              className="overflow-hidden rounded-full bg-gray-200 h-2"
+              className="overflow-hidden rounded-full bg-muted h-2"
               role="progressbar"
               aria-valuenow={pct}
               aria-valuemin={0}
@@ -137,16 +137,16 @@ export function ImportProgress({
             >
               <div
                 className={cn(
-                  'h-full rounded-full bg-purple-600 transition-all duration-500 ease-out',
+                  'h-full rounded-full bg-primary transition-all duration-500 ease-out',
                   pct < 100 && 'animate-pulse'
                 )}
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <p className="mt-2 text-xs text-gray-400">{pct}% complete</p>
+            <p className="mt-2 text-xs text-muted-foreground/70">{pct}% complete</p>
           </div>
 
-          <p className="mt-6 text-xs text-gray-400">
+          <p className="mt-6 text-xs text-muted-foreground/70">
             Do not close this page while the import is running.
           </p>
         </>
@@ -162,11 +162,11 @@ export function ImportProgress({
             aria-hidden="true"
           />
 
-          <h3 className="mb-1 text-lg font-semibold text-gray-900">
+          <h3 className="mb-1 text-lg font-semibold text-foreground">
             Import complete
           </h3>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {total > 0
               ? `All ${total} row${total !== 1 ? 's' : ''} have been processed.`
               : 'Your CSV has been processed.'}
@@ -175,16 +175,16 @@ export function ImportProgress({
           {/* Full progress bar shown as complete */}
           <div className="mt-6 w-full max-w-sm">
             <div
-              className="overflow-hidden rounded-full bg-gray-200 h-2"
+              className="overflow-hidden rounded-full bg-muted h-2"
               role="progressbar"
               aria-valuenow={100}
               aria-valuemin={0}
               aria-valuemax={100}
               aria-label="Import progress: 100%"
             >
-              <div className="h-full w-full rounded-full bg-green-500" />
+              <div className="h-full w-full rounded-full bg-emerald-500" />
             </div>
-            <p className="mt-2 text-xs text-gray-400">100% complete</p>
+            <p className="mt-2 text-xs text-muted-foreground/70">100% complete</p>
           </div>
         </>
       )}
@@ -199,7 +199,7 @@ export function ImportProgress({
             aria-hidden="true"
           />
 
-          <h3 className="mb-1 text-lg font-semibold text-gray-900">
+          <h3 className="mb-1 text-lg font-semibold text-foreground">
             Import failed
           </h3>
 
@@ -211,7 +211,7 @@ export function ImportProgress({
               {errorMessage}
             </p>
           ) : (
-            <p className="mb-6 text-sm text-gray-500 max-w-sm">
+            <p className="mb-6 text-sm text-muted-foreground max-w-sm">
               An unexpected error occurred. Please try again or contact support
               if the problem persists.
             </p>

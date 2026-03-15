@@ -23,12 +23,12 @@ export default function InventoryImportPage() {
     <div>
       {/* Page header */}
       <div className="mb-6 flex items-start gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100">
-          <Upload className="h-5 w-5 text-purple-600" aria-hidden="true" />
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <Upload className="h-5 w-5 text-primary" aria-hidden="true" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Import Inventory</h1>
-          <p className="mt-0.5 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground">Import Inventory</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
             Upload a CSV file to import retailer inventory. Rows are matched
             against the wine catalogue and queued for manual review when no
             automatic match is found.

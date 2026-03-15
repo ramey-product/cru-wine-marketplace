@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { WineDetail } from '@/components/features/wines/WineDetail'
+import { RecommendedWines } from '@/components/features/wines/RecommendedWines'
+import { PLACEHOLDER_WINES as BROWSE_WINES } from '../_lib/placeholder-wines'
 
 // TODO: Replace placeholder data with real DAL calls once database is wired
 // import { createServerClient } from '@/lib/supabase/server'
@@ -134,14 +136,14 @@ export default async function WineDetailPage({
       <Breadcrumbs items={breadcrumbs} />
       <WineDetail wine={wine} />
 
-      {/* TODO: "You Might Also Enjoy" section — add when recommendation engine is ready */}
+      {/* "You Might Also Enjoy" section */}
       <section aria-labelledby="also-enjoy-heading" className="pt-6 border-t border-border">
         <h2 id="also-enjoy-heading" className="font-display text-2xl font-bold text-foreground mb-6">
           You Might Also Enjoy
         </h2>
-        <p className="text-sm text-muted-foreground">
-          Recommendations coming soon based on your taste profile.
-        </p>
+        <RecommendedWines
+          wines={BROWSE_WINES.filter((w) => w.slug !== wine.slug).slice(0, 6)}
+        />
       </section>
     </div>
   )

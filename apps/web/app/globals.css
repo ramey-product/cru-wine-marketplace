@@ -100,3 +100,18 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/*
+ * Reduced-motion override for onboarding slide animations.
+ * Design Bible 9.5: "When reduced motion is active, transitions use instant
+ * opacity swaps only." We override the slide keyframes to a simple fade so
+ * no translateX movement occurs for users who prefer reduced motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-in-right,
+  .animate-slide-in-left {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

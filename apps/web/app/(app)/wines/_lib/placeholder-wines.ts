@@ -162,3 +162,138 @@ export const PLACEHOLDER_VARIETALS = [
   'Sauvignon Blanc',
   'Shiraz',
 ]
+
+export interface BrowseCategoryItem {
+  name: string
+  slug: string
+  count: number
+  description?: string
+}
+
+/**
+ * Derive region category items from placeholder wines.
+ */
+export function getRegionCategories(): BrowseCategoryItem[] {
+  const regionCounts = new Map<string, number>()
+  for (const wine of PLACEHOLDER_WINES) {
+    if (wine.region) {
+      regionCounts.set(wine.region, (regionCounts.get(wine.region) ?? 0) + 1)
+    }
+  }
+  return Array.from(regionCounts.entries())
+    .map(([name, count]) => ({ name, slug: name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+}
+
+/**
+ * Derive varietal category items from placeholder wines.
+ */
+export function getVarietalCategories(): BrowseCategoryItem[] {
+  const varietalCounts = new Map<string, number>()
+  for (const wine of PLACEHOLDER_WINES) {
+    if (wine.varietal) {
+      varietalCounts.set(wine.varietal, (varietalCounts.get(wine.varietal) ?? 0) + 1)
+    }
+  }
+  return Array.from(varietalCounts.entries())
+    .map(([name, count]) => ({ name, slug: name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+}
+
+/**
+ * Placeholder occasion categories (mock data).
+ * TODO: Replace with real curated occasion data from the database.
+ */
+export const PLACEHOLDER_OCCASIONS: BrowseCategoryItem[] = [
+  {
+    name: 'Date Night',
+    slug: 'date-night',
+    count: 12,
+    description: 'Romantic picks for an evening in or out.',
+  },
+  {
+    name: 'Celebration',
+    slug: 'celebration',
+    count: 18,
+    description: 'Toast-worthy bottles for milestones and special moments.',
+  },
+  {
+    name: 'Weeknight Dinner',
+    slug: 'weeknight-dinner',
+    count: 24,
+    description: 'Everyday wines that pair perfectly with a home-cooked meal.',
+  },
+  {
+    name: 'Gift-Worthy',
+    slug: 'gift-worthy',
+    count: 15,
+    description: 'Impressive bottles that make unforgettable gifts.',
+  },
+  {
+    name: 'Outdoor Gathering',
+    slug: 'outdoor-gathering',
+    count: 10,
+    description: 'Refreshing wines for picnics, barbecues, and garden parties.',
+  },
+  {
+    name: 'Wine & Cheese Night',
+    slug: 'wine-and-cheese-night',
+    count: 14,
+    description: 'Classic pairings for a relaxed tasting at home.',
+  },
+]
+
+/**
+ * Placeholder producer categories (mock data).
+ * TODO: Replace with real producer data from the database.
+ */
+export const PLACEHOLDER_PRODUCERS: BrowseCategoryItem[] = [
+  {
+    name: 'Opus One',
+    slug: 'opus-one',
+    count: 3,
+    description: 'Iconic Napa Valley estate blending Bordeaux tradition with California terroir.',
+  },
+  {
+    name: 'Chateau Latour',
+    slug: 'chateau-latour',
+    count: 5,
+    description: 'First Growth Bordeaux producing structured, age-worthy wines since the 17th century.',
+  },
+  {
+    name: 'Gaja',
+    slug: 'gaja',
+    count: 4,
+    description: 'Piedmont\'s most celebrated family estate, redefining Italian winemaking.',
+  },
+  {
+    name: 'Cloudy Bay',
+    slug: 'cloudy-bay',
+    count: 2,
+    description: 'New Zealand pioneer known for vibrant Sauvignon Blanc from Marlborough.',
+  },
+  {
+    name: 'Domaine Drouhin',
+    slug: 'domaine-drouhin',
+    count: 3,
+    description: 'Burgundian heritage brought to Oregon\'s Willamette Valley.',
+  },
+  {
+    name: 'Henschke',
+    slug: 'henschke',
+    count: 2,
+    description: 'Six generations of winemaking in Australia\'s Eden Valley.',
+  },
+  {
+    name: 'Tenuta San Guido',
+    slug: 'tenuta-san-guido',
+    count: 2,
+    description: 'Creator of Sassicaia, the original Super Tuscan.',
+  },
+  {
+    name: 'Domaine Dauvissat',
+    slug: 'domaine-dauvissat',
+    count: 3,
+    description: 'Benchmark Chablis producer with exceptional Grand Cru holdings.',
+  },
+]
