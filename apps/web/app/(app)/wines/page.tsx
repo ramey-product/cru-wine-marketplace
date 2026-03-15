@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { WineGrid } from '@/components/features/browse/WineGrid'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 import { FilterPanel } from '@/components/features/browse/FilterPanel'
 import { FilterChips } from '@/components/features/browse/FilterChips'
 import { BrowseEmptyState } from '@/components/features/browse/BrowseEmptyState'
@@ -8,6 +8,7 @@ import {
   PLACEHOLDER_WINES,
   PLACEHOLDER_REGIONS,
   PLACEHOLDER_VARIETALS,
+  MOCK_AVAILABILITY,
 } from './_lib/placeholder-wines'
 
 export const metadata: Metadata = {
@@ -97,7 +98,12 @@ export default async function WinesPage({ searchParams }: WinesPageProps) {
                 {wines.length} {wines.length === 1 ? 'wine' : 'wines'}
                 {hasFilters ? ' matching your filters' : ''}
               </p>
-              <WineGrid wines={wines} />
+              <WineGridClient
+                wines={wines}
+                showBuyButton
+                showAvailability
+                availabilityMap={MOCK_AVAILABILITY}
+              />
 
               {/* TODO: Add Load More button when total > wines.length */}
             </>

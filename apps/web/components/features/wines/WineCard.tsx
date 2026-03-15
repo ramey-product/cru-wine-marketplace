@@ -64,7 +64,7 @@ export function WineCard({
       href={`/wines/${wine.slug}`}
       aria-label={`Wine: ${displayName}, by ${wine.producer.name}, ${price}${showAvailability && availabilityText ? `, ${availabilityText}` : ''}`}
       className="group cursor-pointer rounded-lg border border-border bg-card overflow-hidden
-                 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 block"
+                 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
     >
       <div className="aspect-[3/4] overflow-hidden bg-muted">
         {wine.image_url ? (
@@ -99,56 +99,44 @@ export function WineCard({
         )}
       </div>
 
-      <div className="p-4 space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {wine.producer.name}
-        </p>
+      <div className="p-4 flex flex-col flex-1">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {wine.producer.name}
+          </p>
 
-        <h3 className="text-lg font-medium leading-tight">{displayName}</h3>
+          <h3 className="text-lg font-medium leading-tight">{displayName}</h3>
 
-        {varietalRegion && (
-          <p className="text-sm text-muted-foreground">{varietalRegion}</p>
-        )}
+          {varietalRegion && (
+            <p className="text-sm text-muted-foreground">{varietalRegion}</p>
+          )}
 
-        {/* Price row with optional buy button */}
-        <div className="flex items-center justify-between">
           <p className="text-lg font-semibold font-mono" aria-label={`Price: ${price}`}>
             {price}
           </p>
 
-          {onBuy && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                onBuy(wine.id)
-              }}
-              className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full',
-                'text-muted-foreground hover:text-primary hover:bg-primary/10',
-                'transition-all duration-150',
-                'active:scale-95 motion-reduce:transform-none',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                // 44px touch target via padding
-                'p-0 -m-1.5 min-w-[44px] min-h-[44px]'
-              )}
-              aria-label={`Add ${displayName} to cart`}
-            >
-              <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-            </button>
+          {showStoryHook && wine.description && (
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {wine.description}
+            </p>
           )}
         </div>
 
-        {showStoryHook && wine.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {wine.description}
-          </p>
-        )}
+        {/* Bottom section: availability + buy button, pushed to card bottom */}
+        <div className="mt-auto pt-3 space-y-2">
+          {showAvailability && (
+            <AvailabilityLine availability={availability} />
+          )}
 
-        {showAvailability && (
-          <AvailabilityLine availability={availability} />
-        )}
+          {onBuy && (
+            <BuyButton
+              wineId={wine.id}
+              displayName={displayName}
+              isUnavailable={availability?.nearbyRetailerCount === 0}
+              onBuy={onBuy}
+            />
+          )}
+        </div>
       </div>
     </Link>
   )
@@ -205,6 +193,61 @@ function AvailabilityLine({
         {availability.nearbyRetailerCount === 1 ? 'store' : 'stores'}
       </span>
     </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// BuyButton — full-width primary CTA at card bottom
+// ---------------------------------------------------------------------------
+
+function BuyButton({
+  wineId,
+  displayName,
+  isUnavailable,
+  onBuy,
+}: {
+  wineId: string
+  displayName: string
+  isUnavailable?: boolean
+  onBuy: (wineId: string) => void
+}) {
+  if (isUnavailable) {
+    return (
+      <span
+        className={cn(
+          'w-full min-h-[44px] inline-flex items-center justify-center',
+          'rounded-md bg-muted text-muted-foreground',
+          'text-sm font-medium cursor-not-allowed opacity-60'
+        )}
+        aria-disabled="true"
+      >
+        Not Available Nearby
+      </span>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onBuy(wineId)
+      }}
+      className={cn(
+        'w-full min-h-[44px] inline-flex items-center justify-center gap-2',
+        'rounded-md bg-primary text-primary-foreground',
+        'text-sm font-medium',
+        'transition-all duration-150',
+        'hover:bg-primary/90',
+        'active:scale-[0.98] motion-reduce:transform-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+      )}
+      aria-label={`Add ${displayName} to cart`}
+    >
+      <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+      Add to Cart
+    </button>
   )
 }
 

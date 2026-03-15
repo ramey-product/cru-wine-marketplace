@@ -33,6 +33,8 @@ interface WineGridClientProps {
   showBuyButton?: boolean
   /** Availability data keyed by wine ID. */
   availabilityMap?: Record<string, WineAvailability>
+  /** Override grid column classes (default: responsive 1–4 columns). */
+  gridClassName?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -48,6 +50,7 @@ export function WineGridClient({
   showAvailability = true,
   showBuyButton = true,
   availabilityMap,
+  gridClassName,
 }: WineGridClientProps) {
   const [selectedWine, setSelectedWine] = useState<WineGridWine | null>(null)
   const { addItem } = useCart()
@@ -91,7 +94,7 @@ export function WineGridClient({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className={gridClassName ?? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"}>
         {wines.map((wine) => (
           <WineCard
             key={wine.id}

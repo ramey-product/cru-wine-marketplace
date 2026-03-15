@@ -1,5 +1,8 @@
-import { WineCard } from '@/components/features/wines/WineCard'
-import { PLACEHOLDER_WINES } from '@/app/(app)/wines/_lib/placeholder-wines'
+import {
+  PLACEHOLDER_WINES,
+  MOCK_AVAILABILITY,
+} from '@/app/(app)/wines/_lib/placeholder-wines'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 
 // TODO: Replace with real DAL call for popular wines nearby
 const POPULAR_WINES = PLACEHOLDER_WINES.slice(0, 6)
@@ -12,16 +15,13 @@ export function PopularNearYou() {
         <p className="mt-1 text-sm text-muted-foreground">Trending at shops nearby</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {POPULAR_WINES.map((wine) => (
-          <WineCard
-            key={wine.id}
-            wine={wine}
-            showAvailability
-            showStoryHook
-          />
-        ))}
-      </div>
+      <WineGridClient
+        wines={POPULAR_WINES}
+        showBuyButton
+        showAvailability
+        availabilityMap={MOCK_AVAILABILITY}
+        gridClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      />
     </section>
   )
 }
