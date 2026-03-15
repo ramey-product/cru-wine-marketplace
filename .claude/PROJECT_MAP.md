@@ -4,7 +4,7 @@
 > All agents MUST read this file at the start of every task instead of hardcoding paths.
 > When the filesystem changes, update THIS file — not individual agent definitions.
 >
-> Last updated: 2026-03-12
+> Last updated: 2026-03-14
 
 ---
 
@@ -51,6 +51,9 @@
 | PRD-07: AI + Human Curation Engine | `docs/prds/prd-07-curation-engine.md` | 170 | 6,000 |
 | PRD-08: Social/Community Layer | `docs/prds/prd-08-social-layer.md` | 161 | 4,200 |
 | PRD-09: Retailer Dashboard | `docs/prds/prd-09-retailer-dashboard.md` | 168 | 27 |
+| PRD-10: Commerce Flow & Cart UX | `docs/prds/prd-10-commerce-flow.md` | 279 | 4,800 |
+| PRD-11: Order Tracking & Post-Purchase | `docs/prds/prd-11-order-tracking.md` | 237 | 4,800 |
+| PRD-12: Discovery & Proximity | `docs/prds/prd-12-discovery-proximity.md` | 237 | 7,200 |
 
 ## Competitive Research
 
@@ -60,6 +63,9 @@
 | Competitive Matrix | `docs/competitive-research/COMPETITIVE_MATRIX.md` | 274 | Feature-by-feature comparison grid |
 | Analysis Index | `docs/competitive-research/COMPETITIVE_ANALYSIS_INDEX.md` | 191 | Index of all competitive research |
 | Full Analysis (2025-2026) | `docs/competitive-research/wine_competitive_analysis_2025_2026.md` | 1093 | Comprehensive market analysis |
+| Local Marketplace UX (PM) | `docs/competitive-research/local-marketplace-ux-analysis.md` | ~500 | PM analysis of Uber Eats/Grubhub patterns |
+| Local Marketplace UX (UX) | `docs/competitive-research/LOCAL_MARKETPLACE_UX_DESIGN.md` | ~250 | UX design lens on delivery marketplace patterns |
+| Local Marketplace UX (Eng) | `docs/competitive-research/LOCAL_MARKETPLACE_UX_ENGINEERING.md` | ~720 | Engineering analysis of marketplace implementations |
 
 ## Reference
 
@@ -91,6 +97,13 @@
 | Story Files | `.claude/work-plan/stories/epic-XX/story-XX-slug.md` | Individual developer story files (95 total across 9 epics). Find via Story Index table in parent epic file |
 | Analysis Directory | `.claude/work-plan/analysis/` | Architecture review, risks, cross-cutting concerns, implementation sequence |
 | Epic 05c Type Safety | `.claude/work-plan/epics/epic-05c-type-safety-fixes.md` | Pre-existing TS errors + build workaround cleanup |
+| EPIC-10 Commerce Flow | `.claude/work-plan/epics/EPIC-10-commerce-hub-discovery.md` | Commerce Hub, cart UX, availability on cards, buy flow |
+| EPIC-11 Order Tracking | `.claude/work-plan/epics/EPIC-11-order-tracking.md` | Tracking screen, real-time updates, notifications, taste feedback |
+| EPIC-12 Discovery & Proximity | `.claude/work-plan/epics/EPIC-12-discovery-proximity.md` | PostGIS, geolocation, producer browse, discovery loops |
+| Architecture Review (10-12) | `.claude/work-plan/reviews/architecture-review-prd-10-12.md` | Architect approval + conditions for PRD-10/11/12 |
+| Engineering Review (10-12) | `.claude/work-plan/reviews/engineering-review-prd-10-12.md` | FE Lead feasibility + estimates for PRD-10/11/12 |
+| UX Review (10-12) | `.claude/work-plan/reviews/ux-review-prd-10-12.md` | UX Lead refinements + wireframes for PRD-10/11/12 |
+| Copy Deck (Commerce/Track/Disc) | `.claude/work-plan/copy/commerce-tracking-discovery-copy.md` | All user-facing strings for PRD-10/11/12 |
 
 ## Scripts
 
