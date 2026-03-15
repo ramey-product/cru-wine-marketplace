@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { OrderConfirmationClient } from '@/components/features/orders/OrderConfirmationClient'
+import { PushOptInBanner } from '@/components/features/orders/PushOptInBanner'
 
 export const metadata: Metadata = {
   title: 'Order Confirmed | Cru',
@@ -29,9 +30,12 @@ export default async function OrderConfirmationPage({
   const { orderId } = await params
 
   return (
-    <OrderConfirmationClient
-      order={MOCK_ORDER}
-      orderId={orderId}
-    />
+    <div className="space-y-6">
+      <OrderConfirmationClient
+        order={MOCK_ORDER}
+        orderId={orderId}
+      />
+      <PushOptInBanner />
+    </div>
   )
 }

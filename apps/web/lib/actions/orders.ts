@@ -17,6 +17,7 @@ import {
   createRefund,
 } from '@/lib/stripe/checkout'
 import { sendOrderStatusChangeEmail } from '@/lib/email/order-notifications'
+import { sendOrderStatusPush } from '@/lib/push/send'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -345,6 +346,15 @@ export async function updateOrderStatusAction(
       console.error('Status change email failed (non-blocking):', err)
     })
   }
+
+  // 7b. Push notification (fire-and-forget)
+  sendOrderStatusPush(
+    order.user_id,
+    parsed.data.orderId,
+    parsed.data.status
+  ).catch((err) => {
+    console.error('Push notification failed (non-blocking):', err)
+  })
 
   // 8. Revalidate
   revalidatePath('/(app)/[orgSlug]', 'layout')
