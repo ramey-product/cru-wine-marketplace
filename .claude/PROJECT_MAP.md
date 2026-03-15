@@ -108,6 +108,7 @@
 | EPIC-11 Order Tracking | `.claude/work-plan/epics/EPIC-11-order-tracking.md` | Tracking screen, real-time updates, notifications, taste feedback |
 | EPIC-12 Discovery & Proximity | `.claude/work-plan/epics/EPIC-12-discovery-proximity.md` | PostGIS, geolocation, producer browse, discovery loops |
 | EPIC-13 Motion Library Adoption | `.claude/work-plan/epics/EPIC-13-motion-library-adoption.md` | Platform-wide animation enhancement with Motion library |
+| EPIC-14 DAL & Auth Wiring | `.claude/work-plan/epics/EPIC-14-dal-auth-wiring.md` | Replace all mock/placeholder data with real DAL queries, wire auth flows end-to-end |
 | Architecture Review (10-12) | `.claude/work-plan/reviews/architecture-review-prd-10-12.md` | Architect approval + conditions for PRD-10/11/12 |
 | Engineering Review (10-12) | `.claude/work-plan/reviews/engineering-review-prd-10-12.md` | FE Lead feasibility + estimates for PRD-10/11/12 |
 | UX Review (10-12) | `.claude/work-plan/reviews/ux-review-prd-10-12.md` | UX Lead refinements + wireframes for PRD-10/11/12 |
