@@ -2,7 +2,7 @@
 -- These are the multi-tenancy infrastructure tables required by SYSTEM_ARCHITECTURE.md
 -- All content-scoped and org-scoped tables depend on organizations(id).
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Organizations table
@@ -64,7 +64,7 @@ CREATE TABLE public.invitations (
   role        public.member_role NOT NULL DEFAULT 'member',
   status      public.invite_status NOT NULL DEFAULT 'pending',
   invited_by  UUID NOT NULL REFERENCES public.profiles(id),
-  token       TEXT UNIQUE NOT NULL DEFAULT encode(gen_random_bytes(32), 'hex'),
+  token       TEXT UNIQUE NOT NULL DEFAULT encode(extensions.gen_random_bytes(32), 'hex'),
   expires_at  TIMESTAMPTZ NOT NULL DEFAULT (now() + INTERVAL '7 days'),
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );

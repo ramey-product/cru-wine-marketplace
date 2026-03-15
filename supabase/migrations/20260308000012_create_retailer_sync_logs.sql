@@ -6,7 +6,7 @@
 -- Only org members can see their own sync history.
 -- No updated_at column — sync logs are append-only with a completed_at timestamp.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Retailer Sync Logs table

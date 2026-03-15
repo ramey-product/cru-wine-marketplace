@@ -1,4 +1,4 @@
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- ============================================================================
 -- Corrective migration: fix RLS policy defects found in QA/Code Review

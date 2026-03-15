@@ -4,7 +4,7 @@
 -- All direct access is denied to authenticated users — holds are managed
 -- exclusively via service role in Server Actions and Stripe webhooks.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Inventory Holds table

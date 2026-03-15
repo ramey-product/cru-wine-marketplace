@@ -6,7 +6,7 @@
 -- SELECT is permissive for all authenticated users (consumers browse retailers).
 -- Write operations restricted to org members (retailer staff).
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Enable PostGIS extension for geographic queries

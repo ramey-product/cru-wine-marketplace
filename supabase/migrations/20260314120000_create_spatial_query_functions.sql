@@ -6,7 +6,7 @@
 --   1. find_nearby_retailers  — retailers within N miles of a point
 --   2. find_wines_available_nearby — deduplicated wines stocked by nearby retailers
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. find_nearby_retailers

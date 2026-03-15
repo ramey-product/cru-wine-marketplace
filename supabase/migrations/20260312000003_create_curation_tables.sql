@@ -5,7 +5,7 @@
 -- user_wine_dismissals is user-scoped with NO org_id (CG-2 exception):
 --   dismiss records are personal user preferences, not org-tied content.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Curated Collections table

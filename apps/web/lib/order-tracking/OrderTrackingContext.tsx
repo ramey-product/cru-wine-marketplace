@@ -38,7 +38,8 @@ const OrderTrackingContext = createContext<OrderTrackingContextValue | null>(
 const MOCK_ORDERS: OrderTrackingState[] = [
   {
     orderId: 'order-001',
-    status: 'preparing',
+    status: 'confirmed',
+    fulfillmentType: 'pickup',
     retailerName: 'Wine House LA',
     displayName: 'Estate Reserve 2021',
     itemCount: 2,

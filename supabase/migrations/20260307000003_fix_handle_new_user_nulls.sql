@@ -4,7 +4,7 @@
 -- HIGH-01: Previously, COALESCE fallback to '' wrote empty strings,
 -- which is semantically incorrect (NULL = "not set", '' = "explicitly blank").
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$

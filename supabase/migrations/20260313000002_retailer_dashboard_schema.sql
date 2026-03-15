@@ -2,7 +2,7 @@
 -- stock overrides, retailer fulfillment settings, and analytics materialized view.
 -- EPIC-09/STORY-01 — Retailer Dashboard Database Schema & RLS Policies
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Retailer Members table

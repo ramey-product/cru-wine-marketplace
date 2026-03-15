@@ -5,7 +5,7 @@
 -- SELECT is permissive for all authenticated users.
 -- Write operations restricted to platform org admins.
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Enable pg_trgm extension (for fuzzy matching / autocomplete)

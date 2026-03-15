@@ -8,7 +8,7 @@
 -- 3. match_wine_candidates() RPC function that returns ranked wine candidates
 --    using pg_trgm similarity scoring across name, producer, vintage, varietal
 
-SET search_path TO '';
+SET search_path TO 'public', 'extensions';
 
 -- =============================================================================
 -- 1. Trigram indexes for fuzzy matching

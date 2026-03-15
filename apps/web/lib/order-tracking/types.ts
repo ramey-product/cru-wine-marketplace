@@ -1,21 +1,23 @@
 // ---------------------------------------------------------------------------
-// Order Tracking Types
+// Order Tracking Types — aligned with DB enum in orders table
 // ---------------------------------------------------------------------------
 
 export type OrderStatus =
+  | 'pending'
   | 'confirmed'
-  | 'preparing'
   | 'ready_for_pickup'
   | 'out_for_delivery'
-  | 'delivered'
-  | 'picked_up'
+  | 'completed'
   | 'cancelled'
+
+export type FulfillmentType = 'pickup' | 'delivery'
 
 export interface OrderTrackingState {
   orderId: string
   status: OrderStatus
+  fulfillmentType: FulfillmentType
   retailerName: string
-  /** Short display name for the wine/order (e.g. "Estate Reserve 2021") */
+  /** Short display name for the order (e.g. "3 items from Wine House LA") */
   displayName: string
   /** Number of items in the order */
   itemCount: number
@@ -28,19 +30,22 @@ export interface OrderTrackingState {
 }
 
 /** Terminal statuses — order tracking is no longer "active" */
-export const TERMINAL_STATUSES: OrderStatus[] = [
-  'delivered',
-  'picked_up',
-  'cancelled',
-]
+export const TERMINAL_STATUSES: OrderStatus[] = ['completed', 'cancelled']
 
 /** Human-readable labels for each status */
 export const STATUS_LABELS: Record<OrderStatus, string> = {
+  pending: 'Order placed',
   confirmed: 'Order confirmed',
-  preparing: 'Being prepared',
   ready_for_pickup: 'Ready for pickup',
   out_for_delivery: 'Out for delivery',
-  delivered: 'Delivered',
-  picked_up: 'Picked up',
+  completed: 'Completed',
   cancelled: 'Cancelled',
+}
+
+/**
+ * Returns a fulfillment-aware label for the completed status.
+ * e.g. "Delivered" for delivery, "Picked up" for pickup.
+ */
+export function getCompletionLabel(fulfillmentType: FulfillmentType): string {
+  return fulfillmentType === 'delivery' ? 'Delivered' : 'Picked up'
 }
