@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Minus, Plus, Trash2 } from 'lucide-react'
+import { QuantityStepper } from '@/components/features/cart/QuantityStepper'
 
 interface CartItemProps {
   item: {
@@ -21,8 +21,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
   const [isPending, startTransition] = useTransition()
   const [optimisticQty, setOptimisticQty] = useState(item.quantity)
 
-  const handleQuantityChange = (delta: number) => {
-    const newQty = optimisticQty + delta
+  const handleQuantityChange = (newQty: number) => {
     if (newQty < 1 || newQty > 24) return
 
     setOptimisticQty(newQty)
@@ -76,36 +75,15 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           ${item.price.toFixed(2)} each
         </p>
 
-        {/* Quantity controls */}
-        <div className="mt-2 flex items-center gap-2">
-          <button
-            onClick={() => handleQuantityChange(-1)}
-            disabled={isPending || optimisticQty <= 1}
-            aria-label="Decrease quantity"
-            className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Minus className="h-3 w-3" aria-hidden="true" />
-          </button>
-          <span className="w-8 text-center text-sm font-medium" aria-label={`Quantity: ${optimisticQty}`}>
-            {optimisticQty}
-          </span>
-          <button
-            onClick={() => handleQuantityChange(1)}
-            disabled={isPending || optimisticQty >= 24}
-            aria-label="Increase quantity"
-            className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Plus className="h-3 w-3" aria-hidden="true" />
-          </button>
-
-          <button
-            onClick={handleRemove}
+        {/* Quantity stepper */}
+        <div className="mt-2">
+          <QuantityStepper
+            quantity={optimisticQty}
+            onQuantityChange={handleQuantityChange}
+            onRemove={handleRemove}
+            wineName={item.wineName}
             disabled={isPending}
-            aria-label={`Remove ${item.wineName} from cart`}
-            className="ml-auto h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
-          </button>
+          />
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { MapPin, ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatWinePrice, formatVarietalRegion } from './utils'
+import { BuyButton } from './BuyButton'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -193,61 +194,6 @@ function AvailabilityLine({
         {availability.nearbyRetailerCount === 1 ? 'store' : 'stores'}
       </span>
     </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// BuyButton — full-width primary CTA at card bottom
-// ---------------------------------------------------------------------------
-
-function BuyButton({
-  wineId,
-  displayName,
-  isUnavailable,
-  onBuy,
-}: {
-  wineId: string
-  displayName: string
-  isUnavailable?: boolean
-  onBuy: (wineId: string) => void
-}) {
-  if (isUnavailable) {
-    return (
-      <span
-        className={cn(
-          'w-full min-h-[44px] inline-flex items-center justify-center',
-          'rounded-md bg-muted text-muted-foreground',
-          'text-sm font-medium cursor-not-allowed opacity-60'
-        )}
-        aria-disabled="true"
-      >
-        Not Available Nearby
-      </span>
-    )
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        onBuy(wineId)
-      }}
-      className={cn(
-        'w-full min-h-[44px] inline-flex items-center justify-center gap-2',
-        'rounded-md bg-primary text-primary-foreground',
-        'text-sm font-medium',
-        'transition-all duration-150',
-        'hover:bg-primary/90',
-        'active:scale-[0.98] motion-reduce:transform-none',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-      )}
-      aria-label={`Add ${displayName} to cart`}
-    >
-      <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-      Add to Cart
-    </button>
   )
 }
 

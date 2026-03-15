@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ShoppingBag } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCart } from '@/lib/cart/CartContext'
 import { formatCartPrice } from '@/lib/cart/cart-store'
 import { cn } from '@/lib/utils'
@@ -20,6 +21,7 @@ export function StickyCartBar() {
   const pathname = usePathname()
   const prevCountRef = useRef(cart.itemCount)
   const [pulse, setPulse] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
 
   const hasItems = cart.itemCount > 0
   const isHiddenPage = HIDDEN_PATHS.some((p) => pathname.startsWith(p))
@@ -57,21 +59,50 @@ export function StickyCartBar() {
         {/* Left: item count + total */}
         <div className="flex items-center gap-2">
           <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-          <span
-            className={cn(
-              'text-sm font-semibold tabular-nums',
-              'motion-reduce:transform-none',
-              pulse && 'animate-[pulse-scale_200ms_ease-out]'
-            )}
-          >
-            {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'items'}
-          </span>
+
+          {/* Animated item count badge */}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={cart.itemCount}
+              initial={shouldReduceMotion ? false : { scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={shouldReduceMotion ? undefined : { scale: 0.8, opacity: 0 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { type: 'spring', stiffness: 400, damping: 20 }
+              }
+              className={cn(
+                'text-sm font-semibold tabular-nums',
+                'motion-reduce:transform-none',
+                pulse && 'animate-[pulse-scale_200ms_ease-out]'
+              )}
+            >
+              {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'items'}
+            </motion.span>
+          </AnimatePresence>
+
           <span className="text-primary-foreground/60" aria-hidden="true">
             ·
           </span>
-          <span className="text-sm font-semibold tabular-nums">
-            {formatCartPrice(cart.subtotal)}
-          </span>
+
+          {/* Animated price total */}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={cart.subtotal}
+              initial={shouldReduceMotion ? false : { y: -8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={shouldReduceMotion ? undefined : { y: 8, opacity: 0 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { duration: 0.15 }
+              }
+              className="text-sm font-semibold tabular-nums"
+            >
+              {formatCartPrice(cart.subtotal)}
+            </motion.span>
+          </AnimatePresence>
         </div>
 
         {/* Right: View Cart CTA */}

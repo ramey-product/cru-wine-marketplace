@@ -55,6 +55,12 @@
 | PRD-11: Order Tracking & Post-Purchase | `docs/prds/prd-11-order-tracking.md` | 237 | 4,800 |
 | PRD-12: Discovery & Proximity | `docs/prds/prd-12-discovery-proximity.md` | 237 | 7,200 |
 
+## PRDs (P1 — Post-Launch Polish)
+
+| Resource | Path | ~Lines | RICE |
+|----------|------|--------|------|
+| PRD-13: Motion Library Adoption | `docs/prds/prd-13-motion-library-adoption.md` | 170 | — |
+
 ## Competitive Research
 
 | Resource | Path | ~Lines | Description |
@@ -101,6 +107,7 @@
 | EPIC-10 Commerce Flow | `.claude/work-plan/epics/EPIC-10-commerce-hub-discovery.md` | Commerce Hub, cart UX, availability on cards, buy flow |
 | EPIC-11 Order Tracking | `.claude/work-plan/epics/EPIC-11-order-tracking.md` | Tracking screen, real-time updates, notifications, taste feedback |
 | EPIC-12 Discovery & Proximity | `.claude/work-plan/epics/EPIC-12-discovery-proximity.md` | PostGIS, geolocation, producer browse, discovery loops |
+| EPIC-13 Motion Library Adoption | `.claude/work-plan/epics/EPIC-13-motion-library-adoption.md` | Platform-wide animation enhancement with Motion library |
 | Architecture Review (10-12) | `.claude/work-plan/reviews/architecture-review-prd-10-12.md` | Architect approval + conditions for PRD-10/11/12 |
 | Engineering Review (10-12) | `.claude/work-plan/reviews/engineering-review-prd-10-12.md` | FE Lead feasibility + estimates for PRD-10/11/12 |
 | UX Review (10-12) | `.claude/work-plan/reviews/ux-review-prd-10-12.md` | UX Lead refinements + wireframes for PRD-10/11/12 |
