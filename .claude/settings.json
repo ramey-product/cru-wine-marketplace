@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "allowedTools": [
+    "allow": [
       "Edit",
       "Write",
       "Bash(npm run *)",
@@ -11,6 +11,7 @@
       "Bash(npm list *)",
       "Bash(npm info *)",
       "Bash(npx *)",
+      "Bash(pnpm *)",
       "Bash(node *)",
       "Bash(tsc *)",
       "Bash(vitest *)",
