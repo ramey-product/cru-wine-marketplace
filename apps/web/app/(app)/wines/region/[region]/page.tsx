@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { WineGrid } from '@/components/features/browse/WineGrid'
+import { WineGridClient } from '@/components/features/wines/WineGridClient'
 import { FilterChips } from '@/components/features/browse/FilterChips'
 import { BrowseEmptyState } from '@/components/features/browse/BrowseEmptyState'
 import { PLACEHOLDER_WINES } from '../../_lib/placeholder-wines'
@@ -73,7 +73,7 @@ export default async function RegionPage({ params, searchParams }: RegionPagePro
           <p className="text-sm text-muted-foreground mb-4">
             {wines.length} {wines.length === 1 ? 'wine' : 'wines'}
           </p>
-          <WineGrid wines={wines} />
+          <WineGridClient wines={wines} />
         </>
       ) : (
         <BrowseEmptyState

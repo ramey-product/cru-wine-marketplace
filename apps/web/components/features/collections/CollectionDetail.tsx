@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { CollectionWineCard } from './CollectionWineCard'
+import { CollectionGridClient } from './CollectionGridClient'
 import type { PlaceholderCollection } from '@/app/(app)/collections/_lib/placeholder-collections'
 
 interface CollectionDetailProps {
@@ -59,15 +59,7 @@ export function CollectionDetail({ collection }: CollectionDetailProps) {
       </div>
 
       {/* Wine grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedItems.map((item) => (
-          <CollectionWineCard
-            key={item.id}
-            wine={item.wine}
-            curatorNote={item.curator_note}
-          />
-        ))}
-      </div>
+      <CollectionGridClient items={sortedItems} />
     </div>
   )
 }

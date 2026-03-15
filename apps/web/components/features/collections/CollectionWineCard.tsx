@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { formatWinePrice, formatVarietalRegion } from '@/components/features/wines/utils'
+import { BuyButton } from '@/components/features/wines/BuyButton'
 
 interface CollectionWineCardProps {
   wine: {
@@ -18,9 +19,11 @@ interface CollectionWineCardProps {
     description: string | null
   }
   curatorNote?: string | null
+  /** Called when buy button is tapped. Omit to hide the button. */
+  onBuy?: (wineId: string) => void
 }
 
-export function CollectionWineCard({ wine, curatorNote }: CollectionWineCardProps) {
+export function CollectionWineCard({ wine, curatorNote, onBuy }: CollectionWineCardProps) {
   const varietalRegion = formatVarietalRegion(wine.varietal, wine.region, wine.country)
   const price = formatWinePrice(wine.price_min, wine.price_max)
   const displayName = wine.vintage ? `${wine.name} ${wine.vintage}` : wine.name
@@ -30,7 +33,7 @@ export function CollectionWineCard({ wine, curatorNote }: CollectionWineCardProp
       href={`/wines/${wine.slug}`}
       aria-label={`${displayName}, by ${wine.producer.name}, ${price}`}
       className="group cursor-pointer rounded-lg border border-border bg-card overflow-hidden
-                 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 block"
+                 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
     >
       <div className="aspect-[3/4] overflow-hidden bg-muted">
         {wine.image_url ? (
@@ -65,22 +68,34 @@ export function CollectionWineCard({ wine, curatorNote }: CollectionWineCardProp
         )}
       </div>
 
-      <div className="p-4 space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          {wine.producer.name}
-        </p>
-        <h3 className="text-lg font-medium leading-tight">{displayName}</h3>
-        {varietalRegion && (
-          <p className="text-sm text-muted-foreground">{varietalRegion}</p>
-        )}
-        <p className="text-lg font-semibold font-mono">{price}</p>
-        {wine.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2">{wine.description}</p>
-        )}
-        {curatorNote && (
-          <p className="text-sm text-muted-foreground italic">
-            &mdash; {curatorNote}
+      <div className="p-4 flex flex-col flex-1">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {wine.producer.name}
           </p>
+          <h3 className="text-lg font-medium leading-tight">{displayName}</h3>
+          {varietalRegion && (
+            <p className="text-sm text-muted-foreground">{varietalRegion}</p>
+          )}
+          <p className="text-lg font-semibold font-mono">{price}</p>
+          {wine.description && (
+            <p className="text-sm text-muted-foreground line-clamp-2">{wine.description}</p>
+          )}
+          {curatorNote && (
+            <p className="text-sm text-muted-foreground italic">
+              &mdash; {curatorNote}
+            </p>
+          )}
+        </div>
+
+        {onBuy && (
+          <div className="mt-auto pt-3">
+            <BuyButton
+              wineId={wine.id}
+              displayName={displayName}
+              onBuy={onBuy}
+            />
+          </div>
         )}
       </div>
     </Link>

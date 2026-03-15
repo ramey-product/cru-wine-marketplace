@@ -1,32 +1,21 @@
 'use client'
 
-import { MapPin, ShoppingCart, Clock } from 'lucide-react'
-import { useTransition } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { Check } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import type { RetailerBadge } from './RetailerSelectionSheet'
+import { Button } from '@/components/ui/button'
+import type { Retailer, RetailerBadge } from './RetailerSelectionSheet'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface RetailerCardProps {
-  retailer: {
-    id: string
-    orgId: string
-    name: string
-    distanceMiles: number
-    price: number
-    fulfillment: ('pickup' | 'delivery')[]
-    inStock: boolean
-    prepTimeMinutes?: number
-    deliveryWindowEnd?: string
-    isOpen?: boolean
-    closingSoon?: boolean
-    nextOpenAt?: string
-  }
-  wineId: string
+  retailer: Retailer
   onAddToCart: (retailerOrgId: string) => Promise<void>
   badge?: RetailerBadge
+  index?: number
 }
 
 // ---------------------------------------------------------------------------
@@ -38,7 +27,7 @@ function formatDistance(miles: number): string {
   return `${miles.toFixed(1)} mi`
 }
 
-function getTimeEstimate(retailer: RetailerCardProps['retailer']): string {
+function getTimeEstimate(retailer: Retailer): string {
   if (retailer.fulfillment.includes('pickup')) {
     const prep = retailer.prepTimeMinutes ?? 30
     return `Ready in ~${prep} min`
@@ -49,118 +38,154 @@ function getTimeEstimate(retailer: RetailerCardProps['retailer']): string {
   return `~${retailer.prepTimeMinutes ?? 30} min`
 }
 
+function formatFulfillment(methods: ('pickup' | 'delivery')[]): string {
+  return methods.map((m) => m.charAt(0).toUpperCase() + m.slice(1)).join(', ')
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export function RetailerCard({
   retailer,
-  wineId,
   onAddToCart,
   badge,
+  index = 0,
 }: RetailerCardProps) {
-  const [isPending, startTransition] = useTransition()
+  const [showCheck, setShowCheck] = useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
   const isClosed = retailer.isOpen === false
   const isDisabled = isPending || !retailer.inStock || isClosed
 
-  const handleAdd = () => {
-    startTransition(async () => {
+  // Reset check icon after animation
+  useEffect(() => {
+    if (!showCheck) return
+    const timer = setTimeout(() => setShowCheck(false), 600)
+    return () => clearTimeout(timer)
+  }, [showCheck])
+
+  const handleAdd = useCallback(async () => {
+    setIsPending(true)
+    setShowCheck(true)
+    try {
       await onAddToCart(retailer.orgId)
-    })
-  }
+    } finally {
+      setIsPending(false)
+    }
+  }, [onAddToCart, retailer.orgId])
+
+  const isBestValue = badge?.label === 'Best Value'
 
   return (
-    <div
+    <motion.div
+      role="listitem"
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : { delay: index * 0.05, duration: 0.2, ease: 'easeOut' }
+      }
       className={cn(
-        'flex items-center justify-between rounded-lg border border-border p-4 min-h-[44px]',
-        isClosed && retailer.inStock && 'opacity-60'
+        'rounded-lg border border-border p-4',
+        isBestValue && 'border-l-2 border-l-primary',
+        isClosed && retailer.inStock && 'opacity-60',
+        !retailer.inStock && 'opacity-50'
       )}
     >
-      <div className="min-w-0 flex-1">
-        {/* Name + badge */}
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-medium truncate">{retailer.name}</p>
-          {badge && (
-            <span
-              className={cn(
-                'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap',
-                badge.className
-              )}
-            >
-              {badge.label}
-            </span>
-          )}
-        </div>
-
-        {/* Time-first display: "Ready in ~30 min · 1.2 mi" */}
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-          <span>{getTimeEstimate(retailer)}</span>
-          <span aria-hidden="true">&middot;</span>
-          <MapPin className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-          <span>{formatDistance(retailer.distanceMiles)}</span>
-          <span aria-hidden="true">&middot;</span>
-          <span className="font-mono">${retailer.price.toFixed(2)}</span>
-        </div>
-
-        {/* Fulfillment badges + status indicators */}
-        <div className="mt-1.5 flex flex-wrap gap-1.5">
-          {retailer.fulfillment.map((method) => (
-            <span
-              key={method}
-              className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground capitalize"
-            >
-              {method}
-            </span>
-          ))}
-
-          {/* Store hours indicator */}
-          {retailer.isOpen === true && !retailer.closingSoon && (
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-emerald-500"
-                aria-hidden="true"
-              />
-              Open
-            </span>
-          )}
-          {retailer.closingSoon && (
-            <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-amber-500"
-                aria-hidden="true"
-              />
-              Closes soon
-            </span>
-          )}
-          {isClosed && (
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50"
-                aria-hidden="true"
-              />
-              Closed
-              {retailer.nextOpenAt ? ` · Opens ${retailer.nextOpenAt}` : ''}
-            </span>
-          )}
-
-          {!retailer.inStock && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-destructive/10 text-destructive">
-              Out of stock
-            </span>
-          )}
-        </div>
+      {/* Row 1: Identity — Name + Badge */}
+      <div className="flex items-center gap-2">
+        <p className="text-sm font-medium truncate">{retailer.name}</p>
+        {badge && (
+          <span
+            className={cn(
+              'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap',
+              badge.className
+            )}
+          >
+            {badge.label}
+          </span>
+        )}
       </div>
 
-      <button
-        onClick={handleAdd}
-        disabled={isDisabled}
-        aria-label={`Add to cart from ${retailer.name}`}
-        className="ml-3 flex min-h-[44px] items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-      >
-        <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-        {isPending ? 'Adding...' : 'Add'}
-      </button>
-    </div>
+      {/* Row 2: Logistics — Distance · Time · Fulfillment */}
+      <p className="mt-1 text-xs text-muted-foreground">
+        {formatDistance(retailer.distanceMiles)}
+        {' \u00B7 '}
+        {getTimeEstimate(retailer)}
+        {' \u00B7 '}
+        {formatFulfillment(retailer.fulfillment)}
+        {/* Status — only when abnormal */}
+        {retailer.closingSoon && (
+          <>
+            {' \u00B7 '}
+            <span className="text-amber-600 dark:text-amber-400">
+              Closes soon
+            </span>
+          </>
+        )}
+        {isClosed && (
+          <>
+            {' \u00B7 '}
+            <span>
+              Closed{retailer.nextOpenAt ? ` \u00B7 Opens ${retailer.nextOpenAt}` : ''}
+            </span>
+          </>
+        )}
+      </p>
+
+      {/* Row 3: Decision — Price + Action */}
+      <div className="mt-2 flex items-center justify-between">
+        <span
+          className="text-lg font-semibold"
+          aria-label={`Price: $${retailer.price.toFixed(2)}`}
+        >
+          ${retailer.price.toFixed(2)}
+        </span>
+
+        {retailer.inStock ? (
+          <Button
+            onClick={handleAdd}
+            disabled={isDisabled}
+            aria-label={`Add to cart from ${retailer.name}`}
+            size="default"
+            className="min-h-[44px] min-w-[72px] px-5"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {showCheck ? (
+                <motion.span
+                  key="check"
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={
+                    shouldReduceMotion
+                      ? { duration: 0 }
+                      : { type: 'spring', stiffness: 400, damping: 15 }
+                  }
+                  className="inline-flex items-center gap-1.5"
+                >
+                  <Check className="h-4 w-4" aria-hidden="true" />
+                  Added
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="add"
+                  initial={shouldReduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  Add
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Button>
+        ) : (
+          <span className="text-xs text-muted-foreground">Out of stock</span>
+        )}
+      </div>
+    </motion.div>
   )
 }
