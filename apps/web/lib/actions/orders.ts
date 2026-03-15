@@ -16,6 +16,8 @@ import {
   createCheckoutSession,
   createRefund,
 } from '@/lib/stripe/checkout'
+import { sendOrderStatusChangeEmail } from '@/lib/email/order-notifications'
+import { sendOrderStatusPush } from '@/lib/push/send'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -326,7 +328,35 @@ export async function updateOrderStatusAction(
     return { error: 'Failed to update order status' }
   }
 
-  // 7. Revalidate
+  // 7. Fire-and-forget status change email to consumer
+  const [profileResult, orgResult] = await Promise.all([
+    supabase.from('profiles').select('email').eq('id', order.user_id).single(),
+    supabase.from('organizations').select('name').eq('id', order.org_id).single(),
+  ])
+
+  if (profileResult.data?.email) {
+    sendOrderStatusChangeEmail({
+      email: profileResult.data.email,
+      orderId: parsed.data.orderId,
+      orderNumber: order.id.slice(0, 8).toUpperCase(),
+      newStatus: parsed.data.status,
+      retailerName: orgResult.data?.name ?? 'your retailer',
+      fulfillmentType: (order.fulfillment_type ?? 'pickup') as 'pickup' | 'delivery',
+    }).catch((err) => {
+      console.error('Status change email failed (non-blocking):', err)
+    })
+  }
+
+  // 7b. Push notification (fire-and-forget)
+  sendOrderStatusPush(
+    order.user_id,
+    parsed.data.orderId,
+    parsed.data.status
+  ).catch((err) => {
+    console.error('Push notification failed (non-blocking):', err)
+  })
+
+  // 8. Revalidate
   revalidatePath('/(app)/[orgSlug]', 'layout')
   return { data: updatedOrder }
 }
